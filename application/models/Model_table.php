@@ -109,24 +109,24 @@ class Model_Table extends CI_Model
         if ($lastProduct->num_rows() != 0) {
             $newProductId = $lastProduct->row()->Product_SlNo + 1;
             $zeros = array('0', '00', '000', '0000');
-            $productCode = 'P' . (strlen($newProductId) > count($zeros) ? $newProductId : $zeros[count($zeros) - strlen($newProductId)] . $newProductId);
+            $productCode = 'R' . (strlen($newProductId) > count($zeros) ? $newProductId : $zeros[count($zeros) - strlen($newProductId)] . $newProductId);
         }
 
         return $productCode;
     }
-
-    public function generateSupplierCode()
+    
+    public function generateDoctorCode()
     {
-        $supplierCode = "S00001";
+        $doctorCode = "D00001";
 
-        $lastSupplier = $this->db->query("select * from tbl_supplier order by Supplier_SlNo desc limit 1");
-        if ($lastSupplier->num_rows() != 0) {
-            $newSupplierId = $lastSupplier->row()->Supplier_SlNo + 1;
+        $lastDoctor = $this->db->query("select * from tbl_doctor order by Doctor_SlNo desc limit 1");
+        if ($lastDoctor->num_rows() != 0) {
+            $newDoctorId = $lastDoctor->row()->Doctor_SlNo + 1;
             $zeros = array('0', '00', '000', '0000');
-            $supplierCode = 'S' . (strlen($newSupplierId) > count($zeros) ? $newSupplierId : $zeros[count($zeros) - strlen($newSupplierId)] . $newSupplierId);
+            $doctorCode = 'D' . (strlen($newDoctorId) > count($zeros) ? $newDoctorId : $zeros[count($zeros) - strlen($newDoctorId)] . $newDoctorId);
         }
 
-        return $supplierCode;
+        return $doctorCode;
     }
 
     public function generateCustomerPaymentCode()
@@ -136,20 +136,6 @@ class Model_Table extends CI_Model
         $lastPayment = $this->db->query("select * from tbl_customer_payment order by CPayment_id desc limit 1");
         if ($lastPayment->num_rows() != 0) {
             $newPaymentId = $lastPayment->row()->CPayment_id + 1;
-            $zeros = array('0', '00', '000', '0000');
-            $paymentCode = 'TR' . (strlen($newPaymentId) > count($zeros) ? $newPaymentId : $zeros[count($zeros) - strlen($newPaymentId)] . $newPaymentId);
-        }
-
-        return $paymentCode;
-    }
-
-    public function generateSupplierPaymentCode()
-    {
-        $paymentCode = "TR00001";
-
-        $lastPayment = $this->db->query("select * from tbl_supplier_payment order by SPayment_id desc limit 1");
-        if ($lastPayment->num_rows() != 0) {
-            $newPaymentId = $lastPayment->row()->SPayment_id + 1;
             $zeros = array('0', '00', '000', '0000');
             $paymentCode = 'TR' . (strlen($newPaymentId) > count($zeros) ? $newPaymentId : $zeros[count($zeros) - strlen($newPaymentId)] . $newPaymentId);
         }
