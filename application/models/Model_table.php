@@ -103,13 +103,13 @@ class Model_Table extends CI_Model
 
     public function generateProductCode()
     {
-        $productCode = "R00001";
+        $productCode = "T00001";
 
         $lastProduct = $this->db->query("select * from tbl_product order by Product_SlNo desc limit 1");
         if ($lastProduct->num_rows() != 0) {
             $newProductId = $lastProduct->row()->Product_SlNo + 1;
             $zeros = array('0', '00', '000', '0000');
-            $productCode = 'R' . (strlen($newProductId) > count($zeros) ? $newProductId : $zeros[count($zeros) - strlen($newProductId)] . $newProductId);
+            $productCode = 'T' . (strlen($newProductId) > count($zeros) ? $newProductId : $zeros[count($zeros) - strlen($newProductId)] . $newProductId);
         }
 
         return $productCode;

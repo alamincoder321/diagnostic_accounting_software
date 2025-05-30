@@ -62,16 +62,16 @@ $route['customerPaymentPage'] = 'Administrator/Customer/customerPaymentPage';
 $route['customer_payment_history'] = 'Administrator/Customer/customerPaymentHistory';
 
 // report generate
-$route['sales'] = 'Administrator/Sales/index';
-$route['sales/(:any)'] = 'Administrator/Sales/salesEdit/$1';
-$route['salesinvoice'] = 'Administrator/Sales/sales_invoice';
-$route['salesInvoicePrint'] = 'Administrator/Reports/sales_invoice';
-$route['add_sales'] = 'Administrator/Sales/addSales';
-$route['get_sales'] = 'Administrator/Sales/getSales';
-$route['get_sales_record'] = 'Administrator/Sales/getSalesRecord';
-$route['get_saledetails'] = 'Administrator/Sales/getSaleDetails';
-$route['update_sales'] = 'Administrator/Sales/updateSales';
-$route['delete_sales'] = 'Administrator/Sales/deleteSales';
+$route['reportEntry']        = 'Administrator/Sales/index';
+$route['reportEntry/(:any)'] = 'Administrator/Sales/salesEdit/$1';
+$route['salesinvoice']       = 'Administrator/Sales/sales_invoice';
+$route['salesInvoicePrint']  = 'Administrator/Reports/sales_invoice';
+$route['add_sales']          = 'Administrator/Sales/addSales';
+$route['get_sales']          = 'Administrator/Sales/getSales';
+$route['get_sales_record']   = 'Administrator/Sales/getSalesRecord';
+$route['get_saledetails']    = 'Administrator/Sales/getSaleDetails';
+$route['update_sales']       = 'Administrator/Sales/updateSales';
+$route['delete_sales']       = 'Administrator/Sales/deleteSales';
 
 $route['sale_invoice_print/(:any)'] = 'Administrator/Sales/saleInvoicePrint/$1';
 $route['salesrecord'] = 'Administrator/Sales/sales_record';

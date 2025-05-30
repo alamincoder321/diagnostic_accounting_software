@@ -73,7 +73,7 @@
 			</div>
 
 			<div class="form-group">
-				<label class="col-md-1 control-label no-padding-right"> Sales By </label>
+				<label class="col-md-1 control-label no-padding-right"> Employee </label>
 				<div class="col-md-2">
 					<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name" @input="onChangeEmployee" placeholder="Select Employee"></v-select>
 				</div>
@@ -98,7 +98,7 @@
 	<div class="col-xs-12 col-md-9 col-lg-9">
 		<div class="widget-box">
 			<div class="widget-header">
-				<h4 class="widget-title">Sales Information</h4>
+				<h4 class="widget-title">Patient & Test Information</h4>
 				<div class="widget-toolbar">
 					<a href="#" data-action="collapse">
 						<i class="ace-icon fa fa-chevron-up"></i>
@@ -116,7 +116,7 @@
 					<div class="row">
 						<div class="col-md-5">
 							<div class="form-group">
-								<label class="col-xs-4 control-label no-padding-right"> Customer </label>
+								<label class="col-xs-4 control-label no-padding-right"> Patient </label>
 								<div class="col-xs-8" style="display: flex;align-items:center;margin-bottom:5px;">
 									<div style="width: 86%;">
 										<v-select v-bind:options="customers" style="margin: 0;" label="display_name" v-model="selectedCustomer" v-on:input="customerOnChange" @search="onSearchCustomer"></v-select>
@@ -127,7 +127,7 @@
 								</div>
 							</div>
 
-							<div class="form-group" style="display:none;" v-bind:style="{display: selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? '' : 'none'}">
+							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Name </label>
 								<div class="col-xs-8">
 									<input type="text" id="customerName" placeholder="Customer Name" class="form-control" v-model="selectedCustomer.Customer_Name" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true" />
@@ -150,63 +150,55 @@
 						</div>
 
 						<div class="col-md-5">
-							<div class="form-group">
-								<label class="col-xs-3 control-label no-padding-right"> Category </label>
-								<div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:5px;">
-									<div style="width: 86%;">
-										<v-select v-bind:options="categories" id="category" style="margin: 0;" v-model="selectedCategory" label="ProductCategory_Name" @input="onChangeCategory" placeholder="Select Category"></v-select>
-									</div>
-									<div style="width: 13%;margin-left:2px;">
-										<a href="<?= base_url('category') ?>" class="add-button" target="_blank" title="Add New Category"><i class="fa fa-plus" aria-hidden="true"></i></a>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-xs-3 control-label no-padding-right"> Product </label>
-								<div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:5px;">
-									<div style="width: 86%;">
-										<v-select v-show="!barcode" v-bind:options="products" id="product" style="margin: 0;" v-model="selectedProduct" label="display_text" @input="productOnChange" @search="onSearchProduct"></v-select>
-										<input v-show="barcode" placeholder="barcode here" ref="barcode" v-model="barcodeVal" type="text" class="form-control" @change="barcodeProduct($event)" />
-									</div>
-									<div style="width: 13%;margin-left:2px;">
-										<a class="add-button" @click="barcode = !barcode"><i class="fa fa-barcode" aria-hidden="true"></i></a>
+							<form @submit.prevent="addToCart">
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Category </label>
+									<div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:5px;">
+										<div style="width: 86%;">
+											<v-select v-bind:options="categories" id="category" style="margin: 0;" v-model="selectedCategory" label="ProductCategory_Name" @input="onChangeCategory" placeholder="Select Category"></v-select>
+										</div>
+										<div style="width: 13%;margin-left:2px;">
+											<a href="<?= base_url('category') ?>" class="add-button" target="_blank" title="Add New Category"><i class="fa fa-plus" aria-hidden="true"></i></a>
+										</div>
 									</div>
 								</div>
-							</div>
 
-							<div class="form-group">
-								<label class="col-xs-3 control-label no-padding-right"> Sale Rate </label>
-								<div class="col-xs-4">
-									<input type="number" id="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Test </label>
+									<div class="col-xs-9" style="display: flex;align-items:center;margin-bottom:5px;">
+										<div style="width: 86%;">
+											<v-select v-bind:options="products" id="product" style="margin: 0;" v-model="selectedProduct" label="display_text" @input="productOnChange" @search="onSearchProduct"></v-select>
+										</div>
+										<div style="width: 13%;margin-left:2px;">
+											<a class="add-button" href="/product" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i></a>
+										</div>
+									</div>
 								</div>
-								<label class="col-xs-1 control-label no-padding-right"> Qty </label>
-								<div class="col-xs-4">
-									<input type="number" step="0.01" id="quantity" placeholder="Qty" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" required />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-xs-3 control-label no-padding-right"> Amount </label>
-								<div class="col-xs-9">
-									<input type="text" id="productTotal" placeholder="Amount" class="form-control" v-model="selectedProduct.total" readonly />
-								</div>
-							</div>
 
-							<div class="form-group">
-								<label class="col-xs-3 control-label no-padding-right"> </label>
-								<div class="col-xs-9">
-									<button type="button" @click="addToCart" style="padding: 3px 6px; background: rgb(0, 126, 187) !important; border-color: rgb(0, 126, 187) !important; outline: none; border-radius: 6px;" class="btn pull-right">Add to Cart</button>
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Rate </label>
+									<div class="col-xs-4">
+										<input type="number" id="salesRate" ref="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
+									</div>
+									<label class="col-xs-1 control-label no-padding-right"> Qty </label>
+									<div class="col-xs-4">
+										<input type="number" step="0.01" id="quantity" placeholder="Qty" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" required />
+									</div>
 								</div>
-							</div>
-						</div>
-						<div class="col-md-2">
-							<div style="display:none;" v-bind:style="{display:sales.isService == 'true' ? 'none' : ''}">
-								<div class="text-center" style="display:none;" v-bind:style="{color: productStock > 0 ? 'green' : 'red', display: selectedProduct.Product_SlNo == '' ? 'none' : ''}">{{ productStockText }}</div class="text-center">
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Total </label>
+									<div class="col-xs-9">
+										<input type="text" id="productTotal" placeholder="Total" class="form-control" v-model="selectedProduct.total" readonly />
+									</div>
+								</div>
 
-								<input type="text" id="productStock" v-model="productStock" readonly style="border:none;font-size:20px;width:100%;text-align:center;color:green"><br>
-								<input type="text" id="stockUnit" v-model="selectedProduct.Unit_Name" readonly style="border:none;font-size:12px;width:100%;text-align: center;"><br><br>
-							</div>
-							<input type="password" ref="productPurchaseRate" v-model="selectedProduct.Product_Purchase_Rate" v-on:mousedown="toggleProductPurchaseRate" v-on:mouseup="toggleProductPurchaseRate" readonly title="Purchase rate (click & hold)" style="font-size:12px;width:100%;text-align: center;">
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> </label>
+									<div class="col-xs-9">
+										<button type="submit" style="padding: 3px 6px; background: rgb(0, 126, 187) !important; border-color: rgb(0, 126, 187) !important; outline: none; border-radius: 6px;" class="btn pull-right">Add to Cart</button>
+									</div>
+								</div>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -224,7 +216,7 @@
 							<th style="width:15%;color:#000;">Category</th>
 							<th style="width:7%;color:#000;">Qty</th>
 							<th style="width:8%;color:#000;">Rate</th>
-							<th style="width:15%;color:#000;">Total Amount</th>
+							<th style="width:15%;color:#000;">Total</th>
 							<th style="width:10%;color:#000;">Action</th>
 						</tr>
 					</thead>
@@ -283,7 +275,18 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Sub Total</label>
+												<label class="col-xs-12 control-label no-padding-right">Doctor</label>
+												<div class="col-xs-12">
+													<v-select :options="doctors" v-model="selectedDoctor" label="display_name" placeholder="Select Doctor"></v-select>
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">SubTotal</label>
 												<div class="col-xs-12">
 													<input type="number" id="subTotal" class="form-control" v-model="sales.subTotal" readonly />
 												</div>
@@ -306,29 +309,6 @@
 													<input type="number" id="discount" class="form-control" v-model="sales.discount" v-on:input="calculateTotal" />
 												</div>
 
-											</div>
-										</td>
-									</tr>
-
-									<tr>
-										<td>
-											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right"> Vat </label>
-												<div class="col-xs-12">
-													<input type="number" id="vat" readonly="" class="form-control" v-model="sales.vat" />
-												</div>
-											</div>
-										</td>
-									</tr>
-
-
-									<tr>
-										<td>
-											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Transport Cost</label>
-												<div class="col-xs-12">
-													<input type="number" class="form-control" v-model="sales.transportCost" v-on:input="calculateTotal" />
-												</div>
 											</div>
 										</td>
 									</tr>
@@ -365,7 +345,7 @@
 										</td>
 									</tr>
 
-									<tr v-if="sales.bankPaid > 0">
+									<tr v-if="sales.bankPaid > 0" style="display:none;" :style="{display: sales.bankPaid > 0 ? '' : 'none'}">
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label">Bank Account</label>
@@ -391,12 +371,12 @@
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label">Due</label>
-												<div class="col-xs-6">
+												<div class="col-xs-12">
 													<input type="number" id="due" class="form-control" v-model="sales.due" readonly />
 												</div>
-												<div class="col-xs-6">
+												<!-- <div class="col-xs-6">
 													<input type="number" id="previousDue" class="form-control" v-model="sales.previousDue" readonly style="color:red;" />
-												</div>
+												</div> -->
 											</div>
 										</td>
 									</tr>
@@ -435,21 +415,16 @@
 		el: '#sales',
 		data() {
 			return {
-				barcode: true,
-				barcodeVal: "",
 				sales: {
 					salesId: parseInt('<?php echo $salesId; ?>'),
 					invoiceNo: '<?php echo $invoice; ?>',
 					salesBy: '<?php echo $this->session->userdata("FullName"); ?>',
-					salesType: 'retail',
 					salesFrom: '',
 					salesDate: moment().format('YYYY-MM-DD'),
 					customerId: '',
 					employeeId: null,
 					subTotal: 0,
 					discount: 0,
-					vat: 0,
-					transportCost: 0,
 					total: 0,
 					bank_id: '',
 					bankPaid: 0,
@@ -457,17 +432,16 @@
 					paid: 0,
 					returnAmount: 0,
 					due: 0,
-					previousDue: 0,
-					isService: '<?php echo $isService; ?>',
 					note: ''
 				},
-				vatPercent: 0,
 				discountPercent: 0,
 				cart: [],
 				categories: [],
 				selectedCategory: null,
 				employees: [],
 				selectedEmployee: null,
+				doctors: [],
+				selectedDoctor: null,
 				banks: [],
 				selectedBank: null,
 				branches: [],
@@ -479,30 +453,23 @@
 				selectedCustomer: {
 					Customer_SlNo: '',
 					Customer_Code: '',
-					Customer_Name: 'General Customer',
-					display_name: 'General Customer',
+					Customer_Name: 'General Patient',
+					display_name: 'General Patient',
 					Customer_Mobile: '',
 					Customer_Address: '',
 					Customer_Type: 'G'
 				},
 				oldCustomerId: null,
-				oldPreviousDue: 0,
 				products: [],
 				selectedProduct: {
 					Product_SlNo: '',
-					display_text: 'Select Product',
+					display_text: 'Select Test',
 					Product_Name: '',
-					Unit_Name: '',
 					quantity: 0,
 					Product_Purchase_Rate: '',
 					Product_SellingPrice: 0,
-					vat: 0,
-					total: 0,
-					warranty: '',
+					total: 0
 				},
-				productPurchaseRate: '',
-				productStockText: '',
-				productStock: '',
 				saleOnProgress: false,
 				sales_due_on_update: 0,
 				userType: '<?php echo $this->session->userdata("accountType"); ?>'
@@ -510,6 +477,7 @@
 		},
 		async created() {
 			await this.getBank();
+			await this.getDoctor();
 			await this.getCategory();
 			await this.getEmployees();
 			await this.getBranches();
@@ -527,6 +495,11 @@
 						item.display_name = `${item.bank_name} - ${item.account_number} - ${item.account_name}`;
 						return item;
 					});
+				})
+			},
+			getDoctor() {
+				axios.get('/get_doctors').then(res => {
+					this.doctors = res.data;
 				})
 			},
 			getCategory() {
@@ -567,20 +540,12 @@
 					this.customers.unshift({
 						Customer_SlNo: '',
 						Customer_Code: '',
-						Customer_Name: 'General Customer',
-						display_name: 'General Customer',
+						Customer_Name: 'General Patient',
+						display_name: 'General Patient',
 						Customer_Mobile: '',
 						Customer_Address: '',
 						Customer_Type: 'G'
-					}, {
-						Customer_SlNo: '',
-						Customer_Code: '',
-						Customer_Name: '',
-						display_name: 'New Customer',
-						Customer_Mobile: '',
-						Customer_Address: '',
-						Customer_Type: 'N'
-					})
+					});
 				})
 			},
 			async onSearchCustomer(val, loading) {
@@ -604,8 +569,8 @@
 					this.selectedCustomer = {
 						Customer_SlNo: '',
 						Customer_Code: '',
-						Customer_Name: 'General Customer',
-						display_name: 'General Customer',
+						Customer_Name: 'General Patient',
+						display_name: 'General Patient',
 						Customer_Mobile: '',
 						Customer_Address: '',
 						Customer_Type: 'G'
@@ -614,58 +579,15 @@
 				}
 
 				if (this.selectedCustomer.Customer_SlNo != '') {
-					if (this.sales.salesId != 0 && this.oldCustomerId != parseInt(this.selectedCustomer.Customer_SlNo)) {
-						let changeConfirm = confirm('Changing customer will set previous due to current due amount. Do you really want to change customer?');
-						if (changeConfirm == false) {
-							return;
-						}
-					} else if (this.sales.salesId != 0 && this.oldCustomerId == parseInt(this.selectedCustomer.Customer_SlNo)) {
-						this.sales.previousDue = this.oldPreviousDue;
-						return;
-					}
-
-					await this.getCustomerDue();
 					this.calculateTotal();
 				}
 			},
-			async getCustomerDue() {
-				if (this.selectedCustomer == null) {
-					this.selectedCustomer = {
-						Customer_SlNo: '',
-						Customer_Code: '',
-						Customer_Name: 'General Customer',
-						display_name: 'General Customer',
-						Customer_Mobile: '',
-						Customer_Address: '',
-						Customer_Type: 'G'
-					}
-					return;
-				}
-				if (this.selectedCustomer.Customer_SlNo != '') {
-					await axios.post('/get_customer_due', {
-						customerId: this.selectedCustomer.Customer_SlNo
-					}).then(res => {
-						if (res.data.length > 0) {
-							this.sales.previousDue = res.data[0].dueAmount;
-						} else {
-							this.sales.previousDue = 0;
-						}
-					})
-				}
-			},
+
 			getProducts() {
 				axios.post('/get_products', {
-					isService: this.sales.isService,
 					categoryId: this.selectedCategory == null ? "" : this.selectedCategory.ProductCategory_SlNo
 				}).then(res => {
-					if (this.sales.salesType == 'wholesale') {
-						this.products = res.data;
-						this.products.map((product) => {
-							return product.Product_SellingPrice = product.Product_WholesaleRate;
-						})
-					} else {
-						this.products = res.data;
-					}
+					this.products = res.data;
 				})
 			},
 			async onSearchProduct(val, loading) {
@@ -673,7 +595,6 @@
 					loading(true);
 					await axios.post("/get_products", {
 							name: val,
-							isService: this.sales.isService,
 							categoryId: this.selectedCategory == null ? "" : this.selectedCategory.ProductCategory_SlNo
 						})
 						.then(res => {
@@ -689,108 +610,28 @@
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_SellingPrice)).toFixed(2);
 			},
-			onSalesTypeChange() {
-				if (this.selectedCustomer)
-					this.selectedCustomer = {
-						Customer_SlNo: '',
-						Customer_Code: '',
-						Customer_Name: 'General Customer',
-						display_name: 'General Customer',
-						Customer_Mobile: '',
-						Customer_Address: '',
-						Customer_Type: 'G'
-					}
-				this.getCustomers();
-
-				this.clearProduct();
-				this.getProducts();
-			},
 
 			async productOnChange() {
 				if (this.selectedProduct == null) {
 					this.selectedProduct = {
 						Product_SlNo: '',
-						display_text: 'Select Product',
+						display_text: 'Select Test',
 						Product_Name: '',
-						Unit_Name: '',
 						quantity: 0,
 						Product_Purchase_Rate: '',
 						Product_SellingPrice: 0,
-						vat: 0,
 						total: 0
 					}
 					return;
 				}
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.sales.isService == 'false') {
-					this.productStock = await axios.post('/get_product_stock', {
-						productId: this.selectedProduct.Product_SlNo
-					}).then(res => {
-						return res.data;
-					})
-
-					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
-					if (this.barcode == true) {
-						this.$refs.barcode.focus();
-					} else {
-						this.$refs.quantity.focus();
-					}
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
+					this.selectedProduct.quantity = 1;
+					this.$refs.salesRate.focus();
+					await this.productTotal();
 				}
 
 			},
-			toggleProductPurchaseRate() {
-				this.$refs.productPurchaseRate.type = this.$refs.productPurchaseRate.type == 'text' ? 'password' : 'text';
-			},
-			async barcodeProduct(event) {
-				await axios.post('/get_products', {
-					isService: this.sales.isService,
-					categoryId: this.selectedCategory == null ? "" : this.selectedCategory.ProductCategory_SlNo,
-					name: event.target.value,
-				}).then(async res => {
-					if (this.sales.salesType == 'wholesale') {
-						this.products = res.data;
-						this.products.map((product) => {
-							return product.Product_SellingPrice = product.Product_WholesaleRate;
-						})
-						let prod = this.products[0];
-						if (prod == undefined) {
-							alert("Product not found");
-							this.barcodeVal = "";
-							return;
-						}
-						this.selectedProduct = prod;
-						this.selectedProduct.quantity = 1;
-						await this.productTotal();
-						await this.productOnChange();
-						if (parseFloat(this.productStock) < parseFloat(this.selectedProduct.quantity)) {
-							alert("Stock unavailable");
-							this.barcodeVal = "";
-							return;
-						}
-						await this.addToCart();
-					} else {
-						this.products = res.data;
-						let prod = this.products[0];
-						if (prod == undefined) {
-							alert("Product not found");
-							this.barcodeVal = "";
-							return;
-						}
-						this.selectedProduct = prod;
-						this.selectedProduct.quantity = 1;
-						await this.productTotal();
-						await this.productOnChange();
-						if (parseFloat(this.productStock) < parseFloat(this.selectedProduct.quantity)) {
-							alert("Stock unavailable");
-							this.barcodeVal = "";
-							return;
-						}
-						await this.addToCart();
-					}
-					this.barcodeVal = "";
-					this.productStock = '';
-					this.productStockText = '';
-				})
-			},
+
 			addToCart() {
 				let product = {
 					productId: this.selectedProduct.Product_SlNo,
@@ -798,38 +639,27 @@
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
 					salesRate: this.selectedProduct.Product_SellingPrice,
-					vat: this.selectedProduct.vat,
 					quantity: this.selectedProduct.quantity,
 					total: this.selectedProduct.total,
-					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
-					warranty: this.selectedProduct.warranty == undefined ? 'n/a' : this.selectedProduct.warranty,
+					purchaseRate: this.selectedProduct.Product_Purchase_Rate
 				}
 
-				if (product.productId == '' && !this.barcode) {
-					alert('Select Product');
+				if (product.productId == '' || product.productId == null) {
+					alert('Select Test');
 					return;
 				}
 
-				if ((product.quantity == 0 || product.quantity == '') && !this.barcode) {
+				if (product.quantity == 0 || product.quantity == '') {
 					alert('Enter quantity');
 					return;
 				}
 
-				if ((product.salesRate == 0 || product.salesRate == '') && !this.barcode) {
-					alert('Enter sales rate');
+				if (product.salesRate == 0 || product.salesRate == '') {
+					alert('Enter rate');
 					return;
 				}
 
 				let cartInd = this.cart.findIndex(p => p.productId == product.productId);
-				if (cartInd > -1) {
-					let cartProduct = this.cart[cartInd];
-					product.quantity = parseFloat(+cartProduct.quantity + +product.quantity);
-					product.total = parseFloat(+cartProduct.total + +product.total).toFixed(2);
-				}
-				if (parseFloat(this.productStock) < parseFloat(product.quantity)) {
-					alert("Stock unavailable");
-					return;
-				}
 				if (cartInd > -1) {
 					this.cart.splice(cartInd, 1);
 				}
@@ -845,32 +675,25 @@
 			clearProduct() {
 				this.selectedProduct = {
 					Product_SlNo: '',
-					display_text: 'Select Product',
+					display_text: 'Select Test',
 					Product_Name: '',
-					Unit_Name: '',
 					quantity: 0,
 					Product_Purchase_Rate: '',
 					Product_SellingPrice: 0,
-					vat: 0,
-					total: 0,
-					warranty: ''
+					total: 0
 				}
-				this.productStock = '';
-				this.productStockText = '';
 			},
 			calculateTotal() {
 				this.sales.subTotal = this.cart.reduce((prev, curr) => {
 					return prev + parseFloat(curr.total)
 				}, 0).toFixed(2);
-				this.sales.vat = this.cart.reduce((prev, curr) => {
-					return +prev + +(curr.total * (curr.vat / 100))
-				}, 0);
+
 				if (event.target.id == 'discountPercent') {
 					this.sales.discount = ((parseFloat(this.sales.subTotal) * parseFloat(this.discountPercent)) / 100).toFixed(2);
 				} else {
 					this.discountPercent = (parseFloat(this.sales.discount) / parseFloat(this.sales.subTotal) * 100).toFixed(2);
 				}
-				this.sales.total = ((parseFloat(this.sales.subTotal) + parseFloat(this.sales.vat) + parseFloat(this.sales.transportCost)) - parseFloat(this.sales.discount)).toFixed(2);
+				this.sales.total = (parseFloat(this.sales.subTotal) - parseFloat(this.sales.discount)).toFixed(2);
 
 				if (event.target.id == 'cashPaid' || event.target.id == 'bankPaid') {
 					this.sales.paid = parseFloat(parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid)).toFixed(2);
@@ -892,7 +715,7 @@
 			},
 			async saveSales() {
 				if (this.selectedCustomer == null) {
-					alert('Select Customer');
+					alert('Select Patient');
 					return;
 				}
 				if (this.cart.length == 0) {
@@ -900,7 +723,7 @@
 					return;
 				}
 				if (this.selectedCustomer.Customer_Type == 'G' && parseFloat(this.sales.due) != 0) {
-					alert('Due sale does not accept on general customer');
+					alert('Due sale does not accept on general Patient');
 					return;
 				}
 
@@ -912,25 +735,13 @@
 					this.sales.bank_id = this.selectedBank.account_id
 				}
 
-				await this.getCustomerDue();
 				let url = "/add_sales";
 				if (this.sales.salesId != 0) {
 					url = "/update_sales";
-					this.sales.previousDue = parseFloat((this.sales.previousDue - this.sales_due_on_update)).toFixed(2);
 				}
 
-				// if (parseFloat(this.selectedCustomer.Customer_Credit_Limit) < (parseFloat(this.sales.due) + parseFloat(this.sales.previousDue))) {
-				// 	alert(`Customer credit limit (${this.selectedCustomer.Customer_Credit_Limit}) exceeded`);
-				// 	this.saleOnProgress = false;
-				// 	return;
-				// }
-
-				if (this.selectedEmployee != null && this.selectedEmployee.Employee_SlNo != null) {
-					this.sales.employeeId = this.selectedEmployee.Employee_SlNo;
-				} else {
-					this.sales.employeeId = null;
-				}
-
+				this.sales.employeeId = this.selectedEmployee ? this.selectedEmployee.Employee_SlNo : '';
+				this.sales.doctorId = this.selectedDoctor ? this.selectedDoctor.Doctor_SlNo : '';
 				this.sales.customerId = this.selectedCustomer.Customer_SlNo;
 				this.sales.salesFrom = this.selectedBranch.brunch_id;
 				let data = {
@@ -942,13 +753,13 @@
 				axios.post(url, data).then(async res => {
 					let r = res.data;
 					if (r.success) {
-						let conf = confirm('Sale success, Do you want to view invoice?');
+						let conf = confirm('Report entry success, Do you want to view invoice?');
 						if (conf) {
 							window.open('/sale_invoice_print/' + r.salesId, '_blank');
 							await new Promise(r => setTimeout(r, 1000));
-							window.location = this.sales.isService == 'false' ? '/sales/product' : '/sales/service';
+							window.location = '/reportEntry';
 						} else {
-							window.location = this.sales.isService == 'false' ? '/sales/product' : '/sales/service';
+							window.location = '/reportEntry';
 						}
 					} else {
 						alert(r.message);
@@ -970,22 +781,16 @@
 					this.sales.employeeId = sales.Employee_SlNo;
 					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
 					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
 					this.sales.total = sales.SaleMaster_TotalSaleAmount;
 					this.sales.paid = sales.SaleMaster_PaidAmount;
 					this.sales.cashPaid = sales.SaleMaster_cashPaid;
 					this.sales.bankPaid = sales.SaleMaster_bankPaid;
+					this.sales.doctor_id = sales.doctor_id;
 					this.sales.bank_id = sales.bank_id;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
 					this.sales.due = sales.SaleMaster_DueAmount;
 					this.sales.note = sales.SaleMaster_Description;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
-					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
-					this.sales_due_on_update = sales.SaleMaster_DueAmount;
-
-					this.vatPercent = parseFloat(this.sales.vat) * 100 / parseFloat(this.sales.subTotal);
 					this.discountPercent = parseFloat(this.sales.discount) * 100 / parseFloat(this.sales.subTotal);
 
 					this.selectedEmployee = {
@@ -1003,7 +808,7 @@
 						Customer_SlNo: sales.SalseCustomer_IDNo,
 						Customer_Code: sales.Customer_Code,
 						Customer_Name: sales.Customer_Name,
-						display_name: sales.Customer_Type == 'G' ? 'General Customer' : `${sales.Customer_Code} - ${sales.Customer_Name}`,
+						display_name: sales.Customer_Type == 'G' ? 'General Patient' : `${sales.Customer_Code} - ${sales.Customer_Name}`,
 						Customer_Mobile: sales.Customer_Mobile,
 						Customer_Address: sales.Customer_Address,
 						Customer_Type: sales.Customer_Type
@@ -1016,18 +821,12 @@
 							categoryName: product.ProductCategory_Name,
 							name: product.Product_Name,
 							salesRate: product.SaleDetails_Rate,
-							vat: product.SaleDetails_Tax,
 							quantity: product.SaleDetails_TotalQuantity,
 							total: product.SaleDetails_TotalAmount,
-							purchaseRate: product.Purchase_Rate,
-							warranty: product.warranty,
+							purchaseRate: product.Purchase_Rate
 						}
-
 						this.cart.push(cartProduct);
 					})
-
-					let gCustomerInd = this.customers.findIndex(c => c.Customer_Type == 'G');
-					this.customers.splice(gCustomerInd, 1);
 				})
 			}
 		}

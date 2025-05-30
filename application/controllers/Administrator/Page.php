@@ -270,10 +270,10 @@ class Page extends CI_Controller
         $fld = 'company_BrunchId';
         $this->load->library('upload');
         $config['upload_path'] = './uploads/company_profile_org/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size'] = '10000';
-        $config['image_width'] = '4000';
-        $config['image_height'] = '4000';
+        $config['image_width'] = '300';
+        $config['image_height'] = '300';
         $this->upload->initialize($config);
 
         $data['Company_Name'] =  $this->input->post('Company_name', true);
@@ -336,7 +336,7 @@ class Page extends CI_Controller
             $this->load->library('upload');
             $config = array();
             $config['upload_path']      = './uploads/company_profile_org/';
-            $config['allowed_types']    = 'jpg|jpeg|png|gif';
+            $config['allowed_types']    = 'png|jpg|jpeg|gif';
             $config['max_size']         = '0';
             $config['file_name']        = 'company_logo';
             $config['overwrite']        = FALSE;
@@ -351,8 +351,8 @@ class Page extends CI_Controller
             $config['source_image'] = $this->upload->upload_path . $this->upload->file_name;
             $config['new_image'] = 'uploads/company_profile_thum/' . $this->upload->file_name;
             $config['maintain_ratio'] = FALSE;
-            $config['width'] = 165;
-            $config['height'] = 175;
+            $config['width'] = 200;
+            $config['height'] = 200;
             $this->load->library('image_lib', $config);
             $this->image_lib->resize();
             $data['Company_Logo_thum'] = $this->upload->file_name;

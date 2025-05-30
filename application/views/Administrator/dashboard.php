@@ -104,7 +104,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-plus-circle"></i>
 								</div>
 								<div class="textModule">
-									Report Entry
+									Test Entry
 								</div>
 							</a>
 						</div>
@@ -118,7 +118,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-list-ul"></i>
 								</div>
 								<div class="textModule">
-									Report list
+									Test list
 								</div>
 							</a>
 						</div>

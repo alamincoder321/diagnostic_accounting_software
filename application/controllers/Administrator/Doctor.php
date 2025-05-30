@@ -46,7 +46,7 @@ class Doctor extends CI_Controller
                 c.*,
                 concat_ws(' - ', c.Doctor_Code, c.Doctor_Name, c.Doctor_Mobile) as display_name
             from tbl_doctor c
-            where c.status = 'a'
+            where c.status != 'd'
             and c.Doctor_brunchid = ?
             $clauses
             order by c.Doctor_SlNo desc

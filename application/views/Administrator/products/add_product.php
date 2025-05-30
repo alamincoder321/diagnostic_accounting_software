@@ -90,9 +90,9 @@
 <div id="products">
 	<form @submit.prevent="saveProduct">
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom: 15px;">
-			<div class="col-md-5">
+			<div class="col-md-5 col-md-offset-1">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Report Id:</label>
+					<label class="control-label col-md-4">Test Id:</label>
 					<div class="col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_Code">
 					</div>
@@ -105,24 +105,16 @@
 					</div>
 					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/category" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
-
+			</div>
+			
+			<div class="col-md-5">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Report Name:</label>
+					<label class="control-label col-md-4">Test Name:</label>
 					<div class="col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_Name" required>
 					</div>
 				</div>
 
-			</div>
-
-			<div class="col-md-5">
-				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Unit:</label>
-					<div class="col-md-7">
-						<v-select v-bind:options="units" v-model="selectedUnit" label="Unit_Name"></v-select>
-					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
-				</div>
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Price:</label>
 					<div class="col-md-7">
@@ -132,20 +124,6 @@
 				<div class="form-group clearfix">
 					<div class="col-md-11 text-right">
 						<input type="submit" class="btn btn-success btn-sm" value="Save">
-					</div>
-				</div>
-			</div>
-			<div class="col-md-2 text-center;">
-				<div class="form-group clearfix">
-					<div style="width: 100px;height:100px;border: 1px solid #ccc;overflow:hidden;">
-						<img id="customerImage" v-if="imageUrl == '' || imageUrl == null" src="/assets/no_image.gif">
-						<img id="customerImage" v-if="imageUrl != '' && imageUrl != null" v-bind:src="imageUrl">
-					</div>
-					<div style="text-align:center;">
-						<label class="custom-file-upload">
-							<input type="file" @change="previewImage" />
-							Select Image
-						</label>
 					</div>
 				</div>
 			</div>
@@ -165,16 +143,10 @@
 					<template scope="{ row }">
 						<tr>
 							<td>{{ row.sl }}</td>
-							<td>
-								<a :href="row.imageSrc">
-									<img :src="row.imageSrc" style="width: 30px; height: 30px; border: 1px solid gray; border-radius: 5px; padding: 1px;" />
-								</a>
-							</td>
 							<td>{{ row.Product_Code }}</td>
 							<td>{{ row.Product_Name }}</td>
 							<td>{{ row.ProductCategory_Name }}</td>
 							<td>{{ row.Product_SellingPrice }}</td>
-							<td>{{ row.Unit_Name }}</td>
 							<td>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<button type="button" class="button edit" @click="editProduct(row)">
@@ -184,9 +156,9 @@
 										<i class="fa fa-trash"></i>
 									</button>
 								<?php } ?>
-								<button type="button" class="button" @click="window.location = `/barcode/${row.Product_SlNo}`">
+								<!-- <button type="button" class="button" @click="window.location = `/barcode/${row.Product_SlNo}`">
 									<i class="fa fa-barcode"></i>
-								</button>
+								</button> -->
 							</td>
 						</tr>
 					</template>
@@ -218,7 +190,6 @@
 					ProductCategory_ID: '',
 					Product_Purchase_Rate: 0,
 					Product_SellingPrice: 0,
-					Unit_ID: '',
 					vat: 0,
 				},
 				imageUrl: '',
@@ -226,8 +197,6 @@
 				products: [],
 				categories: [],
 				selectedCategory: null,
-				units: [],
-				selectedUnit: null,
 
 				columns: [{
 						label: 'Sl',
@@ -235,17 +204,12 @@
 						align: 'center'
 					},
 					{
-						label: 'Image',
-						field: 'imageSrc',
-						align: 'center'
-					},
-					{
-						label: 'Report Id',
+						label: 'Test Id',
 						field: 'Product_Code',
 						align: 'center',
 					},
 					{
-						label: 'Report Name',
+						label: 'Test Name',
 						field: 'Product_Name',
 						align: 'center'
 					},
@@ -257,11 +221,6 @@
 					{
 						label: 'Price',
 						field: 'Product_SellingPrice',
-						align: 'center'
-					},
-					{
-						label: 'Unit',
-						field: 'Unit_Name',
 						align: 'center'
 					},
 					{
@@ -277,18 +236,12 @@
 		},
 		created() {
 			this.getCategories();
-			this.getUnits();
 			this.getProducts();
 		},
 		methods: {
 			getCategories() {
 				axios.get('/get_categories').then(res => {
 					this.categories = res.data;
-				})
-			},
-			getUnits() {
-				axios.get('/get_units').then(res => {
-					this.units = res.data;
 				})
 			},
 			getProducts() {
@@ -305,13 +258,7 @@
 					alert('Select category');
 					return;
 				}
-				if (this.selectedUnit == null) {
-					alert('Select unit');
-					return;
-				}
-
 				this.product.ProductCategory_ID = this.selectedCategory.ProductCategory_SlNo;
-				this.product.Unit_ID = this.selectedUnit.Unit_SlNo;
 
 				let fd = new FormData();
 				fd.append('image', this.selectedFile);
@@ -343,11 +290,6 @@
 					ProductCategory_Name: product.ProductCategory_Name
 				}
 
-				this.selectedUnit = {
-					Unit_SlNo: product.Unit_ID,
-					Unit_Name: product.Unit_Name
-				}
-
 				if (product.image_name == null || product.image_name == '') {
 					this.imageUrl = null;
 				} else {
@@ -377,7 +319,6 @@
 					ProductCategory_ID: '',
 					Product_Purchase_Rate: 0,
 					Product_SellingPrice: 0,
-					Unit_ID: '',
 					vat: 0,
 				}
 

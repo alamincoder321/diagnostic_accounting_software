@@ -11,22 +11,22 @@ const salesInvoice = Vue.component('sales-invoice', {
                 <div class="row">
                     <div class="col-xs-12 text-center">
                         <div _h098asdh>
-                            {{ sales.is_sample == 'true' ? 'Sample Invoice' : 'Sales Invoice'}}
+                            Report Voucher
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-7">
-                        <strong>Customer Id:</strong> {{ sales.Customer_Code }}<br>
+                        <strong>Patient Id:</strong> {{ sales.Customer_Code }}<br>
                         {{ sales.Customer_Name }}<br>
                         {{ sales.Customer_Address }}<br>
                         {{ sales.Customer_Mobile }}<br>
-                        <span v-if="sales.Project_Name"> <strong>Project:</strong> {{ sales.Project_Name }} </span>
                     </div>
                     <div class="col-xs-5 mobile-second-section">
                         <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
                         <strong>Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}<br>
                         <span v-if="sales.Employee_Name"> <strong>Employee:</strong> {{ sales.Employee_Name }} </span>
+                        <span v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }} </span>
                     </div>
                 </div>
                 <div class="row">
@@ -40,7 +40,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <thead>
                                 <tr>
                                     <td>Sl.</td>
-                                    <td>Product Description</td>
+                                    <td>Description</td>
                                     <td>Quantity</td>
                                     <td>Rate</td>
                                     <td>Total</td>
@@ -50,7 +50,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                                 <tr v-for="(product, sl) in cart">
                                     <td>{{ sl + 1 }}</td>
                                     <td class="text-align:left;">{{ product.Product_Name }}</td>
-                                    <td>{{ product.SaleDetails_TotalQuantity }} {{ product.Unit_Name }}</td>
+                                    <td>{{ product.SaleDetails_TotalQuantity }}</td>
                                     <td>{{ product.SaleDetails_Rate }}</td>
                                     <td align="right">{{ product.SaleDetails_TotalAmount }}</td>
                                 </tr>

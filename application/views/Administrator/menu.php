@@ -95,7 +95,7 @@ if ($module == 'dashboard' or $module == '') {
 			<li class="">
 				<a href="<?php echo base_url(); ?>product">
 					<i class="menu-icon fa fa-plus-circle"></i>
-					<span class="menu-text"> Report Entry </span>
+					<span class="menu-text"> Test Entry </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
@@ -105,7 +105,7 @@ if ($module == 'dashboard' or $module == '') {
 			<li class="">
 				<a href="<?php echo base_url(); ?>productlist">
 					<i class="menu-icon fa fa-list"></i>
-					<span class="menu-text"> Report List </span>
+					<span class="menu-text"> Test List </span>
 				</a>
 				<b class="arrow"></b>
 			</li>

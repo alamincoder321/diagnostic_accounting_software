@@ -20,7 +20,7 @@ class Products extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Report Entry";
+        $data['title'] = "Test Entry";
         $data['productCode'] = $this->mt->generateProductCode();
         $data['content'] = $this->load->view('Administrator/products/add_product', $data, TRUE);
         $this->load->view('Administrator/index', $data);
@@ -80,7 +80,7 @@ class Products extends CI_Controller
                 $this->db->query("update tbl_product set image_name = ? where Product_SlNo = ?", [$imageName, $productId]);
             }
 
-            $res = ['success' => true, 'message' => 'Report added successfully', 'productId' => $this->mt->generateProductCode()];
+            $res = ['success' => true, 'message' => 'Test added successfully', 'productId' => $this->mt->generateProductCode()];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -145,7 +145,7 @@ class Products extends CI_Controller
             }
 
 
-            $res = ['success' => true, 'message' => 'Report updated successfully', 'productId' => $this->mt->generateProductCode()];
+            $res = ['success' => true, 'message' => 'Test updated successfully', 'productId' => $this->mt->generateProductCode()];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -160,7 +160,7 @@ class Products extends CI_Controller
 
             $this->db->set(['status' => 'd'])->where('Product_SlNo', $data->productId)->update('tbl_product');
 
-            $res = ['success' => true, 'message' => 'Report deleted successfully'];
+            $res = ['success' => true, 'message' => 'Test deleted successfully'];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -205,11 +205,9 @@ class Products extends CI_Controller
                                 select
                                     p.*,
                                     concat(p.Product_Name, ' - ', p.Product_Code) as display_text,
-                                    pc.ProductCategory_Name,
-                                    u.Unit_Name
+                                    pc.ProductCategory_Name
                                 from tbl_product p
                                 left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
-                                left join tbl_unit u on u.Unit_SlNo = p.Unit_ID
                                 where p.status = 'a'
                                 $clauses
                                 order by p.Product_SlNo desc
@@ -267,8 +265,6 @@ class Products extends CI_Controller
             select
                 p.*,
                 pc.ProductCategory_Name,
-                b.brand_name,
-                u.Unit_Name,
                 (select ifnull(sum(pd.PurchaseDetails_TotalQuantity), 0) 
                     from tbl_purchasedetails pd 
                     join tbl_purchasemaster pm on pm.PurchaseMaster_SlNo = pd.PurchaseMaster_IDNo
@@ -332,8 +328,6 @@ class Products extends CI_Controller
                 (select p.Product_Purchase_Rate * current_quantity) as stock_value
             from tbl_product p
             left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
-            left join tbl_brand b on b.brand_SiNo = p.brand
-            left join tbl_unit u on u.Unit_SlNo = p.Unit_ID
             where p.status = 'a' and p.is_service = 'false' $clauses
         ")->result();
 
