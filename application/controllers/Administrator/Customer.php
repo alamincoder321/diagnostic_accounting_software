@@ -246,7 +246,7 @@ class Customer extends CI_Controller
 
                 $customerId = $duplicateCustomer->Customer_SlNo;
                 $customerObj->Customer_Code = $duplicateCustomer->Customer_Code;
-                $res_message = 'Customer updated successfully';
+                $res_message = 'Patient updated successfully';
             } else {
                 $customer["AddBy"] = $this->session->userdata("FullName");
                 $customer["AddTime"] = date("Y-m-d H:i:s");
