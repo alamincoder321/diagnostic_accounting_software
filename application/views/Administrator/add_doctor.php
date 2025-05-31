@@ -105,6 +105,13 @@
                 </div>
 
                 <div class="form-group clearfix">
+                    <label class="control-label col-md-4">Commission (%):</label>
+                    <div class="col-md-7">
+                        <input type="number" min="0" step="any" class="form-control" v-model="doctor.commission" />
+                    </div>
+                </div>
+
+                <div class="form-group clearfix">
                     <label for="" class="col-md-4"></label>
                     <div class="col-md-7" style="display: flex; align-items:center;justify-content:space-between;">
                         <label for="status" style="margin: 0;">
@@ -151,6 +158,7 @@
                             <td>{{ row.specialization }}</td>
                             <td>{{ row.age }}</td>
                             <td>{{ row.gender }}</td>
+                            <td>{{ row.commission }}</td>
                             <td>
                                 <?php if ($this->session->userdata('accountType') != 'u') { ?>
                                     <button type="button" class="button edit" @click="editDoctor(row)">
@@ -192,6 +200,7 @@
                     specialization: '',
                     age: '',
                     gender: 'male',
+                    commission: 0,
                     status: 'a'
                 },
                 doctors: [],
@@ -233,6 +242,11 @@
                     {
                         label: 'Gender',
                         field: 'gender',
+                        align: 'center'
+                    },
+                    {
+                        label: 'Commission',
+                        field: 'commission',
                         align: 'center'
                     },
                     {
@@ -342,6 +356,7 @@
                     specialization: '',
                     age: '',
                     gender: 'male',
+                    commission: 0,
                     status: 'a'
                 }
                 this.imageUrl = '';

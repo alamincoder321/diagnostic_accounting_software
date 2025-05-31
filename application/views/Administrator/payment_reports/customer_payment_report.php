@@ -29,7 +29,7 @@
 <div class="row" id="customerPaymentReport">
 	<div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;">
 		<div class="form-group">
-			<label class="col-sm-1 control-label no-padding-right"> Customer </label>
+			<label class="col-sm-1 control-label no-padding-right"> Patient </label>
 			<div class="col-sm-2">
 				<v-select v-bind:options="customers" v-model="selectedCustomer" label="display_name"></v-select>
 			</div>
@@ -64,10 +64,9 @@
 						<th style="text-align:center">Date</th>
 						<th style="text-align:center">Description</th>
 						<th style="text-align:center">Bill</th>
-						<th style="text-align:center">Paid</th>
+						<th style="text-align:center">Received</th>
 						<th style="text-align:center">Inv.Due</th>
-						<th style="text-align:center">Retruned</th>
-						<th style="text-align:center">Paid to customer</th>
+						<th style="text-align:center">Paid to Patient</th>
 						<th style="text-align:center">Balance</th>
 					</tr>
 				</thead>
@@ -75,23 +74,22 @@
 					<tr>
 						<td></td>
 						<td style="text-align:left;">Previous Balance</td>
-						<td colspan="5"></td>
+						<td colspan="4"></td>
 						<td style="text-align:right;">{{ parseFloat(previousBalance).toFixed(2) }}</td>
 					</tr>
 					<tr v-for="payment in payments">
-						<td>{{ payment.date }}</td>
+						<td>{{ payment.date | dateFormat('DD/MM/YYYY') }}</td>
 						<td style="text-align:left;">{{ payment.description }}</td>
 						<td style="text-align:right;">{{ parseFloat(payment.bill).toFixed(2) }}</td>
 						<td style="text-align:right;">{{ parseFloat(payment.paid).toFixed(2) }}</td>
 						<td style="text-align:right;">{{ parseFloat(payment.due).toFixed(2) }}</td>
-						<td style="text-align:right;">{{ parseFloat(payment.returned).toFixed(2) }}</td>
 						<td style="text-align:right;">{{ parseFloat(payment.paid_out).toFixed(2) }}</td>
 						<td style="text-align:right;">{{ parseFloat(payment.balance).toFixed(2) }}</td>
 					</tr>
 				</tbody>
 				<tbody v-if="payments.length == 0">
 					<tr>
-						<td colspan="8">No records found</td>
+						<td colspan="7">No records found</td>
 					</tr>
 				</tbody>
 			</table>
@@ -117,6 +115,11 @@
 				payments: [],
 				previousBalance: 0.00,
 				showTable: false
+			}
+		},
+		filters: {
+			dateFormat(dt, format){
+				return dt == null || dt == '' ? '' : moment(dt).format(format);
 			}
 		},
 		created(){
@@ -151,10 +154,10 @@
 			async print(){
 				let reportContent = `
 					<div class="container">
-						<h4 style="text-align:center">Customer payment report</h4 style="text-align:center">
+						<h4 style="text-align:center">Patient Ledger</h4 style="text-align:center">
 						<div class="row">
 							<div class="col-xs-6" style="font-size:12px;">
-								<strong>Customer Code: </strong> ${this.selectedCustomer.Customer_Code}<br>
+								<strong>Patient Code: </strong> ${this.selectedCustomer.Customer_Code}<br>
 								<strong>Name: </strong> ${this.selectedCustomer.Customer_Name}<br>
 								<strong>Address: </strong> ${this.selectedCustomer.Customer_Address}<br>
 								<strong>Mobile: </strong> ${this.selectedCustomer.Customer_Mobile}<br>
@@ -183,7 +186,6 @@
 				mywindow.focus();
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				mywindow.print();
-				await new Promise(resolve => setTimeout(resolve, 1000));
 				mywindow.close();
 			}
 		}

@@ -519,7 +519,7 @@ class Reports extends CI_Controller
 
     public function productlist()
     {
-        $data['title']  = 'Product List';
+        $data['title']  = 'Test List';
         $data['content'] = $this->load->view('Administrator/reports/productList', $data, true);
         $this->load->view('Administrator/index', $data);
     }
@@ -785,20 +785,6 @@ class Reports extends CI_Controller
             $loan_accounts = $this->mt->getLoanTransactionSummary(null, $date);
             $invest_accounts = $this->mt->getInvestmentTransactionSummary(null, $date);
 
-            //assets
-            $assets = $this->mt->assetsReport('', $date);
-
-            $assets = array_reduce($assets, function ($prev, $curr) {
-                return $prev + $curr->approx_amount;
-            });
-
-            //customer prev due adjust
-            $customer_prev_due = $this->db->query("
-                SELECT ifnull(sum(previous_due), 0) as amount
-                from tbl_customer
-                where Customer_brunchid = '$this->brunch'
-            ")->row()->amount;
-
             //customer dues
             $customer_dues = $this->mt->customerDue(" and c.status = 'a'", $date);
             $bad_debts = $this->mt->customerDue(" and c.status = 'd'", $date);
@@ -809,95 +795,6 @@ class Reports extends CI_Controller
 
             $bad_debts = array_reduce($bad_debts, function ($prev, $curr) {
                 return $prev + $curr->dueAmount;
-            });
-
-            //stock values
-            $stocks = $this->db->query("
-                select
-                    (select ifnull(sum(pd.PurchaseDetails_TotalQuantity), 0) 
-                        from tbl_purchasedetails pd 
-                        join tbl_purchasemaster pm on pm.PurchaseMaster_SlNo = pd.PurchaseMaster_IDNo
-                        where pd.Product_IDNo = p.Product_SlNo
-                        and pd.PurchaseDetails_branchID = '$branchId'
-                        and pd.Status = 'a'
-                        " . (isset($date) && $date != null ? " and pm.PurchaseMaster_OrderDate < '$date'" : "") . "
-                    ) as purchased_quantity,
-                            
-                    (select ifnull(sum(prd.PurchaseReturnDetails_ReturnQuantity), 0) 
-                        from tbl_purchasereturndetails prd 
-                        join tbl_purchasereturn pr on pr.PurchaseReturn_SlNo = prd.PurchaseReturn_SlNo
-                        where prd.PurchaseReturnDetailsProduct_SlNo = p.Product_SlNo
-                        and prd.PurchaseReturnDetails_brachid = '$branchId'
-                        " . (isset($date) && $date != null ? " and pr.PurchaseReturn_ReturnDate < '$date'" : "") . "
-                    ) as purchase_returned_quantity,
-                            
-                    (select ifnull(sum(sd.SaleDetails_TotalQuantity), 0) 
-                        from tbl_saledetails sd
-                        join tbl_salesmaster sm on sm.SaleMaster_SlNo = sd.SaleMaster_IDNo
-                        where sd.Product_IDNo = p.Product_SlNo
-                        and sd.SaleDetails_BranchId  = '$branchId'
-                        and sd.Status = 'a'
-                        " . (isset($date) && $date != null ? " and sm.SaleMaster_SaleDate < '$date'" : "") . "
-                    ) as sold_quantity,
-                            
-                    (select ifnull(sum(srd.SaleReturnDetails_ReturnQuantity), 0)
-                        from tbl_salereturndetails srd 
-                        join tbl_salereturn sr on sr.SaleReturn_SlNo = srd.SaleReturn_IdNo
-                        where srd.SaleReturnDetailsProduct_SlNo = p.Product_SlNo
-                        and srd.SaleReturnDetails_brunchID = '$branchId'
-                        " . (isset($date) && $date != null ? " and sr.SaleReturn_ReturnDate < '$date'" : "") . "
-                    ) as sales_returned_quantity,
-                            
-                    (select ifnull(sum(dmd.DamageDetails_DamageQuantity), 0) 
-                        from tbl_damagedetails dmd
-                        join tbl_damage dm on dm.Damage_SlNo = dmd.Damage_SlNo
-                        where dmd.Product_SlNo = p.Product_SlNo
-                        and dmd.status = 'a'
-                        and dm.Damage_brunchid = '$branchId'
-                        " . (isset($date) && $date != null ? " and dm.Damage_Date < '$date'" : "") . "
-                    ) as damaged_quantity,
-                
-                    (select ifnull(sum(trd.quantity), 0)
-                        from tbl_transferdetails trd
-                        join tbl_transfermaster tm on tm.transfer_id = trd.transfer_id
-                        where trd.product_id = p.Product_SlNo
-                        and tm.transfer_from = '$branchId'
-                        " . (isset($date) && $date != null ? " and tm.transfer_date < '$date'" : "") . "
-                    ) as transferred_from_quantity,
-
-                    (select ifnull(sum(trd.quantity), 0)
-                        from tbl_transferdetails trd
-                        join tbl_transfermaster tm on tm.transfer_id = trd.transfer_id
-                        where trd.product_id = p.Product_SlNo
-                        and tm.transfer_to = '$branchId'
-                        " . (isset($date) && $date != null ? " and tm.transfer_date < '$date'" : "") . "
-                    ) as transferred_to_quantity,
-                            
-                    (select (purchased_quantity + sales_returned_quantity + transferred_to_quantity) - (sold_quantity + purchase_returned_quantity + damaged_quantity + transferred_from_quantity)) as current_quantity,
-                    (select p.Product_Purchase_Rate * current_quantity) as stock_value
-                from tbl_product p
-                where p.status = 'a' 
-                and p.is_service = 'false'
-            ")->result();
-
-            $stock_value = array_sum(
-                array_map(function ($product) {
-                    return $product->stock_value;
-                }, $stocks)
-            );
-
-            //supplier prev due adjust
-            $supplier_prev_due = $this->db->query("
-                SELECT ifnull(sum(previous_due), 0) as amount
-                from tbl_supplier
-                where Supplier_brinchid = '$this->brunch'
-            ")->row()->amount;
-
-            //supplier due
-            $supplier_dues = $this->mt->supplierDue("", $date);
-
-            $supplier_dues = array_reduce($supplier_dues, function ($prev, $curr) {
-                return $prev + $curr->due;
             });
 
             //profit loss
@@ -927,16 +824,8 @@ class Reports extends CI_Controller
                 });
             });
 
-            $total_transport_cost = array_reduce($sales, function ($prev, $curr) {
-                return $prev + $curr->SaleMaster_Freight;
-            });
-
             $total_discount = array_reduce($sales, function ($prev, $curr) {
                 return $prev + $curr->SaleMaster_TotalDiscountAmount;
-            });
-
-            $total_vat = array_reduce($sales, function ($prev, $curr) {
-                return $prev + $curr->SaleMaster_TaxAmount;
             });
 
 
@@ -975,15 +864,6 @@ class Reports extends CI_Controller
                     and lt.status = 1
                     " . ($date == null ? "" : " and lt.transaction_date < '$date'") . "
                 ) as loan_interest,
-
-                (
-                    select ifnull(sum(a.valuation - a.as_amount), 0)
-                    from tbl_assets a
-                    where a.branchid = '" . $this->session->userdata('BRANCHid') . "'
-                    and a.buy_or_sale = 'sale'
-                    and a.status = 'a'
-                    " . ($date == null ? "" : " and a.as_date < '$date'") . "
-                ) as assets_sales_profit_loss,
             
                 (
                     select ifnull(sum(ep.total_payment_amount), 0)
@@ -991,43 +871,18 @@ class Reports extends CI_Controller
                     where ep.branch_id = '" . $this->session->userdata('BRANCHid') . "'
                     and ep.status = 'a'
                     " . ($date == null ? "" : " and ep.payment_date < '$date'") . "
-                ) as employee_payment,
-
-                (
-                    select ifnull(sum(dd.damage_amount), 0) 
-                    from tbl_damagedetails dd
-                    join tbl_damage d on d.Damage_SlNo = dd.Damage_SlNo
-                    where d.Damage_brunchid = '" . $this->session->userdata('BRANCHid') . "'
-                    and dd.status = 'a'
-                    " . ($date == null ? "" : " and d.Damage_Date  < '$date'") . "
-                ) as damaged_amount,
-
-                (
-                    select ifnull(sum(rd.SaleReturnDetails_ReturnAmount) - sum(sd.Purchase_Rate * rd.SaleReturnDetails_ReturnQuantity), 0)
-                    from tbl_salereturndetails rd
-                    join tbl_salereturn r on r.SaleReturn_SlNo = rd.SaleReturn_IdNo
-                    join tbl_salesmaster sm on sm.SaleMaster_InvoiceNo = r.SaleMaster_InvoiceNo
-                    join tbl_saledetails sd on sd.Product_IDNo = rd.SaleReturnDetailsProduct_SlNo and sd.SaleMaster_IDNo = sm.SaleMaster_SlNo
-                    where r.Status = 'a'
-                    and r.SaleReturn_brunchId = '" . $this->session->userdata('BRANCHid') . "'
-                    " . ($date == null ? "" : " and r.SaleReturn_ReturnDate  < '$date'") . "
-                ) as returned_amount
+                ) as employee_payment
             ")->row();
 
-            $net_profit = ($profits + $total_transport_cost + $other_income_expense->income + $total_vat) - ($total_discount + $other_income_expense->returned_amount + $other_income_expense->damaged_amount + $other_income_expense->expense + $other_income_expense->employee_payment + $other_income_expense->profit_distribute + $other_income_expense->loan_interest + $other_income_expense->assets_sales_profit_loss);
+            $net_profit = ($profits + $other_income_expense->income) - ($total_discount +  $other_income_expense->expense + $other_income_expense->employee_payment + $other_income_expense->profit_distribute + $other_income_expense->loan_interest);
 
             $statements = [
-                'assets'            => $assets,
                 'cash_balance'      => $cash_balance,
                 'bank_accounts'     => $bank_accounts,
                 'loan_accounts'     => $loan_accounts,
                 'invest_accounts'   => $invest_accounts,
                 'customer_dues'     => $customer_dues,
-                'supplier_dues'     => $supplier_dues,
                 'bad_debts'         => $bad_debts,
-                'supplier_prev_due' => $supplier_prev_due,
-                'customer_prev_due' => $customer_prev_due,
-                'stock_value'       => $stock_value,
                 'net_profit'        => $net_profit,
             ];
 

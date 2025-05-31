@@ -74,10 +74,10 @@
                         <thead>
                             <tr>
                                 <th>Sl</th>
-                                <th>Product Id</th>
-                                <th>Product Name</th>
+                                <th>Test Id</th>
+                                <th>Test Name</th>
                                 <th>Category</th>
-                                <th style="text-align: right;">Sale Price</th>
+                                <th style="text-align: right;">Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,7 +138,7 @@
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h4 style="text-align:center">Product List</h4 style="text-align:center">
+                                <h4 style="text-align:center">Test List</h4 style="text-align:center">
                             </div>
                         </div>
 					</div>
@@ -161,7 +161,6 @@
                 mywindow.focus();
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 mywindow.print();
-                await new Promise(resolve => setTimeout(resolve, 1000));
                 mywindow.close();
             }
         }

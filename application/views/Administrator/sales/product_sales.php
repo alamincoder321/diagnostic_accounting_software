@@ -130,14 +130,14 @@
 							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Name </label>
 								<div class="col-xs-8">
-									<input type="text" id="customerName" placeholder="Customer Name" class="form-control" v-model="selectedCustomer.Customer_Name" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true" />
+									<input type="text" id="customerName" placeholder="Patient Name" class="form-control" v-model="selectedCustomer.Customer_Name" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true" />
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-xs-4 control-label no-padding-right"> Mobile No </label>
+								<label class="col-xs-4 control-label no-padding-right"> Mobile </label>
 								<div class="col-xs-8">
-									<input type="text" id="mobileNo" placeholder="Mobile No" class="form-control" v-model="selectedCustomer.Customer_Mobile" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true" />
+									<input type="text" id="mobileNo" placeholder="Mobile" class="form-control" v-model="selectedCustomer.Customer_Mobile" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true" />
 								</div>
 							</div>
 
@@ -177,18 +177,25 @@
 
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Rate </label>
-									<div class="col-xs-4">
+									<div class="col-xs-9">
 										<input type="number" id="salesRate" ref="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
-									<label class="col-xs-1 control-label no-padding-right"> Qty </label>
+									<!-- <label class="col-xs-1 control-label no-padding-right"> Qty </label>
 									<div class="col-xs-4">
 										<input type="number" step="0.01" id="quantity" placeholder="Qty" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" required />
-									</div>
+									</div> -->
 								</div>
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Total </label>
 									<div class="col-xs-9">
 										<input type="text" id="productTotal" placeholder="Total" class="form-control" v-model="selectedProduct.total" readonly />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Description </label>
+									<div class="col-xs-9">
+										<input type="text" id="note" placeholder="Description" class="form-control" v-model="selectedProduct.note" autocomplete="off"/>
 									</div>
 								</div>
 
@@ -212,9 +219,9 @@
 					<thead>
 						<tr class="">
 							<th style="width:10%;color:#000;">Sl</th>
-							<th style="width:25%;color:#000;">Description</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="width:7%;color:#000;">Qty</th>
+							<th style="width:25%;color:#000;">Item</th>
+							<th style="width:15%;color:#000;">Description</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total</th>
 							<th style="width:10%;color:#000;">Action</th>
@@ -223,9 +230,9 @@
 					<tbody style="display:none;" v-bind:style="{display: cart.length > 0 ? '' : 'none'}">
 						<tr v-for="(product, sl) in cart">
 							<td>{{ sl + 1 }}</td>
-							<td>{{ product.name }} - {{ product.productCode }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.quantity }}</td>
+							<td>{{ product.name }} - {{ product.productCode }}</td>
+							<td>{{ product.note }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
 							<td><a href="" v-on:click.prevent="removeFromCart(sl)"><i class="fa fa-trash"></i></a></td>
@@ -367,7 +374,7 @@
 										</td>
 									</tr>
 
-									<tr style="display: none;">
+									<tr>
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label">Due</label>
@@ -641,7 +648,8 @@
 					salesRate: this.selectedProduct.Product_SellingPrice,
 					quantity: this.selectedProduct.quantity,
 					total: this.selectedProduct.total,
-					purchaseRate: this.selectedProduct.Product_Purchase_Rate
+					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
+					note: this.selectedProduct.note ?? "N/A"
 				}
 
 				if (product.productId == '' || product.productId == null) {
@@ -702,7 +710,7 @@
 						this.sales.due = 0;
 					} else {
 						this.sales.returnAmount = 0;
-						this.sales.due = parseFloat(this.sales.paid).toFixed(2);
+						this.sales.due = parseFloat(this.sales.total - this.sales.paid).toFixed(2);
 					}
 				} else {
 					this.sales.cashPaid = this.sales.total;
@@ -823,7 +831,8 @@
 							salesRate: product.SaleDetails_Rate,
 							quantity: product.SaleDetails_TotalQuantity,
 							total: product.SaleDetails_TotalAmount,
-							purchaseRate: product.Purchase_Rate
+							purchaseRate: product.Purchase_Rate,
+							note: product.note ?? 'N/A'
 						}
 						this.cart.push(cartProduct);
 					})

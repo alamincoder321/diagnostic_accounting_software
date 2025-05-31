@@ -106,7 +106,7 @@
 								</tr>
 								<template v-if="sales.length > 0">
 									<tr>
-										<td class="sub-heading">Sales</td>
+										<td class="sub-heading">Report Amount</td>
 										<td class="sub-value">{{ totalSales }}</td>
 									</tr>
 									<tr v-for="sale in sales">
@@ -114,19 +114,9 @@
 										<td>{{ sale.totalAmount | decimal }}</td>
 									</tr>
 								</template>
-								<template v-if="asset_sales.length > 0">
-									<tr>
-										<td class="sub-heading">Asset Sales</td>
-										<td class="sub-value">{{ totalAssetSales }}</td>
-									</tr>
-									<tr v-for="sale in asset_sales">
-										<td>{{ sale.as_name }}</td>
-										<td>{{ sale.totalAmount | decimal }}</td>
-									</tr>
-								</template>
 								<template v-if="receivedFromCustomers.length > 0">
 									<tr>
-										<td class="sub-heading">Customer Payment</td>
+										<td class="sub-heading">Patient Payment</td>
 										<td class="sub-value">{{ totalReceivedFromCustomers }}</td>
 									</tr>
 									<tr v-for="payment in receivedFromCustomers">
@@ -141,46 +131,6 @@
 									</tr>
 									<tr v-for="transaction in cashReceived">
 										<td>{{ transaction.Acc_Name }}</td>
-										<td>{{ transaction.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="receivedFromSuppliers.length > 0">
-									<tr>
-										<td class="sub-heading">Received from Suppliers</td>
-										<td class="sub-value">{{ totalReceivedFromSuppliers }}</td>
-									</tr>
-									<tr v-for="payment in receivedFromSuppliers">
-										<td>{{ payment.Supplier_Name }}</td>
-										<td>{{ payment.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="loanInitials.length > 0">
-									<tr>
-										<td class="sub-heading">Loan Initial Balance</span></td>
-										<td class="sub-value">{{ totalInitialLoan }}</td>
-									</tr>
-									<tr v-for="transaction in loanInitials">
-										<td>{{ transaction.bank_name }} {{ transaction.account_name }} {{ transaction.account_number }}</td>
-										<td>{{ transaction.initial_balance | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="loanReceives.length > 0">
-									<tr>
-										<td class="sub-heading">Loan Receives</span></td>
-										<td class="sub-value">{{ totalLoanReceived }}</td>
-									</tr>
-									<tr v-for="transaction in loanReceives">
-										<td>{{ transaction.bank_name }} {{ transaction.account_name }} {{ transaction.account_number }}</td>
-										<td>{{ transaction.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="investReceives.length > 0">
-									<tr>
-										<td class="sub-heading">Invest Receives</span></td>
-										<td class="sub-value">{{ totalInvestReceived }}</td>
-									</tr>
-									<tr v-for="transaction in investReceives">
-										<td>{{ transaction.Acc_Code }} {{ transaction.Acc_Name }}</td>
 										<td>{{ transaction.totalAmount | decimal }}</td>
 									</tr>
 								</template>
@@ -228,36 +178,6 @@
 									<td class="main-heading">Payment</td>
 									<td></td>
 								</tr>
-								<template v-if="purchases.length > 0">
-									<tr>
-										<td class="sub-heading">Purchases</td>
-										<td class="sub-value">{{ totalPurchase }}</td>
-									</tr>
-									<tr v-for="purchase in purchases">
-										<td>{{ purchase.Supplier_Name }}</td>
-										<td>{{ purchase.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="asset_purchases.length > 0">
-									<tr>
-										<td class="sub-heading">Asset Purchases</td>
-										<td class="sub-value">{{ totalAssetPurchases }}</td>
-									</tr>
-									<tr v-for="sale in asset_purchases">
-										<td>{{ sale.as_name }}</td>
-										<td>{{ sale.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="paidToSuppliers.length > 0">
-									<tr>
-										<td class="sub-heading">Supplier Payment</td>
-										<td class="sub-value">{{ totalPaidToSuppliers }}</td>
-									</tr>
-									<tr v-for="payment in paidToSuppliers">
-										<td>{{ payment.Supplier_Name }}</td>
-										<td>{{ payment.totalAmount | decimal }}</td>
-									</tr>
-								</template>
 								<template v-if="cashPaid.length > 0">
 									<tr>
 										<td class="sub-heading">Cash Paid</td>
@@ -270,7 +190,7 @@
 								</template>
 								<template v-if="paidToCustomers.length > 0">
 									<tr>
-										<td class="sub-heading">Paid to Customers</td>
+										<td class="sub-heading">Paid to Patient</td>
 										<td class="sub-value">{{ totalPaidToCustomers }}</td>
 									</tr>
 									<tr v-for="payment in paidToCustomers">
@@ -288,26 +208,7 @@
 										<td>{{ payment.totalAmount | decimal }}</td>
 									</tr>
 								</template>
-								<template v-if="loanPayments.length > 0">
-									<tr>
-										<td class="sub-heading">Loan Payments</span></td>
-										<td class="sub-value">{{ totalLoanPayment }}</td>
-									</tr>
-									<tr v-for="transaction in loanPayments">
-										<td>{{ transaction.bank_name }} {{ transaction.account_name }} {{ transaction.account_number }}</td>
-										<td>{{ transaction.totalAmount | decimal }}</td>
-									</tr>
-								</template>
-								<template v-if="investPayments.length > 0">
-									<tr>
-										<td class="sub-heading">Invest Payments</span></td>
-										<td class="sub-value">{{ totalInvestPayment }}</td>
-									</tr>
-									<tr v-for="transaction in investPayments">
-										<td>{{ transaction.Acc_Code }} {{ transaction.Acc_Name }}</td>
-										<td>{{ transaction.totalAmount | decimal }}</td>
-									</tr>
-								</template>
+								
 								<tr>
 									<td class="main-heading">Closing Balance</td>
 									<td></td>
@@ -533,21 +434,12 @@
 				this.getOpeningBalance();
 				this.getClosingBalance();
 				this.getSales();
-				this.getAssetSales();
-				this.getAssetPurchases();
-				this.getPurchases();
 				this.getReceivedFromCustomers();
 				this.getPaidToCustomers();
-				this.getPaidToSuppliers();
-				this.getReceivedFromSuppliers();
 				this.getCashReceived();
 				this.getCashPaid();
 				this.getBankDeposits();
-				this.getLoanPayments();
-				this.getInvestPayments();
 				this.getBankWithdraws();
-				this.getLoanReceived();
-				this.getInvestReceived();
 				this.getEmployeePayments();
 			},
 
@@ -574,57 +466,6 @@
 							return sale[0];
 						})
 						this.sales = sales;
-					})
-			},
-			getAssetSales(){
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					buy_or_sale: 'sale'
-				}
-
-				axios.post('/get_assets_cost', filter)
-				.then(res => { 
-					let asset_sales = res.data.assets.filter(sale => sale.as_amount > 0);
-					asset_sales = _.groupBy(asset_sales, 'as_name');
-					asset_sales = _.toArray(asset_sales);
-					asset_sales = asset_sales.map(sale => {
-						sale[0].totalAmount = sale.reduce((p, c) => { return p + parseFloat(c.as_amount) }, 0);
-						return sale[0];
-					})
-					this.asset_sales = asset_sales;
-				})
-			},
-			getAssetPurchases(){
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					buy_or_sale: 'buy'
-				}
-
-				axios.post('/get_assets_cost', filter)
-				.then(res => { 
-					let asset_sales = res.data.assets.filter(sale => sale.as_amount > 0);
-					asset_sales = _.groupBy(asset_sales, 'as_name');
-					asset_sales = _.toArray(asset_sales);
-					asset_sales = asset_sales.map(sale => {
-						sale[0].totalAmount = sale.reduce((p, c) => { return p + parseFloat(c.as_amount) }, 0);
-						return sale[0];
-					})
-					this.asset_purchases = asset_sales;
-				})
-			},
-			getPurchases() {
-				axios.post('/get_purchases', this.filter)
-					.then(res => {
-						let purchases = res.data.purchases.filter(purchase => purchase.PurchaseMaster_PaidAmount > 0);
-						purchases = _.groupBy(purchases, 'Supplier_SlNo');
-						purchases = _.toArray(purchases);
-						purchases = purchases.map(purchase => {
-							purchase[0].totalAmount = purchase.reduce((p, c) => { return p + parseFloat(c.PurchaseMaster_PaidAmount) }, 0);
-							return purchase[0];
-						})
-						this.purchases = purchases;
 					})
 			},
 
@@ -663,44 +504,6 @@
 							return payment[0];
 						})
 						this.paidToCustomers = payments;
-					})
-			},
-
-			getPaidToSuppliers() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					paymentType: 'paid'
-				}
-				axios.post('/get_supplier_payments', filter)
-					.then(res => {
-						let payments = res.data;
-						payments = _.groupBy(payments, 'SPayment_customerID');
-						payments = _.toArray(payments);
-						payments = payments.map(payment => {
-							payment[0].totalAmount = payment.reduce((p, c) => { return p + parseFloat(c.SPayment_amount) }, 0);
-							return payment[0];
-						})
-						this.paidToSuppliers = payments;
-					})
-			},
-
-			getReceivedFromSuppliers() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					paymentType: 'received'
-				}
-				axios.post('/get_supplier_payments', filter)
-					.then(res => {
-						let payments = res.data;
-						payments = _.groupBy(payments, 'SPayment_customerID');
-						payments = _.toArray(payments);
-						payments = payments.map(payment => {
-							payment[0].totalAmount = payment.reduce((p, c) => { return p + parseFloat(c.SPayment_amount) }, 0);
-							return payment[0];
-						})
-						this.receivedFromSuppliers = payments;
 					})
 			},
 
@@ -760,44 +563,6 @@
 						this.bankDeposits = transactions;
 					})
 			},
-			getLoanPayments() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					transactionType: 'Payment'
-				}
-				axios.post('/get_loan_transactions', filter)
-					.then(res => {
-						let transactions = res.data;
-						transactions = _.groupBy(transactions, 'account_id');
-						transactions = _.toArray(transactions);
-						transactions = transactions.map(transaction => {
-							transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
-							return transaction[0];
-						})
-						this.loanPayments = transactions;
-					})
-			},
-
-			getInvestPayments() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					transactionType: 'Payment'
-				}
-				axios.post('/get_investment_transactions', filter)
-					.then(res => {
-						let transactions = res.data;
-						transactions = _.groupBy(transactions, 'account_id');
-						transactions = _.toArray(transactions);
-						transactions = transactions.map(transaction => {
-							transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
-							return transaction[0];
-						})
-						this.investPayments = transactions;
-					})
-			},
-
 			getBankWithdraws() {
 				let filter = {
 					dateFrom: this.filter.dateFrom,
@@ -816,46 +581,84 @@
 						this.bankWithdraws = transactions;
 					})
 			},
-			getLoanReceived() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					transactionType: 'Receive'
-				}
-				axios.post('/get_loan_transactions', filter)
-					.then(res => {
-						let transactions = res.data;
-						transactions = _.groupBy(transactions, 'account_id');
-						transactions = _.toArray(transactions);
-						transactions = transactions.map(transaction => {
-							transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
-							return transaction[0];
-						})
-						this.loanReceives = transactions;
-					})
+			// getLoanPayments() {
+			// 	let filter = {
+			// 		dateFrom: this.filter.dateFrom,
+			// 		dateTo: this.filter.dateTo,
+			// 		transactionType: 'Payment'
+			// 	}
+			// 	axios.post('/get_loan_transactions', filter)
+			// 		.then(res => {
+			// 			let transactions = res.data;
+			// 			transactions = _.groupBy(transactions, 'account_id');
+			// 			transactions = _.toArray(transactions);
+			// 			transactions = transactions.map(transaction => {
+			// 				transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
+			// 				return transaction[0];
+			// 			})
+			// 			this.loanPayments = transactions;
+			// 		})
+			// },
 
-				axios.post('/get_loan_initial_balance', this.filter).then(res => {
-					this.loanInitials = res.data.accounts;
-				})
-			},
-			getInvestReceived() {
-				let filter = {
-					dateFrom: this.filter.dateFrom,
-					dateTo: this.filter.dateTo,
-					transactionType: 'Receive'
-				}
-				axios.post('/get_investment_transactions', filter)
-					.then(res => {
-						let transactions = res.data;
-						transactions = _.groupBy(transactions, 'account_id');
-						transactions = _.toArray(transactions);
-						transactions = transactions.map(transaction => {
-							transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
-							return transaction[0];
-						})
-						this.investReceives = transactions;
-					})
-			},
+			// getInvestPayments() {
+			// 	let filter = {
+			// 		dateFrom: this.filter.dateFrom,
+			// 		dateTo: this.filter.dateTo,
+			// 		transactionType: 'Payment'
+			// 	}
+			// 	axios.post('/get_investment_transactions', filter)
+			// 		.then(res => {
+			// 			let transactions = res.data;
+			// 			transactions = _.groupBy(transactions, 'account_id');
+			// 			transactions = _.toArray(transactions);
+			// 			transactions = transactions.map(transaction => {
+			// 				transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
+			// 				return transaction[0];
+			// 			})
+			// 			this.investPayments = transactions;
+			// 		})
+			// },
+
+			// getLoanReceived() {
+			// 	let filter = {
+			// 		dateFrom: this.filter.dateFrom,
+			// 		dateTo: this.filter.dateTo,
+			// 		transactionType: 'Receive'
+			// 	}
+			// 	axios.post('/get_loan_transactions', filter)
+			// 		.then(res => {
+			// 			let transactions = res.data;
+			// 			transactions = _.groupBy(transactions, 'account_id');
+			// 			transactions = _.toArray(transactions);
+			// 			transactions = transactions.map(transaction => {
+			// 				transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
+			// 				return transaction[0];
+			// 			})
+			// 			this.loanReceives = transactions;
+			// 		})
+
+			// 	axios.post('/get_loan_initial_balance', this.filter).then(res => {
+			// 		this.loanInitials = res.data.accounts;
+			// 	})
+			// },
+			// getInvestReceived() {
+			// 	let filter = {
+			// 		dateFrom: this.filter.dateFrom,
+			// 		dateTo: this.filter.dateTo,
+			// 		transactionType: 'Receive'
+			// 	}
+			// 	axios.post('/get_investment_transactions', filter)
+			// 		.then(res => {
+			// 			let transactions = res.data;
+			// 			transactions = _.groupBy(transactions, 'account_id');
+			// 			transactions = _.toArray(transactions);
+			// 			transactions = transactions.map(transaction => {
+			// 				transaction[0].totalAmount = transaction.reduce((p, c) => { return p + parseFloat(c.amount) }, 0);
+			// 				return transaction[0];
+			// 			})
+			// 			this.investReceives = transactions;
+			// 		})
+			// },
 
 			getEmployeePayments(){
 				axios.post('/get_salary_details', this.filter)
@@ -933,7 +736,6 @@
 				printWindow.focus();
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				printWindow.print();
-				await new Promise(resolve => setTimeout(resolve, 1000));
 				printWindow.close();
 			}
 		}

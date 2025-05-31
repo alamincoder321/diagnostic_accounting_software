@@ -31,20 +31,8 @@ class Page extends CI_Controller
         $data['content'] = $this->load->view('Administrator/dashboard', $data, TRUE);
         $this->load->view('Administrator/master_dashboard', $data);
     }
-    public function khantrading()
-    {
-        $data['title'] = "Dashboard";
-        $data['content'] = $this->load->view('Administrator/khantrading/dashboard', $data, TRUE);
-        $this->load->view('Administrator/index', $data);
-    }
-    public function about_us()
-    {
-        $data['title'] = "About us";
-        $data['content'] = $this->load->view('Administrator/about_us', $data, TRUE);
-        $this->load->view('Administrator/index', $data);
-    }
-    // Product Category 
 
+    // Product Category 
     public function getCategories()
     {
         $categories = $this->db->query("select * from tbl_productcategory where status = 'a'")->result();
@@ -111,8 +99,89 @@ class Page extends CI_Controller
         $msg = array("status" => true, "message" => "Category delete successfully");
         echo json_encode($msg);
     }
-    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    // unit 
+
+    // Sub Category 
+    public function getSubCategories()
+    {
+        $subcategories = $this->db
+            ->query("select sc.*,  
+                pc.ProductCategory_Name,
+                u.Unit_Name
+                from tbl_subcategory sc 
+                left join tbl_productcategory pc on pc.ProductCategory_SlNo = sc.category_id
+                left join tbl_unit u on u.Unit_SlNo = sc.unit_id
+                where sc.status = 'a'")->result();
+        echo json_encode($subcategories);
+    }
+
+    public function add_subcategory()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Add SubCategory";
+        $data['content'] = $this->load->view('Administrator/add_subcategory', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+    public function insert_subcategory()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $query = $this->db->query("select * from tbl_subcategory where category_id = ? and name = '$data->name'", $data->category_id);
+
+        if ($query->num_rows() > 0) {
+            $msg = array("status" => false, "message" => "Already Exist this name");
+            echo json_encode($msg);
+        } else {
+            $category = array(
+                "category_id"  => $data->category_id,
+                "unit_id"      => $data->unit_id,
+                "name"         => $data->name,
+                "normal_range" => $data->normal_range,
+                "status"       => 'a',
+                "AddBy"        => $this->session->userdata("FullName"),
+                "AddTime"      => date("Y-m-d H:i:s")
+            );
+            $this->db->insert("tbl_subcategory", $category);
+
+            $msg = array("status" => true, "message" => "SubCategory insert successfully");
+            echo json_encode($msg);
+        }
+    }
+
+    public function update_subcategory()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $query = $this->db->query("select * from tbl_subcategory where name = '$data->name' and id != ? and category_id = ?", [$data->id, $data->category_id]);
+
+        if ($query->num_rows() > 0) {
+            $msg = array("status" => false, "message" => "Already Exist this name");
+            echo json_encode($msg);
+        } else {
+            $category = array(
+                "category_id"  => $data->category_id,
+                "unit_id"      => $data->unit_id,
+                "name"         => $data->name,
+                "normal_range" => $data->normal_range,
+                "status"       => 'a',
+                "AddBy"        => $this->session->userdata("FullName"),
+                "AddTime"      => date("Y-m-d H:i:s")
+            );
+            $this->db->where('id', $data->i)->update("tbl_subcategory", $category);
+
+            $msg = array("status" => true, "message" => "SubCategory insert successfully");
+            echo json_encode($msg);
+        }
+    }
+    public function subcatdelete()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $this->db->where("id", $data->subcategoryId)->update('tbl_subcategory', ['status' => 'd']);
+        $msg = array("status" => true, "message" => "SubCategory delete successfully");
+        echo json_encode($msg);
+    }
+
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Unit 
     public function unit()
     {
         $access = $this->mt->userAccess();
@@ -177,6 +246,7 @@ class Page extends CI_Controller
         $units = $this->db->query("select * from tbl_unit where status = 'a'")->result();
         echo json_encode($units);
     }
+
     //======= Area ================ 
     public function area()
     {

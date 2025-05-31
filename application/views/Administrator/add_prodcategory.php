@@ -3,7 +3,7 @@
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom:15px;">
 			<div class="col-md-6 col-xs-12 col-md-offset-3">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">category Name:</label>
+					<label class="control-label col-md-4">Category Name:</label>
 					<div class="col-md-7">
 						<input type="text" class="form-control" v-model="category.ProductCategory_Name" required>
 					</div>

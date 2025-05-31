@@ -205,9 +205,11 @@ class Products extends CI_Controller
                                 select
                                     p.*,
                                     concat(p.Product_Name, ' - ', p.Product_Code) as display_text,
-                                    pc.ProductCategory_Name
+                                    pc.ProductCategory_Name,
+                                    u.Unit_Name
                                 from tbl_product p
                                 left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                                left join tbl_unit u on u.Unit_SlNo = p.unit_id
                                 where p.status = 'a'
                                 $clauses
                                 order by p.Product_SlNo desc
@@ -347,9 +349,7 @@ class Products extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title']  = 'Product';
-        $data['allproduct'] =  $this->Billing_model->select_all_Product_list();
-
+        $data['title']  = 'Test List';
         $this->load->view('Administrator/products/productList', $data);
     }
 

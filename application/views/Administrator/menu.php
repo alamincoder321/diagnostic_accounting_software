@@ -45,7 +45,7 @@ if ($module == 'dashboard' or $module == '') {
 			<!-- module/HRPayroll -->
 			<a href="<?php echo base_url(); ?>module/HRPayroll">
 				<i class="menu-icon fa fa-users"></i>
-				<span class="menu-text"> Manage HR </span>
+				<span class="menu-text"> Manage HRM </span>
 			</a>
 			<b class="arrow"></b>
 		</li>
@@ -90,7 +90,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?> -->
-		
+
 		<?php if (array_search("product", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>product">
@@ -100,7 +100,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("productlist", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>productlist">
@@ -110,7 +110,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("customer", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>customer">
@@ -121,6 +121,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 		
+		<?php if (array_search("customerPaymentReport", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>customerPaymentReport">
+					<i class="menu-icon fa fa-list"></i>
+					<span class="menu-text"> Patient Ledger </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 		<?php if (array_search("doctor", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>doctor">
@@ -130,7 +140,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("category", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>category">
@@ -141,6 +151,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 		
+		<?php if (array_search("subcategory", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>subcategory">
+					<i class="menu-icon fa fa-plus-circle"></i>
+					<span class="menu-text"> SubCategory Entry </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 		<?php if (array_search("unit", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>unit">
@@ -150,7 +170,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("area", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>area">
@@ -221,7 +241,7 @@ if ($module == 'dashboard' or $module == '') {
 			<li class="">
 				<a href="<?php echo base_url(); ?>reportEntry">
 					<i class="menu-icon bi bi-journal-text"></i>
-					<span class="menu-text"> Report Generate </span>
+					<span class="menu-text"> Report Entry </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
@@ -378,7 +398,7 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?> -->
 
-		<?php if (
+		<!-- <?php if (
 			array_search("investment_transactions", $access) > -1
 			|| array_search("investment_transaction_report", $access) > -1
 			|| array_search("investment_view", $access) > -1
@@ -449,7 +469,7 @@ if ($module == 'dashboard' or $module == '') {
 					<?php endif; ?>
 				</ul>
 			</li>
-		<?php endif; ?>
+		<?php endif; ?> -->
 
 		<?php if (
 			array_search("account", $access) > -1
@@ -472,7 +492,7 @@ if ($module == 'dashboard' or $module == '') {
 						<li>
 							<a href="<?php echo base_url(); ?>account">
 								<i class="menu-icon fa fa-caret-right"></i>
-								Transaction Accounts
+								Account Entry
 							</a>
 							<b class="arrow"></b>
 						</li>
@@ -516,7 +536,7 @@ if ($module == 'dashboard' or $module == '') {
 						<li class="">
 							<a href="<?php echo base_url(); ?>TransactionReport">
 								<i class="menu-icon fa fa-caret-right"></i>
-								Cash Transaction Report
+								CashTransaction Report
 							</a>
 							<b class="arrow"></b>
 						</li>
@@ -526,7 +546,7 @@ if ($module == 'dashboard' or $module == '') {
 						<li class="">
 							<a href="<?php echo base_url(); ?>bank_transaction_report">
 								<i class="menu-icon fa fa-caret-right"></i>
-								Bank Transaction Report
+								BankTransaction Report
 							</a>
 							<b class="arrow"></b>
 						</li>
@@ -552,7 +572,7 @@ if ($module == 'dashboard' or $module == '') {
 						</li>
 					<?php endif; ?>
 
-					<?php if (array_search("cashStatment", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<!-- <?php if (array_search("cashStatment", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
 							<a href="<?php echo base_url(); ?>cashStatment">
 								<i class="menu-icon fa fa-caret-right"></i>
@@ -560,7 +580,7 @@ if ($module == 'dashboard' or $module == '') {
 							</a>
 							<b class="arrow"></b>
 						</li>
-					<?php endif; ?>
+					<?php endif; ?> -->
 
 					<?php if (array_search("balance_sheet", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
@@ -610,7 +630,7 @@ if ($module == 'dashboard' or $module == '') {
 		</li>
 		<li>
 			<a href="<?php echo base_url(); ?>module/HRPayroll" style="background:gray !important;" class="module_title">
-				<span>HR & Payroll</span>
+				<span>Manage HRM</span>
 			</a>
 		</li>
 

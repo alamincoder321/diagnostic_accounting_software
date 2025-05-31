@@ -26,7 +26,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                         <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
                         <strong>Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}<br>
                         <span v-if="sales.Employee_Name"> <strong>Employee:</strong> {{ sales.Employee_Name }} </span>
-                        <span v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }} </span>
+                        <span v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }}, {{ sales.specialization }} </span>
                     </div>
                 </div>
                 <div class="row">
@@ -40,17 +40,17 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <thead>
                                 <tr>
                                     <td>Sl.</td>
+                                    <td>Item</td>
                                     <td>Description</td>
-                                    <td>Quantity</td>
                                     <td>Rate</td>
-                                    <td>Total</td>
+                                    <td align="right">Total</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(product, sl) in cart">
                                     <td>{{ sl + 1 }}</td>
-                                    <td class="text-align:left;">{{ product.Product_Name }}</td>
-                                    <td>{{ product.SaleDetails_TotalQuantity }}</td>
+                                    <td style="text-align:left;">{{ product.Product_Name }} - {{product.Product_Code}}</td>
+                                    <td>{{ product.note ?? 'N/A' }}</td>
                                     <td>{{ product.SaleDetails_Rate }}</td>
                                     <td align="right">{{ product.SaleDetails_TotalAmount }}</td>
                                 </tr>
@@ -99,6 +99,11 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <tr v-show="sales.returnAmount > 0">
                                 <td><strong>Change Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.returnAmount }}</td>
+                            </tr>
+                            <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
+                            <tr>
+                                <td><strong>Due:</strong></td>
+                                <td style="text-align:right">{{ sales.SaleMaster_DueAmount }}</td>
                             </tr>
                         </table>
                     </div>
@@ -328,7 +333,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                     <body>
                         <div class="row">
                             <div class="col-xs-2"><img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;" /></div>
-                            <div class="col-xs-10" style="padding-top:20px;">
+                            <div class="col-xs-10">
                                 <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
                                 <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
                             </div>

@@ -205,14 +205,6 @@ class Model_Table extends CI_Model
                 " . ($date == null ? "" : " and cp.CPayment_date < '$date'") . "
             ) as received_customer,
             (
-                select ifnull(sum(sp.SPayment_amount), 0) from tbl_supplier_payment sp
-                where sp.SPayment_TransactionType = 'CR'
-                and sp.SPayment_status = 'a'
-                and sp.SPayment_Paymentby != 'bank'
-                and sp.SPayment_brunchid= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
-            ) as received_supplier,
-            (
                 select ifnull(sum(ct.In_Amount), 0) from tbl_cashtransaction ct
                 where ct.Tr_Type = 'In Cash'
                 and ct.status = 'a'
@@ -226,49 +218,8 @@ class Model_Table extends CI_Model
                 and bt.branch_id= " . $this->session->userdata('BRANCHid') . "
                 " . ($date == null ? "" : " and bt.transaction_date < '$date'") . "
             ) as bank_withdraw,
-            (
-                select ifnull(sum(bt.amount), 0) from tbl_loan_transactions bt
-                where bt.transaction_type = 'Receive'
-                and bt.status = 1
-                and bt.branch_id= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and bt.transaction_date < '$date'") . "
-            ) as loan_received,
-            (
-                select ifnull(sum(la.initial_balance), 0) from tbl_loan_accounts la
-                where la.status = 1
-                and la.branch_id= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and la.save_date < '$date'") . "
-            ) as loan_initial_balance,
-            (
-                select ifnull(sum(bt.amount), 0) from tbl_investment_transactions bt
-                where bt.transaction_type = 'Receive'
-                and bt.status = 1
-                and bt.branch_id= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and bt.transaction_date < '$date'") . "
-            ) as invest_received,
-            (
-                select ifnull(sum(ass.as_amount), 0) from tbl_assets ass
-                where ass.branchid = " . $this->session->userdata('BRANCHid') . "
-                and ass.status = 'a'
-                and ass.buy_or_sale = 'sale'
-                " . ($date == null ? "" : " and ass.as_date < '$date'") . "
-            ) as sale_asset,
 
             /* paid */
-            (
-                select ifnull(sum(pm.PurchaseMaster_PaidAmount), 0) from tbl_purchasemaster pm
-                where pm.status = 'a'
-                and pm.PurchaseMaster_BranchID= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and pm.PurchaseMaster_OrderDate < '$date'") . "
-            ) as paid_purchase,
-            (
-                select ifnull(sum(sp.SPayment_amount), 0) from tbl_supplier_payment sp
-                where sp.SPayment_TransactionType = 'CP'
-                and sp.SPayment_status = 'a'
-                and sp.SPayment_Paymentby != 'bank'
-                and sp.SPayment_brunchid= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
-            ) as paid_supplier,
             (
                 select ifnull(sum(cp.CPayment_amount), 0) from tbl_customer_payment cp
                 where cp.CPayment_TransactionType = 'CP'
@@ -297,33 +248,12 @@ class Model_Table extends CI_Model
                 and ep.status = 'a'
                 " . ($date == null ? "" : " and ep.payment_date < '$date'") . "
             ) as employee_payment,
-            (
-                select ifnull(sum(bt.amount), 0) from tbl_loan_transactions bt
-                where bt.transaction_type = 'Payment'
-                and bt.status = 1
-                and bt.branch_id= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and bt.transaction_date < '$date'") . "
-            ) as loan_payment,
-            (
-                select ifnull(sum(bt.amount), 0) from tbl_investment_transactions bt
-                where bt.transaction_type = 'Payment'
-                and bt.status = 1
-                and bt.branch_id= " . $this->session->userdata('BRANCHid') . "
-                " . ($date == null ? "" : " and bt.transaction_date < '$date'") . "
-            ) as invest_payment,
-            (
-                select ifnull(sum(ass.as_amount), 0) from tbl_assets ass
-                where ass.branchid = " . $this->session->userdata('BRANCHid') . "
-                and ass.status = 'a'
-                and ass.buy_or_sale = 'buy'
-                " . ($date == null ? "" : " and ass.as_date < '$date'") . "
-            ) as buy_asset,
             /* total */
             (
-                select received_sales + received_customer + received_supplier + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received + sale_asset
+                select received_sales + received_customer + received_cash + bank_withdraw
             ) as total_in,
             (
-                select paid_purchase + paid_customer + paid_supplier + paid_cash + bank_deposit + employee_payment + loan_payment + invest_payment + buy_asset
+                select paid_customer +  paid_cash + bank_deposit + employee_payment
             ) as total_out,
             (
                 select total_in - total_out
@@ -371,23 +301,7 @@ class Model_Table extends CI_Model
                     " . ($date == null ? "" : " and cp.CPayment_date < '$date'") . "
                 ) as total_paid_to_customer,
                 (
-                    select ifnull(sum(sp.SPayment_amount), 0) from tbl_supplier_payment sp
-                    where sp.account_id = ba.account_id
-                    and sp.SPayment_status = 'a'
-                    and sp.SPayment_TransactionType = 'CP'
-                    and sp.SPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
-                    " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
-                ) as total_paid_to_supplier,
-                (
-                    select ifnull(sum(sp.SPayment_amount), 0) from tbl_supplier_payment sp
-                    where sp.account_id = ba.account_id
-                    and sp.SPayment_status = 'a'
-                    and sp.SPayment_TransactionType = 'CR'
-                    and sp.SPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
-                    " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
-                ) as total_received_from_supplier,
-                (
-                    select (ba.initial_balance + total_deposit + total_received_from_customer + total_received_from_supplier) - (total_withdraw + total_paid_to_customer + total_paid_to_supplier)
+                    select (ba.initial_balance + total_deposit + total_received_from_customer) - (total_withdraw + total_paid_to_customer)
                 ) as balance
             from tbl_bank_accounts ba
             where ba.branch_id = " . $this->session->userdata('BRANCHid') . "
@@ -652,12 +566,11 @@ class Model_Table extends CI_Model
         $dueResult = $this->db->query("
             select
             c.Customer_SlNo,
-            c.Customer_Name,
             c.Customer_Code,
+            c.Customer_Name,
             c.Customer_Address,
             c.Customer_Mobile,
-            c.owner_name,
-            (select ifnull(sum(sm.SaleMaster_TotalSaleAmount), 0.00) + ifnull(c.previous_due, 0.00)
+            (select ifnull(sum(sm.SaleMaster_TotalSaleAmount), 0.00)
                 from tbl_salesmaster sm 
                 where sm.SalseCustomer_IDNo = c.Customer_SlNo
                 " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
@@ -683,16 +596,9 @@ class Model_Table extends CI_Model
                 " . ($date == null ? "" : " and cp.CPayment_date < '$date'") . "
                 and cp.CPayment_status = 'a') as paidOutAmount,
 
-            (select ifnull(sum(sr.SaleReturn_ReturnAmount), 0.00) 
-                from tbl_salereturn sr 
-                join tbl_salesmaster smr on smr.SaleMaster_InvoiceNo = sr.SaleMaster_InvoiceNo 
-                where smr.SalseCustomer_IDNo = c.Customer_SlNo 
-                " . ($date == null ? "" : " and sr.SaleReturn_ReturnDate < '$date'") . "
-            ) as returnedAmount,
-
             (select invoicePaid + cashReceived) as paidAmount,
 
-            (select (billAmount + paidOutAmount) - (paidAmount + returnedAmount)) as dueAmount
+            (select (billAmount + paidOutAmount) - paidAmount) as dueAmount
             
             from tbl_customer c
             where c.Customer_brunchid = '$branchId' $clauses

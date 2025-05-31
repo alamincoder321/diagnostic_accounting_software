@@ -1177,54 +1177,6 @@ class Account extends CI_Controller {
                 and cp.CPayment_status = 'a'
                 and cp.CPayment_TransactionType = 'CP'
                 and cp.CPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
-                
-                UNION
-                select 
-                    'e' as sequence,
-                    sp.SPayment_id as id,
-                    concat('paid - ', s.Supplier_Name, ' (', s.Supplier_Code, ')') as description, 
-                    sp.account_id,
-                    sp.SPayment_date as transaction_date,
-                    'withdraw' as transaction_type,
-                    0.00 as deposit,
-                    sp.SPayment_amount as withdraw,
-                    sp.SPayment_notes as note,
-                    ac.account_name,
-                    ac.account_number,
-                    ac.bank_name,
-                    ac.branch_name,
-                    0.00 as balance
-                from tbl_supplier_payment sp
-                join tbl_bank_accounts ac on ac.account_id = sp.account_id
-                join tbl_supplier s on s.Supplier_SlNo = sp.SPayment_customerID
-                where sp.account_id is not null
-                and sp.SPayment_status = 'a'
-                and sp.SPayment_TransactionType = 'CP'
-                and sp.SPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
-                
-                UNION
-                select 
-                    'f' as sequence,
-                    sp.SPayment_id as id,
-                    concat('received from supplier - ', s.Supplier_Name, ' (', s.Supplier_Code, ')') as description, 
-                    sp.account_id,
-                    sp.SPayment_date as transaction_date,
-                    'deposit' as transaction_type,
-                    sp.SPayment_amount as deposit,
-                    0.00 as withdraw,
-                    sp.SPayment_notes as note,
-                    ac.account_name,
-                    ac.account_number,
-                    ac.bank_name,
-                    ac.branch_name,
-                    0.00 as balance
-                from tbl_supplier_payment sp
-                join tbl_bank_accounts ac on ac.account_id = sp.account_id
-                join tbl_supplier s on s.Supplier_SlNo = sp.SPayment_customerID
-                where sp.account_id is not null
-                and sp.SPayment_status = 'a'
-                and sp.SPayment_TransactionType = 'CR'
-                and sp.SPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
             ) as tbl
             where 1 = 1 $clauses
             order by $order
@@ -1341,7 +1293,7 @@ class Account extends CI_Controller {
             select 
                 sm.SaleMaster_SlNo as id,
                 sm.SaleMaster_SaleDate as date,
-                concat('Sale - ', sm.SaleMaster_InvoiceNo, ' - ', c.Customer_Name, ' (', c.Customer_Code, ')', ' - Bill: ', sm.SaleMaster_TotalSaleAmount) as description,
+                concat('Report - ', sm.SaleMaster_InvoiceNo, ' - ', c.Customer_Name, ' (', c.Customer_Code, ')', ' - Bill: ', sm.SaleMaster_TotalSaleAmount) as description,
                 (sm.SaleMaster_PaidAmount - sm.returnAmount) as in_amount,
                 0.00 as out_amount
             from tbl_salesmaster sm 
@@ -1365,22 +1317,6 @@ class Account extends CI_Controller {
             and cp.CPayment_TransactionType = 'CR'
             and cp.CPayment_Paymentby != 'bank'
             and cp.CPayment_date between '$data->fromDate' and '$data->toDate'
-            
-            UNION
-            
-            select 
-                sp.SPayment_id as id,
-                sp.SPayment_date as date,
-                concat('Received from supplier - ', sp.SPayment_invoice, ' - ', s.Supplier_Name, ' (', s.Supplier_Code, ')') as description,
-                sp.SPayment_amount as in_amount,
-                0.00 as out_amount
-            from tbl_supplier_payment sp
-            join tbl_supplier s on s.Supplier_SlNo = sp.SPayment_customerID
-            where sp.SPayment_TransactionType = 'CR'
-            and sp.SPayment_status = 'a'
-            and sp.SPayment_Paymentby != 'bank'
-            and sp.SPayment_brunchid = '$this->brunch'
-            and sp.SPayment_date between '$data->fromDate' and '$data->toDate'
             
             UNION
             
@@ -1426,78 +1362,8 @@ class Account extends CI_Controller {
             and bt.branch_id = '$this->brunch'
             and bt.transaction_type = 'Receive'
             and bt.transaction_date between '$data->fromDate' and '$data->toDate'
-            
-            UNION
-            select 
-                ba.	account_id as id,
-                ba.save_date as date,
-                concat('Loan Initial Balance - ', ba.bank_name, ' - ', ba.branch_name, ' - ', ba.account_name, ' - ', ba.account_number) as description,
-                ba.initial_balance as in_amount,
-                0.00 as out_amount
-            from tbl_loan_accounts ba
-            where ba.branch_id = '$this->brunch'
-            and ba.save_date between '$data->fromDate' and '$data->toDate'
-            
-            UNION
-            
-            select 
-                bt.transaction_id as id,
-                bt.transaction_date as date,
-                concat('Invest Received - ', ba.Acc_Name, ' (', ba.Acc_Code, ')') as description,
-                bt.amount as in_amount,
-                0.00 as out_amount
-            from tbl_investment_transactions bt 
-            join tbl_investment_account ba on ba.Acc_SlNo = bt.account_id
-            where bt.status = 1
-            and bt.branch_id = '$this->brunch'
-            and bt.transaction_type = 'Receive'
-            and bt.transaction_date between '$data->fromDate' and '$data->toDate'
 
-            UNION
-            
-            select 
-                ass.as_id as id,
-                ass.as_date as date,
-                concat('Sale Assets - ', ass.as_name) as description,
-                ass.as_amount as in_amount,
-                0.00 as out_amount
-            from tbl_assets ass
-            where ass.branchid = '$this->brunch'
-            and ass.status = 'a'
-            and ass.buy_or_sale = 'sale'
-            and ass.as_date between '$data->fromDate' and '$data->toDate'
-            
             /* Cash out */
-            
-            UNION
-            
-            select 
-                pm.PurchaseMaster_SlNo as id,
-                pm.PurchaseMaster_OrderDate as date,
-                concat('Purchase - ', pm.PurchaseMaster_InvoiceNo, ' - ', s.Supplier_Name, ' (', s.Supplier_Code, ')', ' - Bill: ', pm.PurchaseMaster_TotalAmount) as description,
-                0.00 as in_amount,
-                pm.PurchaseMaster_PaidAmount as out_amount
-            from tbl_purchasemaster pm 
-            join tbl_supplier s on s.Supplier_SlNo = pm.Supplier_SlNo
-            where pm.status = 'a'
-            and pm.PurchaseMaster_BranchID = '$this->brunch'
-            and pm.PurchaseMaster_OrderDate between '$data->fromDate' and '$data->toDate'
-            
-            UNION
-            
-            select 
-                sp.SPayment_id as id,
-                sp.SPayment_date as date,
-                concat('Supplier payment - ', sp.SPayment_invoice, ' - ', s.Supplier_Name, ' (', s.Supplier_Code, ')') as description,
-                0.00 as in_amount,
-                sp.SPayment_amount as out_amount
-            from tbl_supplier_payment sp 
-            join tbl_supplier s on s.Supplier_SlNo = sp.SPayment_customerID
-            where sp.SPayment_TransactionType = 'CP'
-            and sp.SPayment_status = 'a'
-            and sp.SPayment_Paymentby != 'bank'
-            and sp.SPayment_brunchid = '$this->brunch'
-            and sp.SPayment_date between '$data->fromDate' and '$data->toDate'
             
             UNION
             
@@ -1558,50 +1424,6 @@ class Account extends CI_Controller {
             where ep.branch_id = '$this->brunch'
             and ep.status = 'a'
             and ep.payment_date between '$data->fromDate' and '$data->toDate'
-            
-            UNION
-            
-            select 
-                bt.transaction_id as id,
-                bt.transaction_date as date,
-                concat('Loan Payment - ', ba.bank_name, ' - ', ba.branch_name, ' - ', ba.account_name, ' - ', ba.account_number) as description,
-                0.00 as in_amount,
-                bt.amount as out_amount
-            from tbl_loan_transactions bt
-            join tbl_loan_accounts ba on ba.account_id = bt.account_id
-            where bt.transaction_type = 'Payment'
-            and bt.status = 1
-            and bt.branch_id = '$this->brunch'
-            and bt.transaction_date between '$data->fromDate' and '$data->toDate'
-
-            UNION
-            
-            select 
-                bt.transaction_id as id,
-                bt.transaction_date as date,
-                concat('Invest Payment - ', ba.Acc_Name, ' (', ba.Acc_Code, ')') as description,
-                0.00 as in_amount,
-                bt.amount as out_amount
-            from tbl_investment_transactions bt 
-            join tbl_investment_account ba on ba.Acc_SlNo = bt.account_id
-            where bt.status = 1
-            and bt.branch_id = '$this->brunch'
-            and bt.transaction_type = 'Payment'
-            and bt.transaction_date between '$data->fromDate' and '$data->toDate'
-
-            UNION
-            
-            select 
-                ass.as_id as id,
-                ass.as_date as date,
-                concat('Buy Assets - ', ass.as_name, ' from ', ass.as_sp_name) as description,
-                0.00 as in_amount,
-                ass.as_amount as out_amount
-            from tbl_assets ass
-            where ass.branchid = '$this->brunch'
-            and ass.status = 'a'
-            and ass.buy_or_sale = 'buy'
-            and ass.as_date between '$data->fromDate' and '$data->toDate'
 
             order by date, id
         ")->result();

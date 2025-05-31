@@ -18,6 +18,12 @@ $route['insertcategory'] = 'Administrator/Page/insert_category';
 $route['updatecategory'] = 'Administrator/Page/update_category';
 $route['catdelete'] = 'Administrator/Page/catdelete';
 
+$route['get_subcategories'] = 'Administrator/Page/getSubCategories';
+$route['subcategory'] = 'Administrator/Page/add_subcategory';
+$route['insertsubcategory'] = 'Administrator/Page/insert_subcategory';
+$route['updatesubcategory'] = 'Administrator/Page/update_subcategory';
+$route['subcatdelete'] = 'Administrator/Page/subcatdelete';
+
 $route['unit'] = 'Administrator/Page/unit';
 $route['insertunit'] = 'Administrator/Page/insert_unit';
 $route['unitupdate'] = 'Administrator/Page/unitupdate';

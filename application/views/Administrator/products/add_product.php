@@ -97,7 +97,6 @@
 						<input type="text" class="form-control" v-model="product.Product_Code">
 					</div>
 				</div>
-
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Category:</label>
 					<div class="col-md-7">
@@ -105,16 +104,22 @@
 					</div>
 					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/category" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
-			</div>
-			
-			<div class="col-md-5">
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Test Name:</label>
 					<div class="col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_Name" required>
 					</div>
 				</div>
-
+			</div>
+			
+			<div class="col-md-5">
+				<div class="form-group clearfix">
+					<label class="control-label col-md-4">Unit:</label>
+					<div class="col-md-7">
+						<v-select v-bind:options="units" v-model="selectedUnit" label="Unit_Name"></v-select>
+					</div>
+					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+				</div>
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Price:</label>
 					<div class="col-md-7">
@@ -147,6 +152,7 @@
 							<td>{{ row.Product_Name }}</td>
 							<td>{{ row.ProductCategory_Name }}</td>
 							<td>{{ row.Product_SellingPrice }}</td>
+							<td>{{ row.Unit_Name }}</td>
 							<td>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<button type="button" class="button edit" @click="editProduct(row)">
@@ -197,6 +203,8 @@
 				products: [],
 				categories: [],
 				selectedCategory: null,
+				units: [],
+				selectedUnit: null,
 
 				columns: [{
 						label: 'Sl',
@@ -224,6 +232,11 @@
 						align: 'center'
 					},
 					{
+						label: 'Unit',
+						field: 'Unit_Name',
+						align: 'center'
+					},
+					{
 						label: 'Action',
 						align: 'center',
 						filterable: false
@@ -235,10 +248,16 @@
 			}
 		},
 		created() {
+			this.getUnit();
 			this.getCategories();
 			this.getProducts();
 		},
 		methods: {
+			getUnit() {
+				axios.get('/get_units').then(res => {
+					this.units = res.data;
+				})
+			},
 			getCategories() {
 				axios.get('/get_categories').then(res => {
 					this.categories = res.data;
@@ -259,6 +278,7 @@
 					return;
 				}
 				this.product.ProductCategory_ID = this.selectedCategory.ProductCategory_SlNo;
+				this.product.unit_id = this.selectedUnit ? this.selectedUnit.Unit_SlNo : "";
 
 				let fd = new FormData();
 				fd.append('image', this.selectedFile);
@@ -289,6 +309,8 @@
 					ProductCategory_SlNo: product.ProductCategory_ID,
 					ProductCategory_Name: product.ProductCategory_Name
 				}
+
+				this.selectedUnit = this.units.find(item => item.Unit_SlNo == product.unit_id);
 
 				if (product.image_name == null || product.image_name == '') {
 					this.imageUrl = null;

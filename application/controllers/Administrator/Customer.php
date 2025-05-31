@@ -159,7 +159,7 @@ class Customer extends CI_Controller
                 $currentDue = $paymentObj->CPayment_TransactionType == 'CR' ? $paymentObj->CPayment_previous_due - $paymentObj->CPayment_amount : $paymentObj->CPayment_previous_due + $paymentObj->CPayment_amount;
                 //Send sms
                 $customerInfo = $this->db->query("select * from tbl_customer where Customer_SlNo = ?", $paymentObj->CPayment_customerID)->row();
-                $sendToName = $customerInfo->owner_name != '' ? $customerInfo->owner_name : $customerInfo->Customer_Name;
+                $sendToName = $customerInfo->Customer_Name;
                 $currency = $this->session->userdata('Currency_Name');
 
                 $message = "Dear {$sendToName},\nThanks for your payment. Received amount is {$currency} {$paymentObj->CPayment_amount}. Current due is {$currency} {$currentDue}";
@@ -383,7 +383,7 @@ class Customer extends CI_Controller
 
     function paymentAndReport($id = Null)
     {
-        $data['title'] = "Customer Payment Reports";
+        $data['title'] = "Received Voucher";
         if ($id != 'pr') {
             $pid["PamentID"] = $id;
             $this->session->set_userdata($pid);
@@ -398,7 +398,7 @@ class Customer extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Customer Payment Reports";
+        $data['title'] = "Patient Ledger";
         $branch_id = $this->session->userdata('BRANCHid');
 
         $data['content'] = $this->load->view('Administrator/payment_reports/customer_payment_report', $data, TRUE);
@@ -408,14 +408,13 @@ class Customer extends CI_Controller
     function getCustomerLedger()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $previousDueQuery = $this->db->query("select ifnull(previous_due, 0.00) as previous_due from tbl_customer where Customer_SlNo = '$data->customerId'")->row();
 
         $payments = $this->db->query("
             select 
                 'a' as sequence,
                 sm.SaleMaster_SlNo as id,
                 sm.SaleMaster_SaleDate as date,
-                concat('Sales ', sm.SaleMaster_InvoiceNo) as description,
+                concat('Report ', sm.SaleMaster_InvoiceNo) as description,
                 sm.SaleMaster_TotalSaleAmount as bill,
                 sm.SaleMaster_PaidAmount as paid,
                 sm.SaleMaster_DueAmount as due,
@@ -473,29 +472,13 @@ class Customer extends CI_Controller
             and cp.CPayment_customerID = '$data->customerId'
             and cp.CPayment_status = 'a'
             
-            UNION
-            select
-                'd' as sequence,
-                sr.SaleReturn_SlNo as id,
-                sr.SaleReturn_ReturnDate as date,
-                'Sales return' as description,
-                0.00 as bill,
-                0.00 as paid,
-                0.00 as due,
-                sr.SaleReturn_ReturnAmount as returned,
-                0.00 as paid_out,
-                0.00 as balance
-            from tbl_salereturn sr
-            join tbl_salesmaster smr on smr.SaleMaster_InvoiceNo  = sr.SaleMaster_InvoiceNo
-            where smr.SalseCustomer_IDNo = '$data->customerId'
-            
             order by date, sequence, id
         ")->result();
 
-        $previousBalance = $previousDueQuery->previous_due;
+        $previousBalance = 0;
 
         foreach ($payments as $key => $payment) {
-            $lastBalance = $key == 0 ? $previousDueQuery->previous_due : $payments[$key - 1]->balance;
+            $lastBalance = $key == 0 ? 0 : $payments[$key - 1]->balance;
             $payment->balance = ($lastBalance + $payment->bill + $payment->paid_out) - ($payment->paid + $payment->returned);
         }
 

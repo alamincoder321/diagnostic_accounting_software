@@ -21,7 +21,7 @@ class Sales extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Report Generate";
+        $data['title'] = "Report Entry";
         $invoice = $this->mt->generateSalesInvoice();
         $data['salesId'] = 0;
         $data['invoice'] = $invoice;
@@ -105,6 +105,7 @@ class Sales extends CI_Controller
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
                     'SaleDetails_Rate'          => $cartProduct->salesRate,
                     'SaleDetails_TotalAmount'   => $cartProduct->total,
+                    'note'                      => $cartProduct->note,
                     'Status'                    => 'a',
                     'AddBy'                     => $this->session->userdata("FullName"),
                     'AddTime'                   => date('Y-m-d H:i:s'),
@@ -123,7 +124,7 @@ class Sales extends CI_Controller
             // $recipient = $customerInfo->Customer_Mobile;
             // $this->sms->sendSms($recipient, $message);
 
-            $res = ['success' => true, 'message' => 'Report Generate Success', 'salesId' => $salesId];
+            $res = ['success' => true, 'message' => 'Report Entry Success', 'salesId' => $salesId];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -133,7 +134,7 @@ class Sales extends CI_Controller
 
     public function salesEdit($salesId)
     {
-        $data['title'] = "Report Generate Update";
+        $data['title'] = "Report  Update";
         $sales = $this->db->query("select * from tbl_salesmaster where SaleMaster_SlNo = ?", $salesId)->row();
         $data['salesId'] = $salesId;
         $data['invoice'] = $sales->SaleMaster_InvoiceNo;
@@ -296,6 +297,7 @@ class Sales extends CI_Controller
             ifnull(c.Customer_Address, sm.customerAddress) as Customer_Address,
             ifnull(c.Customer_Type, sm.customerType) as Customer_Type,
             dc.Doctor_Name,
+            dc.specialization,
             e.Employee_Name,
             br.Brunch_name,
             ba.account_name,
@@ -387,6 +389,7 @@ class Sales extends CI_Controller
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
                     'SaleDetails_Rate'          => $cartProduct->salesRate,
                     'SaleDetails_TotalAmount'   => $cartProduct->total,
+                    'note'                      => $cartProduct->note,
                     'Status'                    => 'a',
                     'AddBy'                     => $this->session->userdata("FullName"),
                     'AddTime'                   => date('Y-m-d H:i:s'),

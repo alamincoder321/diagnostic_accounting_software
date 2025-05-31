@@ -68,7 +68,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 								<i class="fa fa-users"></i>
 							</div>
 							<div class="textModule">
-								Manage HR
+								Manage HRM
 							</div>
 						</a>
 					</div>
@@ -124,7 +124,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("customer", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -139,7 +139,22 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
+				<?php if (array_search("customerPaymentReport", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>customerPaymentReport">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Patient Ledger
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<?php if (array_search("doctor", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -154,7 +169,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("category", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -169,6 +184,22 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
+
+				<?php if (array_search("subcategory", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>subcategory">
+								<div class="logo">
+									<i class="menu-icon fa fa-plus-circle"></i>
+								</div>
+								<div class="textModule">
+									SubCategory Entry
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<?php if (array_search("unit", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -244,13 +275,13 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon bi bi-journal-text"></i>
 								</div>
 								<div class="textModule">
-									Report Generate
+									Report Entry
 								</div>
 							</a>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("salesrecord", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -332,7 +363,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("cash_view", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -375,7 +406,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("TransactionReport", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -459,7 +490,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 			<div class="col-md-1"></div>
 			<div class="col-md-10">
 				<div class="col-md-12 header">
-					<h3> Manage HR </h3>
+					<h3> Manage HRM </h3>
 				</div>
 				<?php if (array_search("salary_payment", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">

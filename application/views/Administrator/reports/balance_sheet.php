@@ -3,21 +3,22 @@
 		margin-top: -5px;
 	}
 
-	.balancesheet-table{
+	.balancesheet-table {
 		width: 100%;
 		border-collapse: collapse;
 	}
 
-	.balancesheet-table thead{
+	.balancesheet-table thead {
 		text-align: center;
 	}
 
-	.balancesheet-table tfoot{
+	.balancesheet-table tfoot {
 		font-weight: bold;
 		background-color: #eaf3fd;
 	}
 
-	.balancesheet-table td, .balancesheet-table th{
+	.balancesheet-table td,
+	.balancesheet-table th {
 		border: 1px solid #ccc;
 		padding: 5px;
 	}
@@ -57,15 +58,11 @@
 						</thead>
 						<tbody>
 							<tr>
-								<th>Asset</th>
-								<td style="text-align:right;">{{assets | decimal}}</td>
-							</tr>
-							<tr>
 								<th>Cash</th>
 								<td style="text-align:right;">{{cash_balance | decimal}}</td>
 							</tr>
 							<tr>
-								<td>	
+								<td>
 									<table style="width: 100%;">
 										<tr>
 											<th colspan="2">Bank:-</th>
@@ -79,27 +76,15 @@
 								<td style="text-align:right;">{{bank_balance | decimal}}</td>
 							</tr>
 							<tr>
-								<th>Customer Due</th>
+								<th>Patient Due</th>
 								<td style="text-align:right;">{{customer_due | decimal}}</td>
 							</tr>
-							
+
 							<tr>
 								<th>Bad Debt</th>
 								<td style="text-align:right;">{{bad_debt | decimal}}</td>
 							</tr>
 
-							
-							<tr>
-								<th>Stock Value</th>
-								<td style="text-align:right;">{{stock_value | decimal}}</td>
-							</tr>
-							
-							<tr :style="{display: supplier_prev_due != 0 ? '' : 'none'}">
-								<th>Supplier Previous Due Adjustment</th>
-								<td style="text-align:right;">{{supplier_prev_due | decimal}}</td>
-							</tr>
-							
-							
 							<tr :style="{display: loss != 0 ? '' : 'none'}">
 								<th>Loss</th>
 								<td style="text-align:right;">{{loss | decimal}}</td>
@@ -129,45 +114,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>	
-									<table style="width: 100%;">
-										<tr>
-											<th colspan="2">Investment:-</th>
-										</tr>
-										<tr v-for="account in invest_accounts">
-											<td>{{account.Acc_Name}} ({{account.Acc_Code}})</td>
-											<td>{{account.balance | decimal}}</td>
-										</tr>
-									</table>
-								</td>
-								<td style="text-align:right;">{{invest_balance | decimal}}</td>
-							</tr>
-
-							<tr>
-								<td>	
-									<table style="width: 100%;">
-										<tr>
-											<th colspan="2">Loan:-</th>
-										</tr>
-										<tr v-for="account in loan_accounts">
-											<td>{{account.account_name}}, {{account.bank_name}} ({{account.account_number}})</td>
-											<td>{{account.balance | decimal}}</td>
-										</tr>
-									</table>
-								</td>
-								<td style="text-align:right;">{{loan_balance | decimal}}</td>
-							</tr>
-							<tr>
-								<th>Supplier Due</th>
-								<td style="text-align:right;">{{supplier_due | decimal}}</td>
-							</tr>
-
 							<tr :style="{display: customer_prev_due != 0 ? '' : 'none'}">
-								<th>Customer Previous Due Adjustment</th>
+								<th>Patient Previous Due Adjustment</th>
 								<td style="text-align:right;">{{customer_prev_due | decimal}}</td>
 							</tr>
-							
+
 							<tr :style="{display: net_profit != 0 ? '' : 'none'}">
 								<th>Profit</th>
 								<td style="text-align:right;">{{net_profit | decimal}}</td>
@@ -177,7 +128,7 @@
 								<th>Miscellaneous Adjustment</th>
 								<td style="text-align:right;">{{mis_ad_right | decimal}}</td>
 							</tr>
-							
+
 						</tbody>
 						<tfoot>
 							<tr>
@@ -262,82 +213,84 @@
 		methods: {
 			async getStatements() {
 				this.showReport = false;
-				await axios.post('/get_balance_sheet', {date : this.date})
-				.then(res => {
-					if(res.data.success){
+				await axios.post('/get_balance_sheet', {
+						date: this.date
+					})
+					.then(res => {
+						if (res.data.success) {
 
-						if(res.data.statements.net_profit){
-							if(res.data.statements.net_profit >= 0){
-								this.net_profit = res.data.statements.net_profit;
-								this.loss = 0.00;
-							}else{
-								this.loss = Math.abs(res.data.statements.net_profit);
+							if (res.data.statements.net_profit) {
+								if (res.data.statements.net_profit >= 0) {
+									this.net_profit = res.data.statements.net_profit;
+									this.loss = 0.00;
+								} else {
+									this.loss = Math.abs(res.data.statements.net_profit);
+									this.net_profit = 0.00;
+								}
+							} else {
 								this.net_profit = 0.00;
+								this.loss = 0.00;
 							}
-						}else{
-							this.net_profit = 0.00;
-							this.loss = 0.00;
+
+							this.assets = res.data.statements.assets ?? 0;
+							this.cash_balance = res.data.statements.cash_balance ?? 0;
+							this.bank_accounts = res.data.statements.bank_accounts;
+							this.customer_due = res.data.statements.customer_dues ?? 0;
+							this.bad_debt = res.data.statements.bad_debts ?? 0;
+							this.supplier_prev_due = res.data.statements.supplier_prev_due ?? 0;
+							this.customer_prev_due = res.data.statements.customer_prev_due ?? 0;
+							this.stock_value = res.data.statements.stock_value ?? 0;
+							this.invest_accounts = res.data.statements.invest_accounts;
+							this.loan_accounts = res.data.statements.loan_accounts;
+							this.supplier_due = res.data.statements.supplier_dues ?? 0;
+							this.bank_balance = this.bank_accounts.reduce((prev, curr) => {
+								return prev + parseFloat(curr.balance);
+							}, 0).toFixed(2);
+
+							this.invest_balance = this.invest_accounts.reduce((prev, curr) => {
+								return prev + parseFloat(curr.balance);
+							}, 0).toFixed(2);
+
+							this.loan_balance = this.loan_accounts.reduce((prev, curr) => {
+								return prev + parseFloat(curr.balance);
+							}, 0).toFixed(2);
+
+
+							let totalAsset = parseFloat(this.assets) +
+								parseFloat(this.cash_balance) +
+								parseFloat(this.bank_balance) +
+								parseFloat(this.customer_due) +
+								parseFloat(this.bad_debt) +
+								parseFloat(this.supplier_prev_due) +
+								parseFloat(this.loss) +
+								parseFloat(this.stock_value);
+
+							let totalLiability = parseFloat(this.invest_balance) +
+								parseFloat(this.loan_balance) +
+								parseFloat(this.net_profit) +
+								parseFloat(this.customer_prev_due) +
+								parseFloat(this.supplier_due);
+
+							if (totalAsset > totalLiability) {
+								this.mis_ad_right = totalAsset - totalLiability;
+								this.mis_ad_left = 0.00;
+
+							} else if (totalAsset < totalLiability) {
+								this.mis_ad_left = totalLiability - totalAsset;
+								this.mis_ad_right = 0.00;
+							} else {
+								this.mis_ad_left = 0.00;
+								this.mis_ad_right = 0.00;
+							}
+
+							this.totalAsset = totalAsset + this.mis_ad_left;
+							this.totalLiability = totalLiability + this.mis_ad_right;
+
+							this.showReport = true;
+						} else {
+							alert(res.data.message);
 						}
-
-						this.assets 			= res.data.statements.assets ?? 0;
-						this.cash_balance		= res.data.statements.cash_balance ?? 0;
-						this.bank_accounts 		= res.data.statements.bank_accounts;					
-						this.customer_due 		= res.data.statements.customer_dues ?? 0;
-						this.bad_debt 			= res.data.statements.bad_debts ?? 0;
-						this.supplier_prev_due 	= res.data.statements.supplier_prev_due ?? 0;
-						this.customer_prev_due 	= res.data.statements.customer_prev_due ?? 0;
-						this.stock_value 		= res.data.statements.stock_value ?? 0;
-						this.invest_accounts	= res.data.statements.invest_accounts;					
-						this.loan_accounts 		= res.data.statements.loan_accounts;					
-						this.supplier_due 		= res.data.statements.supplier_dues ?? 0;
-						this.bank_balance 		= this.bank_accounts.reduce((prev, curr)=>{
-							return prev + parseFloat(curr.balance);
-						},0).toFixed(2);
-						
-						this.invest_balance 	= this.invest_accounts.reduce((prev, curr)=>{
-							return prev + parseFloat(curr.balance);
-						},0).toFixed(2);
-						
-						this.loan_balance 		= this.loan_accounts.reduce((prev, curr)=>{
-							return prev + parseFloat(curr.balance);
-						},0).toFixed(2);
-
-
-						let totalAsset   	= 	parseFloat(this.assets) +
-												parseFloat(this.cash_balance) +
-												parseFloat(this.bank_balance) +
-												parseFloat(this.customer_due) +
-												parseFloat(this.bad_debt) +
-												parseFloat(this.supplier_prev_due) +
-												parseFloat(this.loss) +
-												parseFloat(this.stock_value);
-
-						let totalLiability 	= 	parseFloat(this.invest_balance) +
-												parseFloat(this.loan_balance) +
-												parseFloat(this.net_profit) +
-												parseFloat(this.customer_prev_due) +
-												parseFloat(this.supplier_due);
-												
-						if (totalAsset > totalLiability) {
-							this.mis_ad_right 	= totalAsset - totalLiability;
-							this.mis_ad_left 	= 0.00;
-
-						}else if(totalAsset < totalLiability){
-							this.mis_ad_left 	= totalLiability - totalAsset;
-							this.mis_ad_right 	= 0.00;
-						}else{
-							this.mis_ad_left 	= 0.00;
-							this.mis_ad_right 	= 0.00;
-						}
-
-						this.totalAsset 		= totalAsset + this.mis_ad_left;
-						this.totalLiability 	= totalLiability + this.mis_ad_right;
-
-						this.showReport = true;
-					}else{
-						alert(res.data.message);
-					}
-				});
+					});
 			},
 
 			async print() {
@@ -388,7 +341,6 @@
 				printWindow.focus();
 				await new Promise(resolve => setTimeout(resolve, 1000));
 				printWindow.print();
-				await new Promise(resolve => setTimeout(resolve, 1000));
 				printWindow.close();
 			}
 		}
