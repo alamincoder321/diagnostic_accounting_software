@@ -67,7 +67,7 @@ $route['delete_customer_payment'] = 'Administrator/Customer/deleteCustomerPaymen
 $route['customerPaymentPage'] = 'Administrator/Customer/customerPaymentPage';
 $route['customer_payment_history'] = 'Administrator/Customer/customerPaymentHistory';
 
-// report generate
+// report entry
 $route['reportEntry']        = 'Administrator/Sales/index';
 $route['reportEntry/(:any)'] = 'Administrator/Sales/salesEdit/$1';
 $route['salesinvoice']       = 'Administrator/Sales/sales_invoice';
@@ -78,17 +78,20 @@ $route['get_sales_record']   = 'Administrator/Sales/getSalesRecord';
 $route['get_saledetails']    = 'Administrator/Sales/getSaleDetails';
 $route['update_sales']       = 'Administrator/Sales/updateSales';
 $route['delete_sales']       = 'Administrator/Sales/deleteSales';
-
 $route['sale_invoice_print/(:any)'] = 'Administrator/Sales/saleInvoicePrint/$1';
 $route['salesrecord'] = 'Administrator/Sales/sales_record';
 $route['customerPaymentReport'] = 'Administrator/Customer/customer_payment_report';
-
 $route['profitLoss'] = 'Administrator/Sales/profitLoss';
 $route['get_profit_loss'] = 'Administrator/Sales/getProfitLoss';
-
 $route['customerDue'] = 'Administrator/Customer/customer_due';
 $route['paymentAndReport/(:any)'] = 'Administrator/Customer/paymentAndReport/$1';
 
+// generate report
+$route['report_generate']     = 'Administrator/ReportGenerate';
+$route['get_report_test']     = 'Administrator/ReportGenerate/getReportTest';
+$route['add_report_generate'] = 'Administrator/ReportGenerate/addReportGenerate';
+
+//user entry
 $route['user'] = 'Administrator/User_management';
 $route['get_users'] = 'Administrator/User_management/getUsers';
 $route['get_all_users'] = 'Administrator/User_management/getAllUsers';

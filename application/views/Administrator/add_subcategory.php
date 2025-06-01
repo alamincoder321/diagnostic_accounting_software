@@ -147,6 +147,7 @@
 				subcategory: {
 					id: 0,
 					name: '',
+					normal_range: ''
 				},
 				subcategories: [],
 
@@ -241,6 +242,9 @@
 				keys.forEach(key => {
 					this.subcategory[key] = subcategory[key];
 				})
+
+				this.selectedCategory = this.categories.find(item => item.ProductCategory_SlNo == subcategory.category_id)
+				this.selectedUnit = this.units.find(item => item.Unit_SlNo == subcategory.unit_id)
 			},
 			deleteData(subcategoryId) {
 				let deleteConfirm = confirm('Are you sure?');
@@ -260,7 +264,8 @@
 			resetForm() {
 				this.subcategory = {
 					id: '',
-					name: ''
+					name: '',
+					normal_range: ''
 				}
 			}
 		}

@@ -88,7 +88,7 @@ class Page extends CI_Controller
             );
             $this->db->where('ProductCategory_SlNo', $data->ProductCategory_SlNo)->update("tbl_productcategory", $category);
 
-            $msg = array("status" => true, "message" => "Category insert successfully");
+            $msg = array("status" => true, "message" => "Category update successfully");
             echo json_encode($msg);
         }
     }
@@ -167,9 +167,9 @@ class Page extends CI_Controller
                 "AddBy"        => $this->session->userdata("FullName"),
                 "AddTime"      => date("Y-m-d H:i:s")
             );
-            $this->db->where('id', $data->i)->update("tbl_subcategory", $category);
+            $this->db->where('id', $data->id)->update("tbl_subcategory", $category);
 
-            $msg = array("status" => true, "message" => "SubCategory insert successfully");
+            $msg = array("status" => true, "message" => "SubCategory update successfully");
             echo json_encode($msg);
         }
     }

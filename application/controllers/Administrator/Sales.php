@@ -233,6 +233,7 @@ class Sales extends CI_Controller
                 select 
                     sd.*,
                     p.Product_Name,
+                    pc.ProductCategory_SlNo,
                     pc.ProductCategory_Name
                 from tbl_saledetails sd
                 join tbl_product p on p.Product_SlNo = sd.Product_IDNo
