@@ -120,7 +120,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("customerPaymentReport", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>customerPaymentReport">
@@ -150,7 +150,7 @@ if ($module == 'dashboard' or $module == '') {
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
-		
+
 		<?php if (array_search("subcategory", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>subcategory">
@@ -237,22 +237,31 @@ if ($module == 'dashboard' or $module == '') {
 			</a>
 		</li>
 
-		<?php if (array_search("reportEntry", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+		<?php if (array_search("bill_entry", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
-				<a href="<?php echo base_url(); ?>reportEntry">
+				<a href="<?php echo base_url(); ?>bill_entry">
 					<i class="menu-icon bi bi-journal-text"></i>
-					<span class="menu-text"> Report Entry </span>
+					<span class="menu-text"> Bill Entry </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
 		<?php endif; ?>
 
-
 		<?php if (array_search("salesrecord", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>salesrecord">
 					<i class="menu-icon fa fa-list"></i>
-					<span class="menu-text"> Report Record </span>
+					<span class="menu-text"> Bill Record </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
+		<?php if (array_search("report_generate", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>report_generate">
+					<i class="menu-icon bi bi-clipboard-pulse"></i>
+					<span class="menu-text"> Report Generate </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
@@ -262,7 +271,7 @@ if ($module == 'dashboard' or $module == '') {
 			<li class="">
 				<a href="<?php echo base_url(); ?>salesinvoice">
 					<i class="menu-icon fa fa-file-text"></i>
-					<span class="menu-text"> Report Invoice </span>
+					<span class="menu-text"> Bill Invoice </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
@@ -399,13 +408,13 @@ if ($module == 'dashboard' or $module == '') {
 		<?php endif; ?> -->
 
 		<!-- <?php if (
-			array_search("investment_transactions", $access) > -1
-			|| array_search("investment_transaction_report", $access) > -1
-			|| array_search("investment_view", $access) > -1
-			|| array_search("investment_ledger", $access) > -1
-			|| array_search("investment_account", $access) > -1
-			|| isset($CheckSuperAdmin) || isset($CheckAdmin)
-		) : ?>
+					array_search("investment_transactions", $access) > -1
+					|| array_search("investment_transaction_report", $access) > -1
+					|| array_search("investment_view", $access) > -1
+					|| array_search("investment_ledger", $access) > -1
+					|| array_search("investment_account", $access) > -1
+					|| isset($CheckSuperAdmin) || isset($CheckAdmin)
+				) : ?>
 
 			<li class="">
 				<a href="<?php echo base_url(); ?>" class="dropdown-toggle">

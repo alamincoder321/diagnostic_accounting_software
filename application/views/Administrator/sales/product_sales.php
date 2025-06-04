@@ -765,9 +765,9 @@
 						if (conf) {
 							window.open('/sale_invoice_print/' + r.salesId, '_blank');
 							await new Promise(r => setTimeout(r, 1000));
-							window.location = '/reportEntry';
+							window.location = '/bill_entry';
 						} else {
-							window.location = '/reportEntry';
+							window.location = '/bill_entry';
 						}
 					} else {
 						alert(r.message);

@@ -267,15 +267,15 @@ if ($module == 'dashboard' or $module == '') { ?>
 				<div class="col-md-12 header">
 					<h3> Reports Panel </h3>
 				</div>
-				<?php if (array_search("reportEntry", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+				<?php if (array_search("bill_entry", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
-							<a href="<?php echo base_url(); ?>reportEntry">
+							<a href="<?php echo base_url(); ?>bill_entry">
 								<div class="logo">
 									<i class="menu-icon bi bi-journal-text"></i>
 								</div>
 								<div class="textModule">
-									Report Entry
+									Bill Entry
 								</div>
 							</a>
 						</div>
@@ -290,12 +290,28 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-list"></i>
 								</div>
 								<div class="textModule">
-									Report Record
+									Bill Record
 								</div>
 							</a>
 						</div>
 					</div>
 				<?php endif; ?>
+				
+				<?php if (array_search("Report Generate", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>Report Generate">
+								<div class="logo">
+									<i class="menu-icon bi bi-clipboard-pulse"></i>
+								</div>
+								<div class="textModule">
+									Bill Record
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<?php if (array_search("salesinvoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
 						<div class="col-md-12 section20">
@@ -304,7 +320,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-file-text-o"></i>
 								</div>
 								<div class="textModule">
-									Report Invoice
+									Bill Invoice
 								</div>
 							</a>
 						</div>

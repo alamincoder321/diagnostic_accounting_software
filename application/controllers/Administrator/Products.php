@@ -21,7 +21,7 @@ class Products extends CI_Controller
             redirect(base_url());
         }
         $data['title'] = "Test Entry";
-        $data['productCode'] = $this->mt->generateProductCode();
+        // $data['productCode'] = $this->mt->generateProductCode();
         $data['content'] = $this->load->view('Administrator/products/add_product', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }

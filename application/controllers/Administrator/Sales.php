@@ -21,7 +21,7 @@ class Sales extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Report Entry";
+        $data['title'] = "Bill Entry";
         $invoice = $this->mt->generateSalesInvoice();
         $data['salesId'] = 0;
         $data['invoice'] = $invoice;
@@ -124,7 +124,7 @@ class Sales extends CI_Controller
             // $recipient = $customerInfo->Customer_Mobile;
             // $this->sms->sendSms($recipient, $message);
 
-            $res = ['success' => true, 'message' => 'Report Entry Success', 'salesId' => $salesId];
+            $res = ['success' => true, 'message' => 'Bill Entry Success', 'salesId' => $salesId];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -134,7 +134,7 @@ class Sales extends CI_Controller
 
     public function salesEdit($salesId)
     {
-        $data['title'] = "Report  Update";
+        $data['title'] = "Bill Update";
         $sales = $this->db->query("select * from tbl_salesmaster where SaleMaster_SlNo = ?", $salesId)->row();
         $data['salesId'] = $salesId;
         $data['invoice'] = $sales->SaleMaster_InvoiceNo;
@@ -400,7 +400,7 @@ class Sales extends CI_Controller
                 $this->db->insert('tbl_saledetails', $saleDetails);
             }
 
-            $res = ['success' => true, 'message' => 'Report Updated', 'salesId' => $salesId];
+            $res = ['success' => true, 'message' => 'Bill Updated', 'salesId' => $salesId];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
@@ -414,7 +414,7 @@ class Sales extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Report Invoice";
+        $data['title'] = "Bill Invoice";
         $data['content'] = $this->load->view('Administrator/sales/sales_invoice', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
@@ -425,14 +425,14 @@ class Sales extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Report Record";
+        $data['title'] = "Bill Record";
         $data['content'] = $this->load->view('Administrator/sales/sales_record', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
 
     public function saleInvoicePrint($saleId)
     {
-        $data['title'] = "Report Invoice";
+        $data['title'] = "Bill Invoice";
         $data['salesId'] = $saleId;
         $data['content'] = $this->load->view('Administrator/sales/sellAndreport', $data, TRUE);
         $this->load->view('Administrator/index', $data);
@@ -466,7 +466,7 @@ class Sales extends CI_Controller
 
             /*Delete Sale Master Data*/
             $this->db->set('Status', 'd')->where('SaleMaster_SlNo', $saleId)->update('tbl_salesmaster');
-            $res = ['success' => true, 'message' => 'Report deleted'];
+            $res = ['success' => true, 'message' => 'Bill deleted'];
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }

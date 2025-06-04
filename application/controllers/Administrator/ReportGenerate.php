@@ -62,24 +62,51 @@ class ReportGenerate extends CI_Controller
             $this->db->trans_begin();
             $data = json_decode($this->input->raw_input_stream);
 
-            $report = (array)$data->report;
-            $report['AddBy'] = $this->session->userdata('FullName');
-            $report['AddTime'] = date("Y-m-d H:i:s");
-            $report['branch_id'] = $this->branchId;
-            $this->db->insert("tbl_report_generate", $report);
-            $reportId = $this->db->insert_id();
+            $check = $this->db
+                ->where('sale_id', $data->report->sale_id)
+                ->where('patient_id', $data->report->patient_id)
+                ->where('category_id', $data->report->category_id)
+                ->get('tbl_report_generate')
+                ->row();
+            if (empty($check)) {
+                $report = (array)$data->report;
+                $report['AddBy'] = $this->session->userdata('FullName');
+                $report['AddTime'] = date("Y-m-d H:i:s");
+                $report['branch_id'] = $this->branchId;
+                $this->db->insert("tbl_report_generate", $report);
+                $reportId = $this->db->insert_id();
 
-            foreach ($data->carts as $key => $item) {
-                $detail = array(
-                    'generate_id' => $reportId,
-                    'subcategory_id' => $item->subcategory_id,
-                    'result' => $item->result
-                );
-                $this->db->insert('tbl_report_generate_detail', $detail);
+                foreach ($data->carts as $item) {
+                    $detail = array(
+                        'generate_id'    => $reportId,
+                        'subcategory_id' => $item->subcategory_id,
+                        'result'         => $item->result
+                    );
+                    $this->db->insert('tbl_report_generate_detail', $detail);
+                }
+                $msg = 'Report Generate Success';
+            } else {
+                $report               = (array)$data->report;
+                $report['UpdateBy']   = $this->session->userdata('FullName');
+                $report['UpdateTime'] = date("Y-m-d H:i:s");
+                $report['branch_id']  = $this->branchId;
+                $this->db->where('id', $check->id)->update("tbl_report_generate", $report);
+
+                $this->db->query("delete from tbl_report_generate_detail where generate_id = ?", [$check->id]);
+                foreach ($data->carts as $item) {
+                    $detail = array(
+                        'generate_id' => $check->id,
+                        'subcategory_id' => $item->subcategory_id,
+                        'result' => $item->result
+                    );
+                    $this->db->insert('tbl_report_generate_detail', $detail);
+                }
+                $msg = 'Report Generate Update Success';
             }
 
+
             $this->db->trans_commit();
-            $msg = ['success' => true, 'message' => 'Report Generate Success'];
+            $msg = ['success' => true, 'message' => $msg];
         } catch (\Throwable $th) {
             $this->db->trans_rollback();
             $msg = ['success' => false, 'message' => 'Something went wrong'];

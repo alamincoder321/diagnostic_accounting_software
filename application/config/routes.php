@@ -68,8 +68,8 @@ $route['customerPaymentPage'] = 'Administrator/Customer/customerPaymentPage';
 $route['customer_payment_history'] = 'Administrator/Customer/customerPaymentHistory';
 
 // report entry
-$route['reportEntry']        = 'Administrator/Sales/index';
-$route['reportEntry/(:any)'] = 'Administrator/Sales/salesEdit/$1';
+$route['bill_entry']        = 'Administrator/Sales/index';
+$route['bill_entry/(:any)'] = 'Administrator/Sales/salesEdit/$1';
 $route['salesinvoice']       = 'Administrator/Sales/sales_invoice';
 $route['salesInvoicePrint']  = 'Administrator/Reports/sales_invoice';
 $route['add_sales']          = 'Administrator/Sales/addSales';

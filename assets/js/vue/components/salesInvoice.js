@@ -2,13 +2,13 @@ const salesInvoice = Vue.component('sales-invoice', {
     template: `
         <div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-12" style="text-align: right; border-bottom: 1px solid gray; margin-bottom: 10px;">
                     <a href="" v-on:click.prevent="print"><i class="fa fa-print"></i> Print</a>
                 </div>
             </div>
             
             <div id="invoiceContent">
-                <div class="row">
+                <div class="row" style="display:none;">
                     <div class="col-xs-12 text-center">
                         <div _h098asdh>
                             Report Voucher
@@ -49,7 +49,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <tbody>
                                 <tr v-for="(product, sl) in cart">
                                     <td>{{ sl + 1 }}</td>
-                                    <td style="text-align:left;">{{ product.Product_Name }} - {{product.Product_Code}}</td>
+                                    <td style="text-align:left;">{{ product.Product_Name }}</td>
                                     <td>{{ product.note ?? 'N/A' }}</td>
                                     <td>{{ product.SaleDetails_Rate }}</td>
                                     <td align="right">{{ product.SaleDetails_TotalAmount }}</td>
@@ -284,153 +284,80 @@ const salesInvoice = Vue.component('sales-invoice', {
         async print() {
             let invoiceContent = document.querySelector('#invoiceContent').innerHTML;
             let printWindow = window.open('', 'PRINT', `width=${screen.width}, height=${screen.height}, left=0, top=0`);
-            if (this.currentBranch.print_type == '3') {
-                printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>Invoice</title>
-                            <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-                            <style>
-                                body, table{
-                                    font-size:11px;
-                                }                                
-                                @media print{
-                                    @page{
-                                        padding: 10px 10px !important;
-                                    }                                  
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <div style="text-align:center;">
-                                <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br>
-                                <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
-                                <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
-                            </div>
-                            ${invoiceContent}
-                        </body>
-                    </html>
-                `);
-            } else if (this.currentBranch.print_type == '2') {
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="en">
+            printWindow.document.write(`
+                <html>
                     <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                        <title>Invoice</title>
-                        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-                        <style>
-                            html, body{
-                                width:500px!important;
-                            }
-                            body, table{
-                                font-size: 13px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="row">
-                            <div class="col-xs-2"><img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;" /></div>
-                            <div class="col-xs-10">
-                                <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
-                                <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div style="border-bottom: 4px double #454545;margin-top:7px;margin-bottom:7px;"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                ${invoiceContent}
-                            </div>
-                        </div>
-                    </body>
-                    </html>
-				`);
-            } else {
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
                         <title>Invoice</title>
                         <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
                         <style>
                             body, table{
-                                font-size: 13px;
+                                font-size:11px;
+                            }
+                            .invoice-header{
+                                border: 1px solid gray; 
+                                border-radius: 15px; 
+                                padding: 5px 20px;
+                            }                                
+                            @media print{
+                                @page{
+                                    padding: 10px 10px !important;
+                                }                                  
+                                .invoice-copy {
+                                    page-break-after: always;
+                                }    
                             }
                         </style>
                     </head>
                     <body>
-                        <div class="container">
-                            <table style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-xs-2"><img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height: 80px; width: 80px; border: 1px solid gray; border-radius: 5px; padding: 1px;" /></div>
-                                                <div class="col-xs-10">
-                                                    <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
-                                                    <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <div style="border-bottom: 4px double #454545;margin-top:7px;margin-bottom:7px;"></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    ${invoiceContent}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td>
-                                            <div style="width:100%;height:50px;">&nbsp;</div>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            <div style="position:fixed;left:0;bottom:15px;width:100%;">
-                                <div class="row" style="border-bottom:1px solid #ccc;margin-bottom:5px;padding-bottom:6px;">
-                                    <div class="col-xs-6">
-                                        <span style="text-decoration:overline;">Received by</span>
-                                    </div>
-                                    <div class="col-xs-6 text-right">
-                                        <span style="text-decoration:overline;">Authorized by</span>
-                                    </div>
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br>
+                                    <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
+                                    <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
                                 </div>
-                                <div class="row" style="font-size:12px;">
-                                    <div class="col-xs-6">
-                                        Print Date: ${moment().format('DD-MM-YYYY h:mm a')}, Printed by: ${this.sales.AddBy}
+                                <div class="col-xs-12">
+                                    <div class="text-center">
+                                        <span class="invoice-header">Customer Copy</span>
                                     </div>
-                                    <div class="col-xs-6 text-right">
-                                        Developed by: BD Soft Tech
-                                    </div>
+                                    ${invoiceContent}
                                 </div>
                             </div>
                         </div>
-                        
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br>
+                                    <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
+                                    <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center">
+                                        <span class="invoice-header">Reception Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br>
+                                    <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
+                                    <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center">
+                                        <span class="invoice-header">Lab Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
+                            </div>
+                        </div>
                     </body>
-                    </html>
-				`);
-            }
+                </html>
+            `);
+            
             let invoiceStyle = printWindow.document.createElement('style');
             invoiceStyle.innerHTML = this.style.innerHTML;
             printWindow.document.head.appendChild(invoiceStyle);

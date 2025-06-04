@@ -92,12 +92,6 @@
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom: 15px;">
 			<div class="col-md-5 col-md-offset-1">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Test Id:</label>
-					<div class="col-md-7">
-						<input type="text" class="form-control" v-model="product.Product_Code">
-					</div>
-				</div>
-				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Category:</label>
 					<div class="col-md-7">
 						<v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name"></v-select>
@@ -110,8 +104,14 @@
 						<input type="text" class="form-control" v-model="product.Product_Name" required>
 					</div>
 				</div>
+				<div class="form-group clearfix">
+					<label class="control-label col-md-4">Short Name:</label>
+					<div class="col-md-7">
+						<input type="text" class="form-control" v-model="product.Product_Code">
+					</div>
+				</div>
 			</div>
-			
+
 			<div class="col-md-5">
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Unit:</label>
@@ -148,9 +148,9 @@
 					<template scope="{ row }">
 						<tr>
 							<td>{{ row.sl }}</td>
-							<td>{{ row.Product_Code }}</td>
-							<td>{{ row.Product_Name }}</td>
 							<td>{{ row.ProductCategory_Name }}</td>
+							<td>{{ row.Product_Name }}</td>
+							<td>{{ row.Product_Code }}</td>
 							<td>{{ row.Product_SellingPrice }}</td>
 							<td>{{ row.Unit_Name }}</td>
 							<td>
@@ -191,7 +191,7 @@
 			return {
 				product: {
 					Product_SlNo: '',
-					Product_Code: "<?php echo $productCode; ?>",
+					Product_Code: "",
 					Product_Name: '',
 					ProductCategory_ID: '',
 					Product_Purchase_Rate: 0,
@@ -212,19 +212,19 @@
 						align: 'center'
 					},
 					{
-						label: 'Test Id',
-						field: 'Product_Code',
-						align: 'center',
-					},
+						label: 'Category',
+						field: 'ProductCategory_Name',
+						align: 'center'
+					},					
 					{
 						label: 'Test Name',
 						field: 'Product_Name',
 						align: 'center'
 					},
 					{
-						label: 'Category',
-						field: 'ProductCategory_Name',
-						align: 'center'
+						label: 'Short Name',
+						field: 'Product_Code',
+						align: 'center',
 					},
 					{
 						label: 'Price',
@@ -294,7 +294,7 @@
 						alert(r.message);
 						if (r.success) {
 							this.clearForm();
-							this.product.Product_Code = r.productId;
+							// this.product.Product_Code = r.productId;
 							this.getProducts();
 						}
 					})
@@ -336,7 +336,7 @@
 			clearForm() {
 				this.product = {
 					Product_SlNo: '',
-					Product_Code: "<?php echo $productCode; ?>",
+					Product_Code: "",
 					Product_Name: '',
 					ProductCategory_ID: '',
 					Product_Purchase_Rate: 0,

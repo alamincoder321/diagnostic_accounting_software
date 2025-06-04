@@ -61,22 +61,22 @@
     <div class="row" style="border: 1px solid gray; padding: 8px 0px; border-radius: 5px; box-shadow: 0px 0px 0px 3px #007ebb; margin: 0;">
         <div class="col-md-12">
             <form class="form-inline" id="searchForm">
-            <div class="form-group">
-                <label style="margin: 0;margin-top: -5px;">Patient</label>
-                <v-select v-bind:options="customers" v-model="selectedCustomer" label="display_name" @input="onChangeCustomer" @search="onSearchCustomer"></v-select>
-            </div>
+                <div class="form-group">
+                    <label style="margin: 0;margin-top: -5px;">Patient</label>
+                    <v-select v-bind:options="customers" v-model="selectedCustomer" label="display_name" @input="onChangeCustomer" @search="onSearchCustomer"></v-select>
+                </div>
 
-            <div class="form-group">
-                <label style="margin: 0;margin-top: -5px;">Invoice</label>
-                <v-select v-bind:options="invoices" v-model="selectedInvoice" label="invoice_text" @input="onChangeInvoice" @search="onSearchSale"></v-select>
-            </div>
+                <div class="form-group">
+                    <label style="margin: 0;margin-top: -5px;">Invoice</label>
+                    <v-select v-bind:options="invoices" v-model="selectedInvoice" label="invoice_text" @input="onChangeInvoice" @search="onSearchSale"></v-select>
+                </div>
 
-            <div class="form-group">
-                <label style="margin: 0;margin-top: -5px;">Category</label>
-                <v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name" @input="getReportTest"></v-select>
-            </div>
+                <div class="form-group">
+                    <label style="margin: 0;margin-top: -5px;">Category</label>
+                    <v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name" @input="getReportTest"></v-select>
+                </div>
 
-            <!-- <div class="form-group" style="margin-top: -2px;">
+                <!-- <div class="form-group" style="margin-top: -2px;">
                     <input type="submit" value="Search">
                 </div> -->
             </form>
@@ -267,8 +267,9 @@
                 }
             },
             onChangeInvoice() {
+                this.selectedCategory = null;
+                this.carts = [];
                 if (this.selectedInvoice == null) {
-                    alert("Please select an invoice.");
                     return;
                 }
                 let filter = {
@@ -281,12 +282,11 @@
                     })
             },
             getReportTest() {
+                this.carts = [];
                 if (this.selectedInvoice == null) {
-                    alert("Please select an invoice.");
                     return;
                 }
                 if (this.selectedCategory == null) {
-                    alert("Please select an category.");
                     return;
                 }
                 let filter = {
@@ -304,6 +304,7 @@
                 this.report.patient_id = this.selectedCustomer.Customer_SlNo;
                 this.report.category_id = this.selectedCategory.ProductCategory_SlNo;
                 this.report.sale_id = this.selectedInvoice.SaleMaster_SlNo;
+
                 let data = {
                     report: this.report,
                     carts: this.carts
@@ -327,6 +328,8 @@
                 this.carts = []
                 this.selectedCategory = null;
                 this.selectedInvoice = null;
+                this.invoices = [];
+                this.categories = [];
                 this.selectedCustomer = {
                     Customer_SlNo: '',
                     Customer_Code: '',
