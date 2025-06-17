@@ -38,14 +38,14 @@ class ReportGenerate extends CI_Controller
                     left join tbl_subcategory sc on sc.id = rpd.subcategory_id
                     left join tbl_unit u on u.Unit_SlNo = sc.unit_id
                     left join tbl_report_generate rp on rp.id = rpd.generate_id
-                    where rp.category_id = ?
+                    where rp.test_id = ?
                     and rp.sale_id = ?
-                    and rp.patient_id = ?", [$data->categoryId, $data->saleId, $data->customerId])->result();
+                    and rp.patient_id = ?", [$data->testId, $data->saleId, $data->customerId])->result();
 
         $category = $this->db
             ->select("sc.id as subcategory_id, sc.name, '' as result, u.Unit_Name, sc.normal_range")
             ->join("tbl_unit as u", "u.Unit_SlNo = sc.unit_id", "left")
-            ->where('sc.category_id', $data->categoryId)
+            ->where('sc.test_id', $data->testId)
             ->get('tbl_subcategory as sc')
             ->result();
 
@@ -65,7 +65,7 @@ class ReportGenerate extends CI_Controller
             $check = $this->db
                 ->where('sale_id', $data->report->sale_id)
                 ->where('patient_id', $data->report->patient_id)
-                ->where('category_id', $data->report->category_id)
+                ->where('test_id', $data->report->test_id)
                 ->get('tbl_report_generate')
                 ->row();
             if (empty($check)) {

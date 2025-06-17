@@ -105,10 +105,10 @@ class Page extends CI_Controller
     {
         $subcategories = $this->db
             ->query("select sc.*,  
-                pc.ProductCategory_Name,
+                p.Product_Name,
                 u.Unit_Name
                 from tbl_subcategory sc 
-                left join tbl_productcategory pc on pc.ProductCategory_SlNo = sc.category_id
+                left join tbl_product p on p.Product_SlNo = sc.test_id
                 left join tbl_unit u on u.Unit_SlNo = sc.unit_id
                 where sc.status = 'a'")->result();
         echo json_encode($subcategories);
@@ -127,14 +127,14 @@ class Page extends CI_Controller
     public function insert_subcategory()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $query = $this->db->query("select * from tbl_subcategory where category_id = ? and name = '$data->name'", $data->category_id);
+        $query = $this->db->query("select * from tbl_subcategory where test_id = ? and name = '$data->name'", $data->test_id);
 
         if ($query->num_rows() > 0) {
             $msg = array("status" => false, "message" => "Already Exist this name");
             echo json_encode($msg);
         } else {
             $category = array(
-                "category_id"  => $data->category_id,
+                "test_id"      => $data->test_id,
                 "unit_id"      => $data->unit_id,
                 "name"         => $data->name,
                 "normal_range" => $data->normal_range,
@@ -152,14 +152,14 @@ class Page extends CI_Controller
     public function update_subcategory()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $query = $this->db->query("select * from tbl_subcategory where name = '$data->name' and id != ? and category_id = ?", [$data->id, $data->category_id]);
+        $query = $this->db->query("select * from tbl_subcategory where name = '$data->name' and id != ? and test_id = ?", [$data->id, $data->test_id]);
 
         if ($query->num_rows() > 0) {
             $msg = array("status" => false, "message" => "Already Exist this name");
             echo json_encode($msg);
         } else {
             $category = array(
-                "category_id"  => $data->category_id,
+                "test_id"  => $data->test_id,
                 "unit_id"      => $data->unit_id,
                 "name"         => $data->name,
                 "normal_range" => $data->normal_range,

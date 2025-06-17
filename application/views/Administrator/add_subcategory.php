@@ -60,11 +60,11 @@
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom:15px;">
 			<div class="col-md-6 col-xs-12 col-md-offset-3">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Category:</label>
+					<label class="control-label col-md-4">Test Name:</label>
 					<div class="col-md-7">
-						<v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name"></v-select>
+						<v-select v-bind:options="products" v-model="selectedTest" label="Product_Name"></v-select>
 					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/category" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/product" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 				<div class="form-group clearfix">
 					<label class="control-label col-md-4">Name:</label>
@@ -109,7 +109,7 @@
 					<template scope="{ row }">
 						<tr>
 							<td>{{ row.sl }}</td>
-							<td>{{ row.ProductCategory_Name }}</td>
+							<td>{{ row.Product_Name }}</td>
 							<td>{{ row.name }}</td>
 							<td>{{ row.normal_range }}</td>
 							<td>{{ row.Unit_Name }}</td>
@@ -151,8 +151,8 @@
 				},
 				subcategories: [],
 
-				categories: [],
-				selectedCategory: null,
+				products: [],
+				selectedTest: null,
 				units: [],
 				selectedUnit: null,
 
@@ -194,7 +194,7 @@
 		},
 		created() {
 			this.getUnit();
-			this.getCategories();
+			this.getProducts();
 			this.getData();
 		},
 		methods: {
@@ -203,9 +203,9 @@
 					this.units = res.data;
 				})
 			},
-			getCategories() {
-				axios.get('/get_categories').then(res => {
-					this.categories = res.data;
+			getProducts() {
+				axios.get('/get_products').then(res => {
+					this.products = res.data;
 				})
 			},
 			getData() {
@@ -218,11 +218,11 @@
 			},
 
 			saveData() {
-				if(this.selectedCategory == null){
+				if(this.selectedTest == null){
 					alert("Select category");
 					return;
 				}
-				this.subcategory.category_id = this.selectedCategory.ProductCategory_SlNo;
+				this.subcategory.test_id = this.selectedTest.Product_SlNo;
 				this.subcategory.unit_id = this.selectedUnit ? this.selectedUnit.Unit_SlNo : "";
 				let url = '/insertsubcategory';
 				if (this.subcategory.id != 0) {
@@ -243,7 +243,7 @@
 					this.subcategory[key] = subcategory[key];
 				})
 
-				this.selectedCategory = this.categories.find(item => item.ProductCategory_SlNo == subcategory.category_id)
+				this.selectedTest = this.products.find(item => item.Product_SlNo == subcategory.test_id)
 				this.selectedUnit = this.units.find(item => item.Unit_SlNo == subcategory.unit_id)
 			},
 			deleteData(subcategoryId) {

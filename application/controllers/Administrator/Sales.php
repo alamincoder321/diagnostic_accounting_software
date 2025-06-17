@@ -207,6 +207,10 @@ class Sales extends CI_Controller
         if (isset($data->employeeId) && $data->employeeId != '') {
             $clauses .= " and sm.employee_id = '$data->employeeId'";
         }
+        
+        if (isset($data->saleId) && $data->saleId != '') {
+            $clauses .= " and sm.SaleMaster_SlNo = '$data->saleId'";
+        }
 
         $sales = $this->db->query("
             select 

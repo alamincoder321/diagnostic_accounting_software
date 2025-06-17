@@ -72,8 +72,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label style="margin: 0;margin-top: -5px;">Category</label>
-                    <v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name" @input="getReportTest"></v-select>
+                    <label style="margin: 0;margin-top: -5px;">Test Name</label>
+                    <v-select v-bind:options="products" v-model="selectedTest" label="Product_Name" @input="getReportTest"></v-select>
                 </div>
 
                 <!-- <div class="form-group" style="margin-top: -2px;">
@@ -104,7 +104,7 @@
                                 <td v-text="index + 1"></td>
                                 <td style="text-align: left;" v-text="`${item.name}`"></td>
                                 <td>
-                                    <input type="text" class="form-control text-center" v-model="item.result" />
+                                    <input type="text" style="margin: 0;" class="form-control text-center" v-model="item.result" />
                                 </td>
                                 <td v-text="item.Unit_Name"></td>
                                 <td v-text="item.normal_range"></td>
@@ -130,7 +130,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <button type="button" @click="saveExchange" style="width: 100%;">Generate</button>
+                                    <button type="button" @click="saveExchange" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;">Generate</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -170,10 +170,10 @@
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    category_id: ""
+                    test_id: ""
                 },
-                categories: [],
-                selectedCategory: null,
+                products: [],
+                selectedTest: null,
                 carts: []
             }
         },
@@ -267,7 +267,7 @@
                 }
             },
             onChangeInvoice() {
-                this.selectedCategory = null;
+                this.selectedTest = null;
                 this.carts = [];
                 if (this.selectedInvoice == null) {
                     return;
@@ -278,7 +278,7 @@
                 }
                 axios.post('/get_sales_record', filter)
                     .then(res => {
-                        this.categories = res.data[0].saleDetails;
+                        this.products = res.data[0].saleDetails;
                     })
             },
             getReportTest() {
@@ -286,13 +286,13 @@
                 if (this.selectedInvoice == null) {
                     return;
                 }
-                if (this.selectedCategory == null) {
+                if (this.selectedTest == null) {
                     return;
                 }
                 let filter = {
                     customerId: this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : null,
                     saleId: this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : null,
-                    categoryId: this.selectedCategory.ProductCategory_SlNo
+                    testId: this.selectedTest.Product_IDNo
                 }
                 axios.post('/get_report_test', filter)
                     .then(res => {
@@ -301,10 +301,13 @@
             },
 
             saveExchange() {
-                this.report.patient_id = this.selectedCustomer.Customer_SlNo;
-                this.report.category_id = this.selectedCategory.ProductCategory_SlNo;
-                this.report.sale_id = this.selectedInvoice.SaleMaster_SlNo;
+                this.report.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : '';
+                this.report.test_id = this.selectedTest ? this.selectedTest.Product_IDNo : '';
+                this.report.sale_id = this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : '';
 
+                console.log(this.report);
+                
+                return;
                 let data = {
                     report: this.report,
                     carts: this.carts
@@ -323,13 +326,13 @@
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    category_id: ""
+                    test_id: ""
                 };
                 this.carts = []
-                this.selectedCategory = null;
+                this.selectedTest = null;
                 this.selectedInvoice = null;
                 this.invoices = [];
-                this.categories = [];
+                this.products = [];
                 this.selectedCustomer = {
                     Customer_SlNo: '',
                     Customer_Code: '',
