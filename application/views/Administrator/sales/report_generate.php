@@ -130,7 +130,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <button type="button" @click="saveExchange" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;">Generate</button>
+                                    <button type="button" @click="saveReport" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;">Generate</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -300,14 +300,19 @@
                     })
             },
 
-            saveExchange() {
+            saveReport() {
                 this.report.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : '';
                 this.report.test_id = this.selectedTest ? this.selectedTest.Product_IDNo : '';
                 this.report.sale_id = this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : '';
-
-                console.log(this.report);
+                if(this.report.test_id == ""){
+                    alert("Please select a test.");
+                    return;
+                }
+                if(this.report.sale_id == ""){
+                    alert("Please select a sale.");
+                    return;
+                }
                 
-                return;
                 let data = {
                     report: this.report,
                     carts: this.carts

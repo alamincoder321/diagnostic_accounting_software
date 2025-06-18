@@ -296,21 +296,6 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
-				<?php if (array_search("Report Generate", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
-					<div class="col-md-2 col-xs-6 custom-padding ">
-						<div class="col-md-12 section20">
-							<a href="<?php echo base_url(); ?>Report Generate">
-								<div class="logo">
-									<i class="menu-icon bi bi-clipboard-pulse"></i>
-								</div>
-								<div class="textModule">
-									Bill Record
-								</div>
-							</a>
-						</div>
-					</div>
-				<?php endif; ?>
 
 				<?php if (array_search("salesinvoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 custom-padding ">
@@ -321,6 +306,36 @@ if ($module == 'dashboard' or $module == '') { ?>
 								</div>
 								<div class="textModule">
 									Bill Invoice
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+				
+				<?php if (array_search("report_generate", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>report_generate">
+								<div class="logo">
+									<i class="menu-icon bi bi-clipboard-pulse"></i>
+								</div>
+								<div class="textModule">
+									Report Generate
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
+				<?php if (array_search("report_list", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>report_list">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Report List
 								</div>
 							</a>
 						</div>
