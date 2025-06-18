@@ -83,7 +83,7 @@
         </div>
     </div>
     <div class="row" style="margin-top: 8px;">
-        <div class="col-xs-12 col-md-9">
+        <div class="col-xs-12 col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title"></h4>
@@ -114,7 +114,65 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-3">
+        <div class="col-xs-12 col-md-4">
+            <div class="card" style="margin-bottom: 5px;">
+                <div class="card-header">
+                    <h4 class="card-title">Left Signature</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover table-bordered table-striped" style="margin-bottom: 0;">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left;">Name</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.left_name" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Degree</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.left_degree" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Department</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.left_department" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom: 5px;">
+                <div class="card-header">
+                    <h4 class="card-title">Right Signature</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover table-bordered table-striped" style="margin-bottom: 0;">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left;">Name</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.right_name" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Degree</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.right_degree" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Department</td>
+                                <td style="text-align: right;">
+                                    <input type="text" v-model="report.right_department" class="form-control" style="margin-bottom: 0;">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title"></h4>
@@ -125,7 +183,7 @@
                             <tr>
                                 <td style="text-align: left;">Date</td>
                                 <td style="text-align: right;">
-                                    <input type="date" v-model="report.date" class="form-control">
+                                    <input type="date" v-model="report.date" class="form-control" style="margin-bottom: 0;">
                                 </td>
                             </tr>
                             <tr>
@@ -170,7 +228,13 @@
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    test_id: ""
+                    test_id: "",
+                    left_name: "",
+                    left_degree: "",
+                    left_department: "",
+                    right_name: "",
+                    right_degree: "",
+                    right_department: ""
                 },
                 products: [],
                 selectedTest: null,

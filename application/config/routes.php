@@ -90,6 +90,9 @@ $route['paymentAndReport/(:any)'] = 'Administrator/Customer/paymentAndReport/$1'
 $route['report_generate']     = 'Administrator/ReportGenerate';
 $route['get_report_test']     = 'Administrator/ReportGenerate/getReportTest';
 $route['add_report_generate'] = 'Administrator/ReportGenerate/addReportGenerate';
+$route['report_list'] = 'Administrator/ReportGenerate/reportlist';
+$route['get_report_list'] = 'Administrator/ReportGenerate/getReportList';
+$route['report_invoice/(:any)'] = 'Administrator/ReportGenerate/reportInvoice/$1';
 
 //user entry
 $route['user'] = 'Administrator/User_management';

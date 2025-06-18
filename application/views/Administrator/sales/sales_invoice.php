@@ -42,10 +42,10 @@
 
 
 
-<script src="<?php echo base_url();?>assets/js/vue/vue.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/vue-select.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/components/salesInvoice.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue-select.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/components/salesInvoice.js"></script>
 
 <script>
   Vue.component('v-select', VueSelect.VueSelect);
@@ -67,7 +67,7 @@
           this.invoices = res.data.sales;
         })
       },
-      async viewInvoice(){
+      async viewInvoice() {
         this.showInvoice = false;
         await new Promise(r => setTimeout(r, 500));
         this.showInvoice = true;

@@ -114,4 +114,59 @@ class ReportGenerate extends CI_Controller
 
         echo json_encode($msg);
     }
+
+    public function reportInvoice($id)
+    {
+        $data['title']  = 'Report Invoice';
+        $data['id']  = $id;
+        $data['content'] = $this->load->view('Administrator/sales/report_invoice', $data, true);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function reportlist()
+    {
+        $data['title']  = 'Report List';
+        $data['content'] = $this->load->view('Administrator/sales/report_list', $data, true);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function getReportList()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+
+        $clauses = "";
+        if(!empty($data->reportId)){
+            $clauses .= " and rp.id = '$data->reportId'";
+        }
+
+        $reports = $this->db->query("select 
+                rp.*, 
+                ifnull(p.Customer_Code, 'General Patient') as Customer_Code, 
+                ifnull(p.Customer_Name, sm.customerName) as Customer_Name, 
+                ifnull(p.Customer_Address, sm.customerAddress) as Customer_Address, 
+                ifnull(p.Customer_Mobile, sm.customerMobile) as Customer_Mobile, 
+                t.Product_Name,
+                sm.SaleMaster_InvoiceNo
+            from tbl_report_generate rp
+            left join tbl_customer p on p.Customer_SlNo = rp.patient_id
+            left join tbl_product t on t.Product_SlNo = rp.test_id
+            left join tbl_salesmaster sm on sm.SaleMaster_SlNo = rp.sale_id
+            where rp.status = 'a'
+            $clauses
+            order by rp.id desc")->result();
+
+        $reports = array_map(function ($report) {
+            $report->details = $this->db
+                ->select("sc.id as subcategory_id, sc.name, rpd.result, u.Unit_Name, sc.normal_range")
+                ->join("tbl_subcategory as sc", "sc.id = rpd.subcategory_id", "left")
+                ->join("tbl_unit as u", "u.Unit_SlNo = sc.unit_id", "left")
+                ->where('rpd.generate_id', $report->id)
+                ->get('tbl_report_generate_detail as rpd')
+                ->result();
+
+            return $report;
+        }, $reports);
+
+        echo json_encode($reports);
+    }
 }
