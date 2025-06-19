@@ -25,7 +25,7 @@
             $monthlyRecord = [];
             $year = date('Y');
             $month = date('m');
-            $dayNumber = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $dayNumber = date('t', mktime(0, 0, 0, $month, 1, $year));
             for($i = 1; $i <= $dayNumber; $i++){
                 $date = $year . '-' . $month . '-'. sprintf("%02d", $i);
                 $query = $this->db->query("
@@ -171,41 +171,12 @@
                 return $due->dueAmount;
             }, $customerDueResult));
 
-            // Supplier Due
-            $supplierDueResult = $this->mt->supplierDue();
-            $supplierDue = array_sum(array_map(function($due) {
-                return $due->due;
-            }, $supplierDueResult));
-
             // Bank balance
             $bankTransactions = $this->mt->getBankTransactionSummary();
             $bankBalance = array_sum(array_map(function($bank){
                 return $bank->balance;
             }, $bankTransactions));
 
-            // Invest balance
-            $investTransactions = $this->mt->getInvestmentTransactionSummary();
-            $investBalance = array_sum(array_map(function($bank){
-                return $bank->balance;
-            }, $investTransactions));
-
-            // Loan balance
-            $loanTransactions = $this->mt->getLoanTransactionSummary();
-            $loanBalance = array_sum(array_map(function($bank){
-                return $bank->balance;
-            }, $loanTransactions));
-
-            //Assets Value
-            $assets = $this->mt->assetsReport();
-            $assets_value = array_reduce($assets, function($prev, $curr){ return $prev + $curr->approx_amount;});
-
-            //stock value
-            $stocks = $this->mt->currentStock();
-            $stockValue = array_sum(
-                array_map(function($product){
-                    return $product->stock_value;
-                }, $stocks)
-            );
 
             //this month profit loss
             $sales = $this->db->query("
@@ -235,16 +206,9 @@
                 });
             });
 
-            $total_transport_cost = array_reduce($sales, function($prev, $curr){ 
-                return $prev + $curr->SaleMaster_Freight;
-            });
-            
+           
             $total_discount = array_reduce($sales, function($prev, $curr){ 
                 return $prev + $curr->SaleMaster_TotalDiscountAmount;
-            });
-
-            $total_vat = array_reduce($sales, function($prev, $curr){ 
-                return $prev + $curr->SaleMaster_TaxAmount;
             });
 
 
@@ -266,38 +230,7 @@
                     and ct.status = 'a'
                     and month(ct.Tr_date) = '$month'
                     and year(ct.Tr_date) = '$year'
-                ) as expense,
-
-                (
-                    select ifnull(sum(it.amount), 0)
-                    from tbl_investment_transactions it
-                    where it.branch_id = '$this->branchId'
-                    and it.transaction_type = 'Profit'
-                    and it.status = 1
-                    and month(it.transaction_date) = '$month'
-                    and year(it.transaction_date) = '$year'
-                ) as profit_distribute,
-
-                (
-                    select ifnull(sum(lt.amount), 0)
-                    from tbl_loan_transactions lt
-                    where lt.branch_id = '$this->branchId'
-                    and lt.transaction_type = 'Interest'
-                    and lt.status = 1
-                    and month(lt.transaction_date) = '$month'
-                    and year(lt.transaction_date) = '$year'
-                ) as loan_interest,
-
-                (
-                    select ifnull(sum(a.valuation - a.as_amount), 0)
-                    from tbl_assets a
-                    where a.branchid = '$this->branchId'
-                    and a.buy_or_sale = 'sale'
-                    and a.status = 'a'
-                    and month(a.as_date) = '$month'
-                    and year(a.as_date) = '$year'
-                ) as assets_sales_profit_loss,
-            
+                ) as expense,            
                 (
                     select ifnull(sum(ep.total_payment_amount), 0)
                     from tbl_employee_payment ep
@@ -305,43 +238,16 @@
                     and ep.status = 'a'
                     and month(ep.payment_date) = '$month'
                     and year(ep.payment_date) = '$year'
-                ) as employee_payment,
-
-                (
-                    select ifnull(sum(dd.damage_amount), 0) 
-                    from tbl_damagedetails dd
-                    join tbl_damage d on d.Damage_SlNo = dd.Damage_SlNo
-                    where d.Damage_brunchid = '$this->branchId'
-                    and dd.status = 'a'
-                    and month(d.Damage_Date) = '$month'
-                    and year(d.Damage_Date) = '$year'
-                ) as damaged_amount,
-
-                (
-                    select ifnull(sum(rd.SaleReturnDetails_ReturnAmount) - sum(sd.Purchase_Rate * rd.SaleReturnDetails_ReturnQuantity), 0)
-                    from tbl_salereturndetails rd
-                    join tbl_salereturn r on r.SaleReturn_SlNo = rd.SaleReturn_IdNo
-                    join tbl_salesmaster sm on sm.SaleMaster_InvoiceNo = r.SaleMaster_InvoiceNo
-                    join tbl_saledetails sd on sd.Product_IDNo = rd.SaleReturnDetailsProduct_SlNo and sd.SaleMaster_IDNo = sm.SaleMaster_SlNo
-                    where r.Status = 'a'
-                    and r.SaleReturn_brunchId = '$this->branchId'
-                    and month(r.SaleReturn_ReturnDate) = '$month'
-                    and year(r.SaleReturn_ReturnDate) = '$year'
-                ) as returned_amount
+                ) as employee_payment
             ")->row();
 
             $net_profit = (
-                $profits + $total_transport_cost + 
-                $other_income_expense->income + $total_vat
+                $profits + 
+                $other_income_expense->income
             ) - (
                 $total_discount + 
-                $other_income_expense->returned_amount + 
-                $other_income_expense->damaged_amount + 
                 $other_income_expense->expense + 
-                $other_income_expense->employee_payment + 
-                $other_income_expense->profit_distribute + 
-                $other_income_expense->loan_interest + 
-                $other_income_expense->assets_sales_profit_loss 
+                $other_income_expense->employee_payment
             );
 
 
@@ -356,12 +262,7 @@
                 'top_customers'     => $topCustomers,
                 'top_products'      => $topProducts,
                 'customer_due'      => $customerDue,
-                'supplier_due'      => $supplierDue,
                 'bank_balance'      => $bankBalance,
-                'invest_balance'    => $investBalance,
-                'loan_balance'      => $loanBalance,
-                'asset_value'       => $assets_value,
-                'stock_value'       => $stockValue,
                 'this_month_profit' => $net_profit,
             ];
 

@@ -42,8 +42,8 @@ if ($module == 'dashboard' or $module == '') {
 		</li>
 
 		<li class="">
-			<!-- module/HRPayroll -->
-			<a href="<?php echo base_url(); ?>module/HRPayroll">
+			<!-- module/HRM -->
+			<a href="<?php echo base_url(); ?>module/HRM">
 				<i class="menu-icon fa fa-users"></i>
 				<span class="menu-text"> Manage HRM </span>
 			</a>
@@ -638,7 +638,7 @@ if ($module == 'dashboard' or $module == '') {
 
 
 	</ul><!-- /.nav-list -->
-<?php } elseif ($module == 'HRPayroll') { ?>
+<?php } elseif ($module == 'HRM') { ?>
 	<ul class="nav nav-list">
 		<li class="active">
 			<a href="<?php echo base_url(); ?>module/dashboard">
@@ -649,7 +649,7 @@ if ($module == 'dashboard' or $module == '') {
 			<b class="arrow"></b>
 		</li>
 		<li>
-			<a href="<?php echo base_url(); ?>module/HRPayroll" style="background:gray !important;" class="module_title">
+			<a href="<?php echo base_url(); ?>module/HRM" style="background:gray !important;" class="module_title">
 				<span>Manage HRM</span>
 			</a>
 		</li>

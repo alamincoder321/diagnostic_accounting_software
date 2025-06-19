@@ -50,7 +50,7 @@
                 </div>
                 
                 <div class="widget-content">
-                    <div class="widget-text">Today's Sale</div>
+                    <div class="widget-text">Today's Bill</div>
                     <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ todaysSale | decimal }}</div>
                 </div>
             </div>
@@ -74,23 +74,12 @@
                 </div>
                 
                 <div class="widget-content">
-                    <div class="widget-text">Monthly Sale</div>
+                    <div class="widget-text">Monthly Bill</div>
                     <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthSale | decimal }}</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #ff8000;">
-                <div class="widget-icon" style="background-color: #ff8000;text-align:center;">
-                    <i class="fa fa-reply fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Customer Due</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ customerDue | decimal }}</div>
-                </div>
-            </div>
-        </div>
+        
         <div class="col-md-2  col-xs-6">
             <div class="widgets" style="border-top: 5px solid #ae0000;">
                 <div class="widget-icon" style="background-color: #ae0000;text-align:center;">
@@ -115,68 +104,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row" v-if="showData" style="display:none;margin-top: 10px;" v-bind:style="{ display: showData ? '' : 'none' }">
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #1c8dff;">
-                <div class="widget-icon" style="background-color: #1c8dff;text-align:center;">
-                    <i class="fa fa-home fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Stock Value</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ stockValue | decimal }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #666633;">
-                <div class="widget-icon" style="background-color: #666633;text-align:center;">
-                    <i class="fa fa-building fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Asset Value</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ assetValue | decimal }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #008241;">
-                <div class="widget-icon" style="background-color: #008241;text-align:center;">
-                    <i class="fa fa-reply fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Supplier Due</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ supplierDue | decimal }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #ff8000;">
-                <div class="widget-icon" style="background-color: #ff8000;text-align:center;">
-                    <i class="fa fa-dollar fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Invest Balance</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ investBalance | decimal }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #ae0000;">
-                <div class="widget-icon" style="background-color: #ae0000;text-align:center;">
-                    <i class="fa fa-dollar fa-2x"></i>
-                </div>
-                
-                <div class="widget-content">
-                    <div class="widget-text">Loan Balance</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ loanBalance | decimal }}</div>
-                </div>
-            </div>
-        </div>
         <div class="col-md-2  col-xs-6">
             <div class="widgets" style="border-top: 5px solid #663300;">
                 <div class="widget-icon" style="background-color: #663300;text-align:center;">
@@ -191,9 +118,8 @@
         </div>
     </div>
     <div class="row" style="margin-top:20px;margin-bottom: 25px;">
-        
         <div class="col-md-12" v-if="salesGraph == 'monthly'">
-            <h3 class="text-center">This Month's Sale</h3>
+            <h3 class="text-center">This Month's Bill</h3>
             <sales-chart
             type="ColumnChart"
             :data="salesData"
@@ -201,7 +127,7 @@
             />
         </div>
         <div class="col-md-12" v-else>
-            <h3 class="text-center">This Year's Sale</h3>
+            <h3 class="text-center">This Year's Bill</h3>
             <sales-chart
             type="ColumnChart"
             :data="yearlySalesData"
@@ -217,7 +143,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3 class="text-center">Top Sold Products</h3>
+            <h3 class="text-center">Top Test</h3>
             <top-product-chart
             type="PieChart"
             :data="topProducts"
@@ -228,7 +154,7 @@
             <table class="table custom-table-bordered">
                 <thead>
                     <tr>
-                        <td class="text-center" colspan="2" style="background-color: #224079;color: white;font-weight: 900;">Top Customers</td>
+                        <td class="text-center" colspan="2" style="background-color: #224079;color: white;font-weight: 900;">Top Patient</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -239,14 +165,6 @@
                 </tbody>
             </table>
         </div>
-        <!-- <div class="col-md-6">
-            <h3 class="text-center">Top Customers</h3>
-            <top-customer-chart
-            type="PieChart"
-            :data="topCustomers"
-            :options="topCustomersOptions"
-            />
-        </div> -->
     </div>
 </div>
 
@@ -272,41 +190,32 @@
         data () {
             return {
                 salesData: [
-                    ['Date', 'Sales']
+                    ['Date', 'Bills']
                 ],
                 salesChartOptions: {
                     chart: {
-                        title: 'Sales',
+                        title: 'Bills',
                         subtitle: "This month's sales data",
                     }
                 },
                 yearlySalesData: [
-                    ['Month', 'Sales']
+                    ['Month', 'Bills']
                 ],
                 yearlySalesChartOptions: {
                     chart: {
-                        title: 'Sales',
+                        title: 'Bills',
                         subtitle: "This year's sales data",
                     }
                 },
                 topProducts: [
-                    ['Product', 'Quantity']
+                    ['Test', 'Quantity']
                 ],
                 topProductsOptions: {
                     chart: {
-                        title: 'Top Sold Products',
-                        subtitle: "Top sold products"
+                        title: 'Top Test',
+                        subtitle: "Top tests sold this month",
                     }
                 },
-                // topCustomers: [
-                //     ['Customer', 'Amount']
-                // ],
-                // topCustomersOptions: {
-                //     chart: {
-                //         title: 'Top Sold Products',
-                //         subtitle: "Top sold products"
-                //     }
-                // },
                 topCustomers : [],
                 salesText: '',
                 todaysSale: 0,
@@ -316,11 +225,6 @@
                 customerDue: 0,
                 bankBalance: 0,
                 thisMonthProfit: 0,
-                stockValue: 0,
-                assetValue: 0,
-                supplierDue: 0,
-                investBalance: 0,
-                loanBalance: 0,
                 showData: false,
                 salesGraph: 'monthly'
             }
@@ -335,14 +239,14 @@
             getGraphData(){
                 axios.get('/get_graph_data').then(res => {
                     this.salesData = [
-                        ['Date', 'Sales']
+                        ['Date', 'Bills']
                     ]
                     res.data.monthly_record.forEach(d => {
                         this.salesData.push(d);
                     })
 
                     this.yearlySalesData = [
-                        ['Month', 'Sales']
+                        ['Month', 'Bills']
                     ]
                     res.data.yearly_record.forEach(d => {
                         this.yearlySalesData.push(d);
@@ -359,23 +263,10 @@
                     this.customerDue        = res.data.customer_due;
                     this.bankBalance        = res.data.bank_balance;
                     this.thisMonthProfit    = res.data.this_month_profit;
-                    this.stockValue         = res.data.stock_value;
-                    this.assetValue         = res.data.asset_value;
-                    this.supplierDue        = res.data.supplier_due;
-                    this.investBalance      = res.data.invest_balance;
-                    this.loanBalance        = res.data.loan_balance;
-
                     this.topCustomers       = res.data.top_customers;
 
-                    // this.topCustomers = [
-                    //     ['Customer', 'Amount']
-                    // ]
-                    // res.data.top_customers.forEach(c => {
-                    //     this.topCustomers.push([c.customer_name, parseFloat(c.amount)]);
-                    // })
-
                     this.topProducts = [
-                        ['Product', 'Quantity']
+                        ['Test', 'Quantity']
                     ]
                     res.data.top_products.forEach(p => {
                         this.topProducts.push([p.product_name, parseFloat(p.sold_quantity)]);

@@ -63,7 +63,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 				</div>
 				<div class="col-md-3 col-xs-6 section4">
 					<div class="col-md-12 section122" style="background-color:#ecffd9;" onmouseover="this.style.background = '#cfff9f'" onmouseout="this.style.background = '#ecffd9'">
-						<a href="<?php echo base_url(); ?>module/HRPayroll">
+						<a href="<?php echo base_url(); ?>module/HRM">
 							<div class="logo">
 								<i class="fa fa-users"></i>
 							</div>
@@ -118,7 +118,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-list-ul"></i>
 								</div>
 								<div class="textModule">
-									Test list
+									Test List
 								</div>
 							</a>
 						</div>
@@ -515,7 +515,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 		</div>
 	</div>
 
-<?php } elseif ($module == 'HRPayroll') { ?>
+<?php } elseif ($module == 'HRM') { ?>
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
 			<div class="col-md-1"></div>

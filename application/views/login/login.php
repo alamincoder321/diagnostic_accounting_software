@@ -19,9 +19,9 @@
 	<div class="container">
 		<div class="cover">
 			<div class="front">
-				<img src="<?php echo base_url(); ?>assets/login/images/login.webp" alt="">
+				<img src="<?php echo base_url(); ?>assets/login/images/login.jpg" alt="">
 				<div class="text">
-					<span class="text-1">Online Accounting POS Software</span>
+					<span class="text-1">Diagnostic Management Software</span>
 				</div>
 			</div>
 		</div>
