@@ -486,7 +486,6 @@ class Sales extends CI_Controller
             redirect(base_url());
         }
         $data['title'] = "Profit & Loss";
-        $data['products'] = $this->Product_model->products_by_brunch();
         $data['content'] = $this->load->view('Administrator/sales/profit_loss', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }

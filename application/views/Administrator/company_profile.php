@@ -48,36 +48,6 @@
 						</div>
 					</div>
 
-					<div class="control-group" style="margin-top:15px;">
-						<label class="col-sm-12 control-label bolder blue">Invoice Print Type</label>
-						<div class="radio inline-radio">
-							<label>
-								<input name="inpt" id="a4" type="radio" value="1" <?php if ($selected->print_type == 1) {
-																						echo "checked";
-																					} ?> class="ace" />
-								<span class="lbl"> A4 Size</span>
-							</label>
-						</div>
-
-						<div class="radio inline-radio">
-							<label>
-								<input name="inpt" id="a42" type="radio" value="2" <?php if ($selected->print_type == 2) {
-																						echo "checked";
-																					} ?> class="ace" />
-								<span class="lbl"> 1/2 of A4 Size</span>
-							</label>
-						</div>
-
-						<div class="radio inline-radio">
-							<label>
-								<input name="inpt" id="pos" type="radio" value="3" <?php if ($selected->print_type == 3) {
-																						echo "checked";
-																					} ?> class="ace" />
-								<span class="lbl"> POS </span>
-							</label>
-						</div>
-					</div>
-
 					<div class="form-group" style="margin-top:15px;">
 						<label class="col-sm-4 control-label" for=""> </label>
 						<label class="col-sm-1 control-label"></label>
