@@ -274,17 +274,7 @@
 		},
 		methods: {
 			checkReturnAndEdit(sale) {
-				axios.get('/check_sale_return/' + sale.SaleMaster_InvoiceNo).then(res => {
-					if (res.data.found) {
-						alert('Unable to edit. Sale return found!');
-					} else {
-						if (sale.is_service == 'true') {
-							location.replace('/sales/service/' + sale.SaleMaster_SlNo);
-						} else {
-							location.replace('/sales/product/' + sale.SaleMaster_SlNo);
-						}
-					}
-				})
+				location.replace('/bill_entry/' + sale.SaleMaster_SlNo);
 			},
 			onChangeSearchType() {
 				this.sales = [];

@@ -35,6 +35,9 @@
     #doctorImage {
         height: 100%;
     }
+    tr td{
+        vertical-align: middle !important;
+    }
 </style>
 <div id="doctors">
     <form @submit.prevent="saveData">
@@ -152,6 +155,11 @@
                     <template scope="{ row }">
                         <tr>
                             <td>{{ row.sl }}</td>
+                            <td>
+								<a :href="row.imgSrc">
+									<img :src="row.imgSrc" style="width: 35px;height:35px;border:1px solid gray;border-radius: 5px;"/>
+								</a>
+							</td>
                             <td>{{ row.Doctor_Code }}</td>
                             <td>{{ row.Doctor_Name }}</td>
                             <td>{{ row.Doctor_Mobile }}</td>
@@ -214,6 +222,11 @@
                         filterable: false
                     },
                     {
+                        label: 'Image',
+                        field: 'imgSrc',
+                        align: 'center'
+                    },
+                    {
                         label: 'Doctor Id',
                         field: 'Doctor_Code',
                         align: 'center',
@@ -267,7 +280,8 @@
             getDoctors() {
                 axios.get('/get_doctors').then(res => {
                     this.doctors = res.data.map((item, index) => {
-                        item.sl = index + 1;
+                        item.sl = index + 1;                        
+						item.imgSrc = item.image_name ? '/uploads/doctors/' + item.image_name : '/assets/no_image.gif';
                         return item;
                     });
                 })

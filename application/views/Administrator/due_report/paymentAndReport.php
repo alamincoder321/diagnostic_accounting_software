@@ -171,7 +171,6 @@ $totalDue = $type == 'CR' ? $prevdueAmont - $CPROW->CPayment_amount : $prevdueAm
         reportWindow.focus();
         await new Promise(resolve => setTimeout(resolve, 1000));
         reportWindow.print();
-        await new Promise(resolve => setTimeout(resolve, 1000));
         reportWindow.close();
     }
 </script>

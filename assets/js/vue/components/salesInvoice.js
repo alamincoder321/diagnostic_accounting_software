@@ -8,14 +8,7 @@ const salesInvoice = Vue.component('sales-invoice', {
             </div>
             
             <div id="invoiceContent">
-                <div class="row" style="display:none;">
-                    <div class="col-xs-12 text-center">
-                        <div _h098asdh>
-                            Report Voucher
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
+                <div class="row" style="border: 1px solid #979797; margin: 0; margin-bottom: 5px; border-radius: 5px;padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-xs-7">
                         <strong>Patient Id:</strong> {{ sales.Customer_Code }}<br>
                         {{ sales.Customer_Name }}<br>
@@ -24,14 +17,11 @@ const salesInvoice = Vue.component('sales-invoice', {
                     </div>
                     <div class="col-xs-5 mobile-second-section">
                         <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
+                        <strong>Added By:</strong> {{ sales.AddBy }}<br>
                         <strong>Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}<br>
                         <span v-if="sales.Employee_Name"> <strong>Employee:</strong> {{ sales.Employee_Name }} </span>
-                        <span v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }}, {{ sales.specialization }} </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div _d9283dsc></div>
+                        <p style="margin:0;" v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }}</p>
+                        <span v-if="sales.Doctor_Name"> <strong>Specialized:</strong> {{ sales.specialization }} </span>
                     </div>
                 </div>
                 <div class="row">
@@ -40,14 +30,12 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <thead>
                                 <tr>
                                     <td>Test Name</td>
-                                    <td>Description</td>
                                     <td align="right">Rate</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(product, sl) in cart">
                                     <td style="text-align:left;padding-left: 7px;">{{ product.Product_Name }}</td>
-                                    <td>{{ product.note ?? 'N/A' }}</td>
                                     <td align="right">{{ product.SaleDetails_Rate }}</td>
                                 </tr>
                             </tbody>
@@ -70,8 +58,8 @@ const salesInvoice = Vue.component('sales-invoice', {
                                 </tr>
                             </table>
                         </div>
-                        <br>
-                        <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}
+                        <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }} <br><br>
+                        <strong>Note: </strong> {{ sales.SaleMaster_Description }}
                     </div>
                     <div class="col-xs-5">
                         <table _t92sadbc2>
@@ -93,7 +81,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                                 <td style="text-align:right">{{ sales.SaleMaster_PaidAmount }}</td>
                             </tr>
                             <tr v-show="sales.returnAmount > 0">
-                                <td><strong>Change Amount:</strong></td>
+                                <td><strong>Return Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.returnAmount }}</td>
                             </tr>
                             <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
@@ -280,76 +268,72 @@ const salesInvoice = Vue.component('sales-invoice', {
         async print() {
             let invoiceContent = document.querySelector('#invoiceContent').innerHTML;
             let printWindow = window.open('', 'PRINT', `width=${screen.width}, height=${screen.height}, left=0, top=0`);
-            
             printWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                    <title>Invoice</title>
-                    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-                    <style>
-                        html, body{
-                            width:500px!important;
-                        }
-                        body, table{
-                            font-size: 13px;
-                        }
-                        .invoice-header{
-                            border: 1px solid gray; 
-                            border-radius: 15px; 
-                            padding: 5px 20px;
-                        }                                
-                        @media print{                                  
-                            .invoice-copy {
-                                page-break-after: always;
-                            }    
-                        }    
-                    </style>
-                </head>
-                <body>
-                    <div class="row invoice-copy">
-                        <div class="col-xs-12">
-                            <img src="/assets/images/header.jpg" alt="Logo" style="width:100%;height:120px;" />
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="text-center">
-                                <span class="invoice-header">Customer Copy</span>
+                <html>
+                    <head>
+                        <title>Invoice</title>
+                        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+                        <style>
+                            body, table{
+                                font-size:15px;
+                            }
+                            .invoice-header{
+                                border: 1px solid gray; 
+                                border-radius: 15px; 
+                                padding: 5px 20px;
+                            }                                
+                            @media print{
+                                @page{
+                                    padding: 5px !important;
+                                    margin: 16px 16px !important;
+                                }                                  
+                                .invoice-copy {
+                                    page-break-after: always;
+                                }    
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center" style="margin-bottom: 10px;">
+                                        <span class="invoice-header">Patient Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
                             </div>
-                            ${invoiceContent}
                         </div>
-                    </div>
-                    <div class="row invoice-copy">
-                        <div class="col-xs-12">
-                            <img src="/assets/images/header.jpg" alt="Logo" style="width:100%;height:120px;" />
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="text-center">
-                                <span class="invoice-header">Reception Copy</span>
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center" style="margin-bottom: 10px;">
+                                        <span class="invoice-header">Reception Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
                             </div>
-                            ${invoiceContent}
                         </div>
-                    </div>
-                    <div class="row invoice-copy">
-                        <div class="col-xs-12">
-                            <img src="/assets/images/header.jpg" alt="Logo" style="width:100%;height:120px;" />
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="text-center">
-                                <span class="invoice-header">Lab Copy</span>
+                        <div class="container-fluid invoice-copy">
+                            <div class="row">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center" style="margin-bottom: 10px;">
+                                        <span class="invoice-header">Lab Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
                             </div>
-                            ${invoiceContent}
                         </div>
-                    </div>
-
-                    <div class="row" style="position:fixed;bottom:0;left:0;width:505px !important;text-align:center;">
-                        <div class="col-xs-12">
-                            <img src="/assets/images/footer.jpg" alt="Logo" style="width:100%;height:120px;" />
-                        </div>
-                    </div>
-                </body>
+                    </body>
                 </html>
             `);
             

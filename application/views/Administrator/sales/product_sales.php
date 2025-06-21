@@ -193,13 +193,6 @@
 								</div>
 
 								<div class="form-group">
-									<label class="col-xs-3 control-label no-padding-right"> Description </label>
-									<div class="col-xs-9">
-										<input type="text" id="note" placeholder="Description" class="form-control" v-model="selectedProduct.note" autocomplete="off"/>
-									</div>
-								</div>
-
-								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> </label>
 									<div class="col-xs-9">
 										<button type="submit" style="padding: 3px 6px; background: rgb(0, 126, 187) !important; border-color: rgb(0, 126, 187) !important; outline: none; border-radius: 6px;" class="btn pull-right">Add to Cart</button>
@@ -220,8 +213,7 @@
 						<tr class="">
 							<th style="width:10%;color:#000;">Sl</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="width:25%;color:#000;">Item</th>
-							<th style="width:15%;color:#000;">Description</th>
+							<th style="width:25%;color:#000;">Test Name</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total</th>
 							<th style="width:10%;color:#000;">Action</th>
@@ -232,7 +224,6 @@
 							<td>{{ sl + 1 }}</td>
 							<td>{{ product.categoryName }}</td>
 							<td>{{ product.name }} - {{ product.productCode }}</td>
-							<td>{{ product.note }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
 							<td><a href="" v-on:click.prevent="removeFromCart(sl)"><i class="fa fa-trash"></i></a></td>
@@ -315,7 +306,6 @@
 												<div class="col-xs-7">
 													<input type="number" id="discount" class="form-control" v-model="sales.discount" v-on:input="calculateTotal" />
 												</div>
-
 											</div>
 										</td>
 									</tr>
@@ -366,7 +356,7 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Change Amount</label>
+												<label class="col-xs-12 control-label no-padding-right">Return Amount</label>
 												<div class="col-xs-12">
 													<input type="number" id="returnAmount" class="form-control" v-model="sales.returnAmount" readonly />
 												</div>
@@ -381,9 +371,6 @@
 												<div class="col-xs-12">
 													<input type="number" id="due" class="form-control" v-model="sales.due" readonly />
 												</div>
-												<!-- <div class="col-xs-6">
-													<input type="number" id="previousDue" class="form-control" v-model="sales.previousDue" readonly style="color:red;" />
-												</div> -->
 											</div>
 										</td>
 									</tr>
@@ -648,8 +635,7 @@
 					salesRate: this.selectedProduct.Product_SellingPrice,
 					quantity: this.selectedProduct.quantity,
 					total: this.selectedProduct.total,
-					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
-					note: this.selectedProduct.note ?? "N/A"
+					purchaseRate: this.selectedProduct.Product_Purchase_Rate
 				}
 
 				if (product.productId == '' || product.productId == null) {
@@ -761,7 +747,7 @@
 				axios.post(url, data).then(async res => {
 					let r = res.data;
 					if (r.success) {
-						let conf = confirm('Report entry success, Do you want to view invoice?');
+						let conf = confirm(`${r.message}, Do you want to view invoice?`);
 						if (conf) {
 							window.open('/sale_invoice_print/' + r.salesId, '_blank');
 							await new Promise(r => setTimeout(r, 1000));
@@ -831,8 +817,7 @@
 							salesRate: product.SaleDetails_Rate,
 							quantity: product.SaleDetails_TotalQuantity,
 							total: product.SaleDetails_TotalAmount,
-							purchaseRate: product.Purchase_Rate,
-							note: product.note ?? 'N/A'
+							purchaseRate: product.Purchase_Rate
 						}
 						this.cart.push(cartProduct);
 					})

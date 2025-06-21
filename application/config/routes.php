@@ -44,6 +44,19 @@ $route['delete_product'] = 'Administrator/Products/deleteProduct';
 $route['productlist'] = 'Administrator/Reports/productlist';
 $route['get_products']    =    'Administrator/Products/getProducts';
 
+// agent route
+$route['agent'] = 'Administrator/Agent';
+$route['get_agents'] = 'Administrator/Agent/getAgents';
+$route['add_agent'] = 'Administrator/Agent/addAgent';
+$route['update_agent'] = 'Administrator/Agent/updateAgent';
+$route['delete_agent'] = 'Administrator/Agent/deleteAgent';
+
+$route['room'] = 'Administrator/Page/room';
+$route['get_rooms'] = 'Administrator/Page/getRooms';
+$route['add_room'] = 'Administrator/Page/addRoom';
+$route['update_room'] = 'Administrator/Page/updateRoom';
+$route['delete_room'] = 'Administrator/Page/deleteRoom';
+
 // docotr route
 $route['doctor'] = 'Administrator/Doctor';
 $route['get_doctors'] = 'Administrator/Doctor/getDoctors';

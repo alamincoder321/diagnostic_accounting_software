@@ -61,9 +61,11 @@ class Customer extends CI_Controller
             select
                 c.*,
                 d.District_Name,
+                a.Agent_Name,
                 concat_ws(' - ', c.Customer_Code, c.Customer_Name, c.Customer_Mobile) as display_name
             from tbl_customer c
             left join tbl_district d on d.District_SlNo = c.area_ID
+            left join tbl_agent a on a.Agent_SlNo = c.agent_id
             where c.status = 'a'
             and c.Customer_brunchid = ?
             $clauses
@@ -269,8 +271,8 @@ class Customer extends CI_Controller
                 $config['source_image'] = './uploads/customers/' . $imageName;
                 $config['new_image'] = './uploads/customers/';
                 $config['maintain_ratio'] = TRUE;
-                $config['width']    = 640;
-                $config['height']   = 480;
+                $config['width']    = 200;
+                $config['height']   = 200;
 
                 $this->load->library('image_lib', $config);
                 $this->image_lib->resize();

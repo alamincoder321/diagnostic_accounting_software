@@ -31,14 +31,14 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <img src="<?php echo base_url(); ?>assets/images/header.jpg" alt="Logo" style="width:100%;height:120px;" />
+                <img src="<?php echo base_url(); ?>assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-xs-12">
                 <div style="border-bottom: 4px double #454545;margin-top:7px;margin-bottom:7px;"></div>
             </div>
-        </div>
+        </div> -->
     </div>
 </body>
 

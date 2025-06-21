@@ -87,6 +87,20 @@ class Model_Table extends CI_Model
         return $userCode;
     }
 
+    public function generateAgentCode()
+    {
+        $agentCode = "A00001";
+
+        $lastAgent = $this->db->query("select * from tbl_agent order by Agent_SlNo desc limit 1");
+        if ($lastAgent->num_rows() != 0) {
+            $newAgentId = $lastAgent->row()->Agent_SlNo + 1;
+            $zeros = array('0', '00', '000', '0000');
+            $agentCode = 'A' . (strlen($newAgentId) > count($zeros) ? $newAgentId : $zeros[count($zeros) - strlen($newAgentId)] . $newAgentId);
+        }
+
+        return $agentCode;
+    }
+
     public function generateCustomerCode()
     {
         $customerCode = "P00001";

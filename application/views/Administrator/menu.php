@@ -141,6 +141,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 
+		<?php if (array_search("agent", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>agent">
+					<i class="menu-icon fa fa-user-plus"></i>
+					<span class="menu-text"> Agent Entry </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 		<?php if (array_search("category", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>category">
@@ -166,6 +176,16 @@ if ($module == 'dashboard' or $module == '') {
 				<a href="<?php echo base_url(); ?>unit">
 					<i class="menu-icon fa fa-plus-circle"></i>
 					<span class="menu-text"> Unit Entry </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
+		<?php if (array_search("room", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>room">
+					<i class="menu-icon fa fa-plus-circle"></i>
+					<span class="menu-text"> Room Entry </span>
 				</a>
 				<b class="arrow"></b>
 			</li>

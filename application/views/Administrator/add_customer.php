@@ -82,6 +82,9 @@
 	#customerImage {
 		height: 100%;
 	}
+	tr td{
+		vertical-align: middle !important;
+	}
 </style>
 <div id="customers">
 	<form @submit.prevent="saveCustomer">
@@ -143,6 +146,14 @@
 				</div>
 
 				<div class="form-group clearfix">
+					<label class="control-label col-md-4">Agent:</label>
+					<div class="col-md-7">
+						<v-select v-bind:options="agents" v-model="selectedAgent" label="display_name"></v-select>
+					</div>
+					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/agent" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+				</div>
+
+				<div class="form-group clearfix">
 					<div class="col-md-7 col-md-offset-4 text-right">
 						<input type="submit" class="btn btn-success btn-sm" value="Save">
 					</div>
@@ -178,12 +189,18 @@
 					<template scope="{ row }">
 						<tr>
 							<td>{{ row.sl }}</td>
+							<td>
+								<a :href="row.imgSrc">
+									<img :src="row.imgSrc" style="width: 35px;height:35px;border:1px solid gray;border-radius: 5px;"/>
+								</a>
+							</td>
 							<td>{{ row.Customer_Code }}</td>
 							<td>{{ row.Customer_Name }}</td>
 							<td>{{ row.Customer_Mobile }}</td>
 							<td>{{ row.District_Name }}</td>
 							<td>{{ row.age }}</td>
 							<td>{{ row.gender }}</td>
+							<td>{{ row.Agent_Name }}</td>
 							<td>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<button type="button" class="button edit" @click="editCustomer(row)">
@@ -229,6 +246,8 @@
 				customers: [],
 				districts: [],
 				selectedDistrict: null,
+				agents: [],
+				selectedAgent: null,
 				imageUrl: '',
 				selectedFile: null,
 
@@ -239,13 +258,19 @@
 						filterable: false
 					},
 					{
-						label: 'Customer Id',
+						label: 'Image',
+						field: 'imgSrc',
+						align: 'center',
+						filterable: false
+					},
+					{
+						label: 'Patient Id',
 						field: 'Customer_Code',
 						align: 'center',
 						filterable: false
 					},
 					{
-						label: 'Customer Name',
+						label: 'Patient Name',
 						field: 'Customer_Name',
 						align: 'center'
 					},
@@ -270,6 +295,11 @@
 						align: 'center'
 					},
 					{
+						label: 'Agent',
+						field: 'Agent_Name',
+						align: 'center'
+					},
+					{
 						label: 'Action',
 						align: 'center',
 						filterable: false
@@ -282,9 +312,15 @@
 		},
 		created() {
 			this.getDistricts();
+			this.getAgents();
 			this.getCustomers();
 		},
 		methods: {
+			getAgents() {
+				axios.get('/get_agents').then(res => {
+					this.agents = res.data;
+				})
+			},
 			getDistricts() {
 				axios.get('/get_districts').then(res => {
 					this.districts = res.data;
@@ -294,6 +330,7 @@
 				axios.get('/get_customers').then(res => {
 					this.customers = res.data.map((item, index) => {
 						item.sl = index + 1;
+						item.imgSrc = item.image_name ? '/uploads/customers/' + item.image_name : '/assets/no_image.gif';
 						return item;
 					});
 				})
@@ -331,6 +368,7 @@
 					return;
 				}
 				this.customer.area_ID = this.selectedDistrict.District_SlNo;
+				this.customer.agent_id = this.selectedAgent ? this.selectedAgent.Agent_SlNo : null;
 
 				let url = '/add_customer';
 				if (this.customer.Customer_SlNo != 0) {
@@ -360,6 +398,9 @@
 					District_SlNo: customer.area_ID,
 					District_Name: customer.District_Name
 				}
+				setTimeout(() => {
+					this.selectedAgent = this.agents.find(agent => agent.Agent_SlNo == customer.agent_id);
+				}, 1000)
 				if (customer.image_name == null || customer.image_name == '') {
 					this.imageUrl = null;
 				} else {

@@ -32,6 +32,74 @@ class Page extends CI_Controller
         $this->load->view('Administrator/master_dashboard', $data);
     }
 
+     // Product Category 
+    public function getRooms()
+    {
+        $categories = $this->db->query("select * from tbl_room where status = 'a'")->result();
+        echo json_encode($categories);
+    }
+
+    public function room()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Add Room";
+        $data['content'] = $this->load->view('Administrator/add_room', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+    public function addRoom()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $query = $this->db->query("select * from tbl_room where Room_Name = '$data->Room_Name'");
+
+        if ($query->num_rows() > 0) {
+            $msg = array("status" => false, "message" => "Already Exist this name");
+            echo json_encode($msg);
+        } else {
+            $category = array(
+                "Room_Name" => $data->Room_Name,
+                "status"    => 'a',
+                "AddBy"     => $this->session->userdata("FullName"),
+                "AddTime"   => date("Y-m-d H:i:s")
+            );
+            $this->db->insert("tbl_room", $category);
+
+            $msg = array("status" => true, "message" => "Room insert successfully");
+            echo json_encode($msg);
+        }
+    }
+
+    public function updateRoom()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $query = $this->db->query("select * from tbl_room where Room_Name = '$data->Room_Name' and Room_SlNo != ?", $data->Room_SlNo);
+
+        if ($query->num_rows() > 0) {
+            $msg = array("status" => false, "message" => "Already Exist this room");
+            echo json_encode($msg);
+        } else {
+            $category = array(
+                "Room_Name" => $data->Room_Name,
+                "status"               => 'a',
+                "AddBy"                => $this->session->userdata("FullName"),
+                "AddTime"              => date("Y-m-d H:i:s")
+            );
+            $this->db->where('Room_SlNo', $data->Room_SlNo)->update("tbl_room", $category);
+
+            $msg = array("status" => true, "message" => "Room update successfully");
+            echo json_encode($msg);
+        }
+    }
+    public function deleteRoom()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $this->db->where("Room_SlNo", $data->roomId)->update('tbl_room', ['status' => 'd']);
+        $msg = array("status" => true, "message" => "Room delete successfully");
+        echo json_encode($msg);
+    }
+
     // Product Category 
     public function getCategories()
     {
