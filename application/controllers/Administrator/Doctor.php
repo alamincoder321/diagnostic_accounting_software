@@ -26,6 +26,17 @@ class Doctor extends CI_Controller
         $this->load->view('Administrator/index', $data);
     }
 
+    public function doctorList()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title']  = 'Doctor List';
+        $data['content'] = $this->load->view('Administrator/reports/doctorList', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
     public function getDoctors()
     {
         $data = json_decode($this->input->raw_input_stream);

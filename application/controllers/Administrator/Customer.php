@@ -33,7 +33,7 @@ class Customer extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Customer List";
+        $data['title'] = "Patient List";
         $data['content'] = $this->load->view("Administrator/reports/customer_list", $data, true);
         $this->load->view("Administrator/index", $data);
     }

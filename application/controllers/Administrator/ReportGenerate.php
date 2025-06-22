@@ -20,6 +20,19 @@ class ReportGenerate extends CI_Controller
             redirect(base_url());
         }
         $data['title'] = "Report Generate";
+        $data['id'] = 0;
+        $data['content'] = $this->load->view('Administrator/sales/report_generate', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function reportEdit($id)
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Report Generate Update";
+        $data['id'] = $id;
         $data['content'] = $this->load->view('Administrator/sales/report_generate', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
@@ -70,6 +83,8 @@ class ReportGenerate extends CI_Controller
                 ->row();
             if (empty($check)) {
                 $report = (array)$data->report;
+                unset($report['id']);
+                $report['invoice'] = $this->mt->generateReportInvoice();
                 $report['AddBy'] = $this->session->userdata('FullName');
                 $report['AddTime'] = date("Y-m-d H:i:s");
                 $report['branch_id'] = $this->branchId;
@@ -84,28 +99,46 @@ class ReportGenerate extends CI_Controller
                     );
                     $this->db->insert('tbl_report_generate_detail', $detail);
                 }
+                $this->db->trans_commit();
                 $msg = 'Report Generate Success';
+                $msg = ['success' => true, 'message' => $msg];
             } else {
-                $report               = (array)$data->report;
-                $report['UpdateBy']   = $this->session->userdata('FullName');
-                $report['UpdateTime'] = date("Y-m-d H:i:s");
-                $report['branch_id']  = $this->branchId;
-                $this->db->where('id', $check->id)->update("tbl_report_generate", $report);
-
-                $this->db->query("delete from tbl_report_generate_detail where generate_id = ?", [$check->id]);
-                foreach ($data->carts as $item) {
-                    $detail = array(
-                        'generate_id' => $check->id,
-                        'subcategory_id' => $item->subcategory_id,
-                        'result' => $item->result
-                    );
-                    $this->db->insert('tbl_report_generate_detail', $detail);
-                }
-                $msg = 'Report Generate Update Success';
+                $msg = 'Already Generated this report for this patient';
+                $msg = ['success' => false, 'message' => $msg];
             }
+        } catch (\Throwable $th) {
+            $this->db->trans_rollback();
+            $msg = ['success' => false, 'message' => 'Something went wrong'];
+        }
 
+        echo json_encode($msg);
+    }
+    public function updateReportGenerate()
+    {
+        $msg = ['success' => false, 'message' => ''];
+        try {
+            $this->db->trans_begin();
+            $data = json_decode($this->input->raw_input_stream);
 
+            $report               = (array)$data->report;
+            unset($report['id']);
+            $report['UpdateBy']   = $this->session->userdata('FullName');
+            $report['UpdateTime'] = date("Y-m-d H:i:s");
+            $report['branch_id']  = $this->branchId;
+            $this->db->where('id', $data->report->id)->update("tbl_report_generate", $report);
+
+            $this->db->query("delete from tbl_report_generate_detail where generate_id = ?", [$data->report->id]);
+            foreach ($data->carts as $item) {
+                $detail = array(
+                    'generate_id' => $data->report->id,
+                    'subcategory_id' => $item->subcategory_id,
+                    'result' => $item->result
+                );
+                $this->db->insert('tbl_report_generate_detail', $detail);
+            }
             $this->db->trans_commit();
+
+            $msg = 'Report Generate Update Success';
             $msg = ['success' => true, 'message' => $msg];
         } catch (\Throwable $th) {
             $this->db->trans_rollback();
@@ -135,8 +168,11 @@ class ReportGenerate extends CI_Controller
         $data = json_decode($this->input->raw_input_stream);
 
         $clauses = "";
-        if(!empty($data->reportId)){
+        if (!empty($data->reportId)) {
             $clauses .= " and rp.id = '$data->reportId'";
+        }
+        if (!empty($data->dateFrom) && !empty($data->dateTo)) {
+            $clauses .= " and rp.date between '$data->dateFrom' and '$data->dateTo'";
         }
 
         $reports = $this->db->query("select 
@@ -168,5 +204,40 @@ class ReportGenerate extends CI_Controller
         }, $reports);
 
         echo json_encode($reports);
+    }
+
+    public function deleteReportGenerate()
+    {
+        $msg = ['success' => false, 'message' => ''];
+        try {
+            $data = json_decode($this->input->raw_input_stream);
+            $this->db->where('id', $data->reportId)->delete('tbl_report_generate');
+            $this->db->where('generate_id', $data->reportId)->delete('tbl_report_generate_detail');
+            $msg = ['success' => true, 'message' => 'Report Generate Deleted Successfully'];
+        } catch (\Throwable $th) {
+            $msg = ['success' => false, 'message' => 'Something went wrong'];
+        }
+        echo json_encode($msg);
+    }
+
+    public function reportDelivery()
+    {
+        $msg = ['success' => false, 'message' => ''];
+        try {
+            $data = json_decode($this->input->raw_input_stream);
+            $this->db->where('id', $data->reportId)->update(
+                'tbl_report_generate',
+                [
+                    'is_delivery' => 'yes',
+                    'delivery_date' => date('Y-m-d'),
+                    'UpdateBy' => $this->session->userdata('FullName'),
+                    'UpdateTime' => date('Y-m-d H:i:s')
+                ]
+            );
+            $msg = ['success' => true, 'message' => 'Report Delivered Successfully'];
+        } catch (\Throwable $th) {
+            $msg = ['success' => false, 'message' => 'Something went wrong'];
+        }
+        echo json_encode($msg);
     }
 }

@@ -171,6 +171,20 @@ class Model_Table extends CI_Model
         return $transactionCode;
     }
 
+    public function generateReportInvoice()
+    {
+        $reportCode = "R00001";
+
+        $lastReport = $this->db->query("select * from tbl_report_generate order by id desc limit 1");
+        if ($lastReport->num_rows() != 0) {
+            $newReportId = $lastReport->row()->Tr_SlNo + 1;
+            $zeros = array('0', '00', '000', '0000');
+            $reportCode = 'R' . (strlen($newReportId) > count($zeros) ? $newReportId : $zeros[count($zeros) - strlen($newReportId)] . $newReportId);
+        }
+
+        return $reportCode;
+    }
+
     public function generateDamageCode()
     {
         $code = "D0001";

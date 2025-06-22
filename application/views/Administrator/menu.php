@@ -121,6 +121,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 
+		<?php if (array_search("customerlist", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>customerlist">
+					<i class="menu-icon fa fa-list"></i>
+					<span class="menu-text"> Patient List </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 		<?php if (array_search("customerPaymentReport", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 			<li class="">
 				<a href="<?php echo base_url(); ?>customerPaymentReport">
@@ -136,6 +146,16 @@ if ($module == 'dashboard' or $module == '') {
 				<a href="<?php echo base_url(); ?>doctor">
 					<i class="menu-icon fa fa-user-md"></i>
 					<span class="menu-text"> Doctor Entry </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
+		<?php if (array_search("doctorlist", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>doctorlist">
+					<i class="menu-icon fa fa-list"></i>
+					<span class="menu-text"> Doctor List </span>
 				</a>
 				<b class="arrow"></b>
 			</li>
@@ -622,7 +642,7 @@ if ($module == 'dashboard' or $module == '') {
 						</li>
 					<?php endif; ?> -->
 
-					<?php if (array_search("balance_sheet", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<!-- <?php if (array_search("balance_sheet", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
 							<a href="<?php echo base_url(); ?>balance_sheet">
 								<i class="menu-icon fa fa-caret-right"></i>
@@ -630,7 +650,7 @@ if ($module == 'dashboard' or $module == '') {
 							</a>
 							<b class="arrow"></b>
 						</li>
-					<?php endif; ?>
+					<?php endif; ?> -->
 
 					<?php if (array_search("BalanceSheet", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
@@ -642,7 +662,7 @@ if ($module == 'dashboard' or $module == '') {
 						</li>
 					<?php endif; ?>
 
-					<?php if (array_search("day_book", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<!-- <?php if (array_search("day_book", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
 							<a href="<?php echo base_url(); ?>day_book">
 								<i class="menu-icon fa fa-caret-right"></i>
@@ -650,7 +670,7 @@ if ($module == 'dashboard' or $module == '') {
 							</a>
 							<b class="arrow"></b>
 						</li>
-					<?php endif; ?>
+					<?php endif; ?> -->
 
 				</ul>
 			</li>

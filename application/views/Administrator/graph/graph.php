@@ -44,6 +44,80 @@
     </div>
     <div class="row" v-if="showData" style="display:none;" v-bind:style="{ display: showData ? '' : 'none' }">
         <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Patient</div>
+                    <div class="widget-value">{{ todayPatient }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Patient</div>
+                    <div class="widget-value">{{ totalPatient }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-user-md fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Doctor</div>
+                    <div class="widget-value">{{ totalDoctor }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Agent</div>
+                    <div class="widget-value">{{ totalAgent }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-file-text fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Delivery Report</div>
+                    <div class="widget-value">{{ todayReport }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-file-text fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Delivery Report</div>
+                    <div class="widget-value">{{ totalReport }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" v-if="showData" style="display:none;margin-top: 10px;" v-bind:style="{ display: showData ? '' : 'none' }">
+        <div class="col-md-2  col-xs-6">
             <div class="widgets" style="border-top: 5px solid #1c8dff;">
                 <div class="widget-icon" style="background-color: #1c8dff;text-align:center;">
                     <i class="fa fa-shopping-cart fa-2x"></i>
@@ -226,7 +300,13 @@
                 bankBalance: 0,
                 thisMonthProfit: 0,
                 showData: false,
-                salesGraph: 'monthly'
+                salesGraph: 'monthly',
+                totalDoctor: 0,
+                totalPatient: 0,
+                todayPatient: 0,
+                totalAgent: 0,
+                todayReport: 0,
+                totalReport: 0,
             }
         },
         created(){
@@ -256,14 +336,20 @@
                         return sale.sale_text;
                     }).join(' | ');
 
-                    this.todaysSale         = res.data.todays_sale;
-                    this.thisMonthSale      = res.data.this_month_sale;
-                    this.todaysCollection   = res.data.todays_collection;
-                    this.cashBalance        = res.data.cash_balance;
-                    this.customerDue        = res.data.customer_due;
-                    this.bankBalance        = res.data.bank_balance;
-                    this.thisMonthProfit    = res.data.this_month_profit;
-                    this.topCustomers       = res.data.top_customers;
+                    this.todaysSale       = res.data.todays_sale;
+                    this.thisMonthSale    = res.data.this_month_sale;
+                    this.todaysCollection = res.data.todays_collection;
+                    this.cashBalance      = res.data.cash_balance;
+                    this.customerDue      = res.data.customer_due;
+                    this.bankBalance      = res.data.bank_balance;
+                    this.thisMonthProfit  = res.data.this_month_profit;
+                    this.topCustomers     = res.data.top_customers;
+                    this.totalDoctor      = res.data.total_doctor;
+                    this.todayPatient     = res.data.today_patient;
+                    this.totalPatient     = res.data.total_patient;
+                    this.totalAgent       = res.data.total_agent;
+                    this.todayReport      = res.data.today_report;
+                    this.totalReport      = res.data.total_report;
 
                     this.topProducts = [
                         ['Test', 'Quantity']

@@ -359,7 +359,7 @@ class Products extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title']  = 'Product Ledger';
+        $data['title']  = 'Test Ledger';
 
         $data['content'] = $this->load->view('Administrator/products/product_ledger', $data, true);
         $this->load->view('Administrator/index', $data);

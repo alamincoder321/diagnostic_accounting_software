@@ -188,7 +188,12 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <button type="button" @click="saveReport" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;">Generate</button>
+                                    <button type="button" @click="saveReport" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;display: none;" :style="{display: report.id > 0 ? '' : 'none'}">
+                                        Update Report
+                                    </button>
+                                    <button v-show="report.id == 0" type="button" @click="saveReport" style="width: 100%; padding: 10px 20px; background: #30b5f5; color: #fff; border: 1px solid #30b5f5;display:none;" :style="{display: report.id == 0 ? '' : 'none'}">
+                                        Generate Report
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -225,6 +230,7 @@
                 invoices: [],
                 selectedInvoice: null,
                 report: {
+                    id: parseInt("<?= $id ?>"),
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
@@ -241,9 +247,12 @@
                 carts: []
             }
         },
-        created() {
+        async created() {
             this.getCustomers();
             this.getSales();
+            if (this.report.id > 0) {
+                await this.getGenerateReport();
+            }
         },
         methods: {
             async getCustomers() {
@@ -368,34 +377,44 @@
                 this.report.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : '';
                 this.report.test_id = this.selectedTest ? this.selectedTest.Product_IDNo : '';
                 this.report.sale_id = this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : '';
-                if(this.report.test_id == ""){
+                if (this.report.test_id == "") {
                     alert("Please select a test.");
                     return;
                 }
-                if(this.report.sale_id == ""){
+                if (this.report.sale_id == "") {
                     alert("Please select a sale.");
                     return;
                 }
-                
+
                 let data = {
                     report: this.report,
                     carts: this.carts
                 }
-                axios.post('/add_report_generate', data)
+                let url = this.report.id > 0 ? '/update_report_generate' : '/add_report_generate';
+
+                axios.post(url, data)
                     .then(res => {
+                        alert(res.data.message);
                         if (res.data.success) {
-                            alert(res.data.message);
                             this.clearData();
+                            window.history.pushState({}, '', '/report_generate');
                         }
                     })
             },
 
             clearData() {
                 this.report = {
+                    id: 0,
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    test_id: ""
+                    test_id: "",
+                    left_name: "",
+                    left_degree: "",
+                    left_department: "",
+                    right_name: "",
+                    right_degree: "",
+                    right_department: ""
                 };
                 this.carts = []
                 this.selectedTest = null;
@@ -411,6 +430,44 @@
                     Customer_Address: '',
                     Customer_Type: '',
                 }
+            },
+
+            async getGenerateReport() {
+                await axios.post('/get_report_list', {
+                    reportId: this.report.id
+                }).then(res => {
+                    let data = res.data[0];
+                    Object.keys(this.report).forEach(key => {
+                        if (data[key] !== undefined) {
+                            this.report[key] = data[key];
+                        }
+                    });
+                    this.selectedCustomer = {
+                        Customer_SlNo: data.patient_id,
+                        Customer_Code: data.Customer_Code,
+                        Customer_Name: data.Customer_Name,
+                        display_name: data.Customer_Code == 'General Patient' ? 'General Patient' : `${data.Customer_Code} - ${data.Customer_Name} - ${data.Customer_Mobile}`,
+                        Customer_Mobile: data.Customer_Mobile,
+                        Customer_Address: data.Customer_Address,
+                        Customer_Type: data.Customer_Code == 'General Patient' ? 'G' : 'retail',
+                    };
+
+                    setTimeout(() => {
+                        this.selectedInvoice = this.invoices.find(invoice => invoice.SaleMaster_SlNo == data.sale_id);
+                    }, 1000);
+                    setTimeout(() => {
+                        this.selectedTest = this.products.find(product => product.Product_IDNo == data.test_id);
+                    }, 2500);
+                    setTimeout(() => {
+                        this.carts = data.details.map(detail => ({
+                            name: detail.name,
+                            result: detail.result,
+                            Unit_Name: detail.Unit_Name,
+                            normal_range: detail.normal_range,
+                            subcategory_id: detail.subcategory_id
+                        }));
+                    }, 3500);
+                });
             }
         }
     })

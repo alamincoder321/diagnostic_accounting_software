@@ -63,6 +63,7 @@ $route['get_doctors'] = 'Administrator/Doctor/getDoctors';
 $route['add_doctor'] = 'Administrator/Doctor/addDoctor';
 $route['update_doctor'] = 'Administrator/Doctor/updateDoctor';
 $route['delete_doctor'] = 'Administrator/Doctor/deleteDoctor';
+$route['doctorlist'] = 'Administrator/Doctor/doctorList';
 
 // patient route
 $route['customer'] = 'Administrator/Customer';
@@ -100,12 +101,16 @@ $route['customerDue'] = 'Administrator/Customer/customer_due';
 $route['paymentAndReport/(:any)'] = 'Administrator/Customer/paymentAndReport/$1';
 
 // generate report
-$route['report_generate']     = 'Administrator/ReportGenerate';
-$route['get_report_test']     = 'Administrator/ReportGenerate/getReportTest';
-$route['add_report_generate'] = 'Administrator/ReportGenerate/addReportGenerate';
-$route['report_list'] = 'Administrator/ReportGenerate/reportlist';
-$route['get_report_list'] = 'Administrator/ReportGenerate/getReportList';
-$route['report_invoice/(:any)'] = 'Administrator/ReportGenerate/reportInvoice/$1';
+$route['report_generate']        = 'Administrator/ReportGenerate';
+$route['report_generate/(:any)'] = 'Administrator/ReportGenerate/reportEdit/$1';
+$route['get_report_test']        = 'Administrator/ReportGenerate/getReportTest';
+$route['add_report_generate']    = 'Administrator/ReportGenerate/addReportGenerate';
+$route['update_report_generate'] = 'Administrator/ReportGenerate/updateReportGenerate';
+$route['delete_report_generate'] = 'Administrator/ReportGenerate/deleteReportGenerate';
+$route['report_list']            = 'Administrator/ReportGenerate/reportlist';
+$route['get_report_list']        = 'Administrator/ReportGenerate/getReportList';
+$route['report_invoice/(:any)']  = 'Administrator/ReportGenerate/reportInvoice/$1';
+$route['report_delivery']        = 'Administrator/ReportGenerate/reportDelivery';
 
 //user entry
 $route['user'] = 'Administrator/User_management';

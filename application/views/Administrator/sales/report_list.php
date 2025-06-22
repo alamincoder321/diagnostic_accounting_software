@@ -70,12 +70,12 @@
                 </div>
 
                 <div class="form-group">
-					<input type="date" class="form-control" v-model="dateFrom">
-				</div>
+                    <input type="date" class="form-control" v-model="dateFrom">
+                </div>
 
-				<div class="form-group">
-					<input type="date" class="form-control" v-model="dateTo">
-				</div>
+                <div class="form-group">
+                    <input type="date" class="form-control" v-model="dateTo">
+                </div>
 
                 <div class="form-group" style="margin-top: -5px;">
                     <input type="submit" value="Search">
@@ -96,21 +96,32 @@
                             <th>Sl</th>
                             <th>Invoice</th>
                             <th>Date</th>
+                            <th>Delivery Date</th>
+                            <th>Bill Invoice</th>
                             <th>Patient Name</th>
                             <th>Test Name</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(item, sl) in reports">
                             <td>{{ sl + 1 }}</td>
-                            <td>{{ item.SaleMaster_InvoiceNo }}</td>
+                            <td>{{ item.invoice }}</td>
                             <td>{{ item.date | dateFormat('DD-MM-YYYY') }}</td>
+                            <td>{{ item.delivery_date | dateFormat('DD-MM-YYYY') }}</td>
+                            <td>{{ item.SaleMaster_InvoiceNo }}</td>
                             <td>{{ item.Customer_Name }}</td>
                             <td>{{ item.Product_Name }}</td>
                             <td>
+                                <span v-if="item.is_delivery == 'yes'" class="badge badge-success">Delivered</span>
+                                <span v-if="item.is_delivery == 'no'" class="badge badge-danger">Undelivered</span>
+                            </td>
+                            <td>
+                                <span style="cursor: pointer;" v-if="item.is_delivery == 'no'" @click="deliveryReport(item)" class="badge badge-warning">Delivery</span>
+                                <i @click="reportEdit(item.id)" class="text-info fa fa-edit" style="cursor: pointer;font-size: 14.5px;margin-right:5px;"></i>
                                 <i @click="openInvoice(item.id)" class="text-info fa fa-file-text" style="cursor: pointer;font-size: 14.5px;margin-right:5px;"></i>
-                                <i class="text-danger fa fa-trash" style="cursor: pointer;font-size: 16px;"></i>
+                                <i @click="deleteData(item.id)" class="text-danger fa fa-trash" style="cursor: pointer;font-size: 16px;"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -152,6 +163,9 @@
             openInvoice(id) {
                 window.open(`/report_invoice/${id}`, '_blank');
             },
+            reportEdit(id) {
+                window.open(`/report_generate/${id}`, '_blank');
+            },
             getProducts() {
                 axios.get('/get_products').then(res => {
                     this.products = res.data;
@@ -167,6 +181,32 @@
                     this.reports = res.data;
                 })
             },
+            deleteData(reportId) {
+                if (confirm('Are you sure you want to delete this report?')) {
+                    axios.post('/delete_report_generate', {
+                        reportId: reportId
+                    }).then(res => {
+                        alert(res.data.message);
+                        if (res.data.success) {
+                            this.getReportList();
+                        }
+                    });
+                }
+            },
+
+            deliveryReport(item) {
+                if (confirm('Are you sure you want to mark this report as delivered?')) {
+                    axios.post('/report_delivery', {
+                        reportId: item.id
+                    }).then(res => {
+                        alert(res.data.message);
+                        if (res.data.success) {
+                            this.getReportList();
+                        }
+                    });
+                }
+            },
+
             async print() {
                 let reportContent = `
 					<div class="container">

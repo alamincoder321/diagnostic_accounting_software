@@ -19,6 +19,7 @@
                         <strong>Invoice No.:</strong> {{ report.SaleMaster_InvoiceNo }}<br>
                         <strong>Report by:</strong> {{ report.AddBy }}<br>
                         <strong>Report Date:</strong> {{ formatDateTime(report.date, 'DD-MM-YYYY') }} {{ formatDateTime(report.AddTime, 'h:mm a') }}
+                        <strong>Delivery Date:</strong> {{ formatDateTime(report.delivery_date, 'DD-MM-YYYY') }} {{ formatDateTime(report.UpdateTime, 'h:mm a') }}
                     </div>
                 </div>
                 <div class="row">
@@ -140,6 +141,15 @@
             },
             async print() {
                 let reportContent = `
+                    <style>
+                        @media print{
+                                @page{
+                                    padding: 5px !important;
+                                    margin: 16px 16px !important;
+                                }  
+                            }
+                        }
+                    </style>
 					<div class="container">
 						<div class="row">
 							<div class="col-xs-12">
