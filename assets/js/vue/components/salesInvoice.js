@@ -11,9 +11,11 @@ const salesInvoice = Vue.component('sales-invoice', {
                 <div class="row" style="border: 1px solid #979797; margin: 0; margin-bottom: 5px; border-radius: 5px;padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-xs-7">
                         <strong>Patient Id:</strong> {{ sales.Customer_Code }}<br>
-                        {{ sales.Customer_Name }}<br>
-                        {{ sales.Customer_Address }}<br>
-                        {{ sales.Customer_Mobile }}<br>
+                        <strong>Name: </strong>{{ sales.Customer_Name }}<br>
+                        <strong>Mobile: </strong>{{ sales.Customer_Mobile }}<br>
+                        <strong>Address: </strong>{{ sales.Customer_Address }}<br>
+                        <strong>Age: </strong>{{ sales.age }}<br>
+                        <strong>Gender: </strong>{{ sales.gender }}<br>
                     </div>
                     <div class="col-xs-5 mobile-second-section">
                         <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
@@ -90,6 +92,14 @@ const salesInvoice = Vue.component('sales-invoice', {
                                 <td style="text-align:right">{{ sales.SaleMaster_DueAmount }}</td>
                             </tr>
                         </table>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 80px;">
+                    <div class="col-xs-6">
+                        <span style="text-decoration:overline;">Received by</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <span style="text-decoration:overline;">Authorized by</span>
                     </div>
                 </div>
             </div>
@@ -268,34 +278,106 @@ const salesInvoice = Vue.component('sales-invoice', {
         async print() {
             let invoiceContent = document.querySelector('#invoiceContent').innerHTML;
             let printWindow = window.open('', 'PRINT', `width=${screen.width}, height=${screen.height}, left=0, top=0`);
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Invoice</title>
-                        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-                        <style>
-                            body, table{
-                                font-size:15px;
-                            }
-                            .invoice-header{
-                                border: 1px solid gray; 
-                                border-radius: 15px; 
-                                padding: 5px 20px;
-                            }                                
-                            @media print{
-                                @page{
-                                    padding: 5px !important;
-                                    margin: 16px 16px !important;
-                                }                                  
-                                .invoice-copy {
-                                    page-break-after: always;
-                                }    
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container-fluid invoice-copy">
-                            <div class="row">
+            if (this.currentBranch.print_type == '1') {
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Invoice</title>
+                            <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+                            <style>
+                                body, table{
+                                    font-size:15px;
+                                }
+                                .invoice-header{
+                                    border: 1px solid gray; 
+                                    border-radius: 15px; 
+                                    padding: 5px 20px;
+                                }                                
+                                @media print{
+                                    @page{
+                                        padding: 5px !important;
+                                        margin: 16px 16px !important;
+                                    }                                  
+                                    .invoice-copy {
+                                        page-break-after: always;
+                                    }    
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container-fluid invoice-copy">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="text-center" style="margin-bottom: 10px;">
+                                            <span class="invoice-header">Patient Copy</span>
+                                        </div>
+                                        ${invoiceContent}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid invoice-copy">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="text-center" style="margin-bottom: 10px;">
+                                            <span class="invoice-header">Reception Copy</span>
+                                        </div>
+                                        ${invoiceContent}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid invoice-copy">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="text-center" style="margin-bottom: 10px;">
+                                            <span class="invoice-header">Lab Copy</span>
+                                        </div>
+                                        ${invoiceContent}
+                                    </div>
+                                </div>
+                            </div>
+                        </body>
+                    </html>
+                `);
+            }else{
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                            <title>Invoice</title>
+                            <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+                            <style>
+                                html, body{
+                                    width:500px!important;
+                                }
+                                body, table{
+                                    font-size: 13px;
+                                }
+                                .invoice-header{
+                                    border: 1px solid gray; 
+                                    border-radius: 15px; 
+                                    padding: 5px 20px;
+                                }                                
+                                @media print{                                
+                                    .invoice-copy {
+                                        page-break-after: always;
+                                    }    
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="row invoice-copy">
                                 <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
                                     <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                 </div>
@@ -306,9 +388,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                                     ${invoiceContent}
                                 </div>
                             </div>
-                        </div>
-                        <div class="container-fluid invoice-copy">
-                            <div class="row">
+                            <div class="row invoice-copy">
                                 <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
                                     <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                 </div>
@@ -319,9 +399,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                                     ${invoiceContent}
                                 </div>
                             </div>
-                        </div>
-                        <div class="container-fluid invoice-copy">
-                            <div class="row">
+                            <div class="row invoice-copy">
                                 <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
                                     <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                 </div>
@@ -332,10 +410,10 @@ const salesInvoice = Vue.component('sales-invoice', {
                                     ${invoiceContent}
                                 </div>
                             </div>
-                        </div>
-                    </body>
-                </html>
-            `);
+                        </body>
+                    </html>
+				`);
+            }
             
             let invoiceStyle = printWindow.document.createElement('style');
             invoiceStyle.innerHTML = this.style.innerHTML;

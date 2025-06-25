@@ -164,4 +164,15 @@ class Agent extends CI_Controller
 
         echo json_encode($res);
     }
+
+    public function agentlist()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Agent List";
+        $data['content'] = $this->load->view("Administrator/reports/agentList", $data, true);
+        $this->load->view("Administrator/index", $data);
+    }
 }

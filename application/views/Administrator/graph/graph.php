@@ -118,8 +118,82 @@
     </div>
     <div class="row" v-if="showData" style="display:none;margin-top: 10px;" v-bind:style="{ display: showData ? '' : 'none' }">
         <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #1c8dff;">
-                <div class="widget-icon" style="background-color: #1c8dff;text-align:center;">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-money fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Patient Due</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ customerDue | decimal }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-money fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Patient Due</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ customerDue | decimal }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="padding-top: 0;background-color: #666633;text-align:center;">
+                    <i class="bi bi-journal-text fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Test</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthSale | decimal }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="padding-top: 0;background-color: #666633;text-align:center;">
+                    <i class="bi bi-journal-text fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Test</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthSale | decimal }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-dollar fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Today Expense</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ bankBalance | decimal }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
+                    <i class="fa fa-dollar fa-2x"></i>
+                </div>
+                
+                <div class="widget-content">
+                    <div class="widget-text">Total Expense</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthProfit | decimal }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" v-if="showData" style="display:none;margin-top: 10px;" v-bind:style="{ display: showData ? '' : 'none' }">
+        <div class="col-md-2  col-xs-6">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
                     <i class="fa fa-shopping-cart fa-2x"></i>
                 </div>
                 
@@ -142,8 +216,8 @@
             </div>
         </div>
         <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #008241;">
-                <div class="widget-icon" style="background-color: #008241;text-align:center;">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
                     <i class="fa fa-shopping-cart fa-2x"></i>
                 </div>
                 
@@ -155,8 +229,8 @@
         </div>
         
         <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #ae0000;">
-                <div class="widget-icon" style="background-color: #ae0000;text-align:center;">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
                     <i class="fa fa-dollar fa-2x"></i>
                 </div>
                 
@@ -167,8 +241,8 @@
             </div>
         </div>
         <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #663300;">
-                <div class="widget-icon" style="background-color: #663300;text-align:center;">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
                     <i class="fa fa-dollar fa-2x"></i>
                 </div>
                 
@@ -179,8 +253,8 @@
             </div>
         </div>
         <div class="col-md-2  col-xs-6">
-            <div class="widgets" style="border-top: 5px solid #663300;">
-                <div class="widget-icon" style="background-color: #663300;text-align:center;">
+            <div class="widgets" style="border-top: 5px solid #666633;">
+                <div class="widget-icon" style="background-color: #666633;text-align:center;">
                     <i class="fa fa-line-chart fa-2x"></i>
                 </div>
                 

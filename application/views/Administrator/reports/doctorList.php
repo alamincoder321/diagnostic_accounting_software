@@ -36,6 +36,9 @@
         width: auto;
         overflow-y: auto;
     }
+    tr td{
+        vertical-align: middle !important;
+    }
 </style>
 <div id="customerListReport">
     <div class="row">
@@ -67,6 +70,7 @@
                     <table class="table table-bordered table-condensed">
                         <thead>
                             <th>Sl</th>
+                            <th>Image</th>
                             <th>Doctor Id</th>
                             <th>Doctor Name</th>
                             <th>Specialization</th>
@@ -78,6 +82,11 @@
                         <tbody>
                             <tr v-for="(doctor, sl) in doctors">
                                 <td>{{ sl + 1 }}</td>
+                                <td>
+                                    <a :href="doctor.imgSrc">
+                                        <img :src="doctor.imgSrc" style="width: 35px;height:35px;border:1px solid gray;border-radius: 5px;" />
+                                    </a>
+                                </td>
                                 <td>{{ doctor.Doctor_Code }}</td>
                                 <td>{{ doctor.Doctor_Name }}</td>
                                 <td>{{ doctor.specialization }}</td>
@@ -149,7 +158,10 @@
                     employeeId: this.selectedEmployee == null ? null : this.selectedEmployee.Employee_SlNo
                 }
                 axios.post('/get_doctors', filter).then(res => {
-                    this.doctors = res.data;
+                    this.doctors = res.data.map((item, index) => {
+                        item.imgSrc = item.image_name ? '/uploads/doctors/' + item.image_name : '/assets/no_image.gif';
+                        return item;
+                    });
                 })
             },
 

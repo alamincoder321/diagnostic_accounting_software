@@ -50,6 +50,7 @@ $route['get_agents'] = 'Administrator/Agent/getAgents';
 $route['add_agent'] = 'Administrator/Agent/addAgent';
 $route['update_agent'] = 'Administrator/Agent/updateAgent';
 $route['delete_agent'] = 'Administrator/Agent/deleteAgent';
+$route['agentlist'] = 'Administrator/Agent/agentlist';
 
 $route['room'] = 'Administrator/Page/room';
 $route['get_rooms'] = 'Administrator/Page/getRooms';

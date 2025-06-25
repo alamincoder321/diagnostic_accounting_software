@@ -300,6 +300,8 @@ class Sales extends CI_Controller
             ifnull(c.Customer_Mobile, sm.customerMobile) as Customer_Mobile,
             ifnull(c.Customer_Address, sm.customerAddress) as Customer_Address,
             ifnull(c.Customer_Type, sm.customerType) as Customer_Type,
+            c.age,
+            c.gender,
             dc.Doctor_Name,
             dc.specialization,
             e.Employee_Name,
