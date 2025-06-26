@@ -101,6 +101,7 @@ class Sales extends CI_Controller
                 $saleDetails = array(
                     'SaleMaster_IDNo'           => $salesId,
                     'Product_IDNo'              => $cartProduct->productId,
+                    'room_id'                   => $cartProduct->room_id,
                     'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
                     'SaleDetails_Rate'          => $cartProduct->salesRate,
@@ -174,10 +175,11 @@ class Sales extends CI_Controller
                 c.Customer_Code,
                 c.Customer_Name
             from tbl_saledetails sd
-            join tbl_product p on p.Product_SlNo = sd.Product_IDNo
-            join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
-            join tbl_salesmaster sm on sm.SaleMaster_SlNo = sd.SaleMaster_IDNo
-            join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
+            left join tbl_product p on p.Product_SlNo = sd.Product_IDNo
+            left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+            left join tbl_salesmaster sm on sm.SaleMaster_SlNo = sd.SaleMaster_IDNo
+            left join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
+            left join tbl_room r on r.Room_SlNo = sd.room_id
             where sd.Status != 'd'
             and sm.SaleMaster_branchid = ?
             $clauses
@@ -237,10 +239,12 @@ class Sales extends CI_Controller
                     sd.*,
                     p.Product_Name,
                     pc.ProductCategory_SlNo,
-                    pc.ProductCategory_Name
+                    pc.ProductCategory_Name,
+                    r.Room_Name
                 from tbl_saledetails sd
-                join tbl_product p on p.Product_SlNo = sd.Product_IDNo
-                join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_product p on p.Product_SlNo = sd.Product_IDNo
+                left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_room r on r.Room_SlNo = sd.room_id
                 where sd.SaleMaster_IDNo = ?
                 and sd.Status != 'd'
             ", $sale->SaleMaster_SlNo)->result();
@@ -282,10 +286,12 @@ class Sales extends CI_Controller
                     sd.*,
                     p.Product_Code,
                     p.Product_Name,
-                    pc.ProductCategory_Name
+                    pc.ProductCategory_Name,
+                    r.Room_Name
                 from tbl_saledetails sd
-                join tbl_product p on p.Product_SlNo = sd.Product_IDNo
-                join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_product p on p.Product_SlNo = sd.Product_IDNo
+                left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_room r on r.Room_SlNo = sd.room_id
                 where sd.SaleMaster_IDNo = ?
             ", $data->salesId)->result();
 
@@ -391,6 +397,7 @@ class Sales extends CI_Controller
                 $saleDetails = array(
                     'SaleMaster_IDNo'           => $salesId,
                     'Product_IDNo'              => $cartProduct->productId,
+                    'room_id'                   => $cartProduct->room_id,
                     'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
                     'SaleDetails_Rate'          => $cartProduct->salesRate,

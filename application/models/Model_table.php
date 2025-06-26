@@ -634,6 +634,54 @@ class Model_Table extends CI_Model
 
         return $dueResult;
     }
+    
+    public function todaycustomerDue($clauses = "", $date = null)
+    {
+        $date = date('Y-m-d');
+        $branchId = $this->session->userdata('BRANCHid');
+        $dueResult = $this->db->query("
+            select
+            c.Customer_SlNo,
+            c.Customer_Code,
+            c.Customer_Name,
+            c.Customer_Address,
+            c.Customer_Mobile,
+            (select ifnull(sum(sm.SaleMaster_TotalSaleAmount), 0.00)
+                from tbl_salesmaster sm 
+                where sm.SalseCustomer_IDNo = c.Customer_SlNo
+                " . ($date == null ? "" : " and sm.SaleMaster_SaleDate = '$date'") . "
+                and sm.Status = 'a') as billAmount,
+
+            (select ifnull(sum(sm.SaleMaster_PaidAmount), 0.00)
+                from tbl_salesmaster sm
+                where sm.SalseCustomer_IDNo = c.Customer_SlNo
+                " . ($date == null ? "" : " and sm.SaleMaster_SaleDate = '$date'") . "
+                and sm.Status = 'a') as invoicePaid,
+
+            (select ifnull(sum(cp.CPayment_amount), 0.00) 
+                from tbl_customer_payment cp 
+                where cp.CPayment_customerID = c.Customer_SlNo 
+                and cp.CPayment_TransactionType = 'CR'
+                " . ($date == null ? "" : " and cp.CPayment_date = '$date'") . "
+                and cp.CPayment_status = 'a') as cashReceived,
+
+            (select ifnull(sum(cp.CPayment_amount), 0.00) 
+                from tbl_customer_payment cp 
+                where cp.CPayment_customerID = c.Customer_SlNo 
+                and cp.CPayment_TransactionType = 'CP'
+                " . ($date == null ? "" : " and cp.CPayment_date = '$date'") . "
+                and cp.CPayment_status = 'a') as paidOutAmount,
+
+            (select invoicePaid + cashReceived) as paidAmount,
+
+            (select (billAmount + paidOutAmount) - paidAmount) as dueAmount
+            
+            from tbl_customer c
+            where c.Customer_brunchid = '$branchId' $clauses
+        ")->result();
+
+        return $dueResult;
+    }
 
     public function productStock($productId)
     {

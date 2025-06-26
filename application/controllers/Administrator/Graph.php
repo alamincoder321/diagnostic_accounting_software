@@ -170,6 +170,11 @@ class Graph extends CI_Controller
             ")->result();
 
         // Customer Due
+        $todaycustomerDueResult = $this->mt->todaycustomerDue();
+        $todaycustomerDue = array_sum(array_map(function ($due) {
+            return $due->dueAmount;
+        }, $todaycustomerDueResult));
+       
         $customerDueResult = $this->mt->customerDue();
         $customerDue = array_sum(array_map(function ($due) {
             return $due->dueAmount;
@@ -283,26 +288,50 @@ class Graph extends CI_Controller
             ->where('delivery_date', date('Y-m-d'))
             ->get('tbl_report_generate')
             ->row()->today_report;
+        $total_test = $this->db->select('count(*) as total_test')
+            ->where('status', 'a')
+            ->get('tbl_report_generate')
+            ->row()->total_test;
+        $today_test = $this->db->select('count(*) as today_test')
+            ->where('status', 'a')
+            ->where('delivery_date', date('Y-m-d'))
+            ->get('tbl_report_generate')
+            ->row()->today_test;
+        
+        $total_expense = $this->db->select('ifnull(sum(Out_Amount), 0) as amount')
+            ->where('status', 'a')
+            ->get('tbl_cashtransaction')
+            ->row()->amount;
+        $today_expense = $this->db->select('ifnull(sum(Out_Amount), 0) as amount')
+            ->where('status', 'a')
+            ->where('Tr_date', date('Y-m-d'))
+            ->get('tbl_cashtransaction')
+            ->row()->amount;
 
         $responseData = [
-            'monthly_record'    => $monthlyRecord,
-            'yearly_record'     => $yearlyRecord,
-            'sales_text'        => $sales_text,
-            'todays_sale'       => $todaysSale,
-            'this_month_sale'   => $thisMonthSale,
-            'todays_collection' => $todaysCollection,
-            'cash_balance'      => $cashBalance,
-            'top_customers'     => $topCustomers,
-            'top_products'      => $topProducts,
-            'customer_due'      => $customerDue,
-            'bank_balance'      => $bankBalance,
-            'this_month_profit' => $net_profit,
-            'total_patient'     => $total_patient,
-            'today_patient'     => $today_patient,
-            'total_doctor'      => $total_doctor,
-            'total_agent'       => $total_agent,
-            'today_report'      => $today_report,
-            'total_report'      => $total_report,
+            'monthly_record'     => $monthlyRecord,
+            'yearly_record'      => $yearlyRecord,
+            'sales_text'         => $sales_text,
+            'todays_sale'        => $todaysSale,
+            'this_month_sale'    => $thisMonthSale,
+            'todays_collection'  => $todaysCollection,
+            'cash_balance'       => $cashBalance,
+            'top_customers'      => $topCustomers,
+            'top_products'       => $topProducts,
+            'today_customer_due' => $todaycustomerDue,
+            'customer_due'       => $customerDue,
+            'bank_balance'       => $bankBalance,
+            'this_month_profit'  => $net_profit,
+            'total_patient'      => $total_patient,
+            'today_patient'      => $today_patient,
+            'total_doctor'       => $total_doctor,
+            'total_agent'        => $total_agent,
+            'today_report'       => $today_report,
+            'total_report'       => $total_report,
+            'today_test'         => $today_test,
+            'total_test'         => $total_test,
+            'today_expense'      => $today_expense,
+            'total_expense'      => $total_expense,
         ];
 
         echo json_encode($responseData, JSON_NUMERIC_CHECK);

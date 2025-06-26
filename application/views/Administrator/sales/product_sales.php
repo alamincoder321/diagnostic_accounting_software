@@ -114,7 +114,7 @@
 				<div class="widget-main">
 
 					<div class="row">
-						<div class="col-md-5">
+						<div class="col-md-6">
 							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Patient </label>
 								<div class="col-xs-8" style="display: flex;align-items:center;margin-bottom:5px;">
@@ -149,7 +149,7 @@
 							</div>
 						</div>
 
-						<div class="col-md-5">
+						<div class="col-md-6">
 							<form @submit.prevent="addToCart">
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Category </label>
@@ -176,15 +176,19 @@
 								</div>
 
 								<div class="form-group">
+									<label class="col-xs-3 control-label no-padding-right"> Room </label>
+									<div class="col-xs-9">
+										<v-select v-bind:options="rooms" id="room" v-model="selectedRoom" @input="onChangeRoom" label="Room_Name" placeholder="select room"></v-select>
+									</div>
+								</div>
+
+								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Rate </label>
 									<div class="col-xs-9">
 										<input type="number" id="salesRate" ref="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
-									<!-- <label class="col-xs-1 control-label no-padding-right"> Qty </label>
-									<div class="col-xs-4">
-										<input type="number" step="0.01" id="quantity" placeholder="Qty" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" required />
-									</div> -->
 								</div>
+
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Total </label>
 									<div class="col-xs-9">
@@ -214,6 +218,7 @@
 							<th style="width:10%;color:#000;">Sl</th>
 							<th style="width:15%;color:#000;">Category</th>
 							<th style="width:25%;color:#000;">Test Name</th>
+							<th style="width:25%;color:#000;">Room</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total</th>
 							<th style="width:10%;color:#000;">Action</th>
@@ -224,6 +229,7 @@
 							<td>{{ sl + 1 }}</td>
 							<td>{{ product.categoryName }}</td>
 							<td>{{ product.name }} - {{ product.productCode }}</td>
+							<td>{{ product.Room_Name }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
 							<td><a href="" v-on:click.prevent="removeFromCart(sl)"><i class="fa fa-trash"></i></a></td>
@@ -387,7 +393,6 @@
 											</div>
 										</td>
 									</tr>
-
 								</table>
 							</div>
 						</div>
@@ -430,6 +435,8 @@
 				},
 				discountPercent: 0,
 				cart: [],
+				rooms: [],
+				selectedRoom: null,
 				categories: [],
 				selectedCategory: null,
 				employees: [],
@@ -471,6 +478,7 @@
 		},
 		async created() {
 			await this.getBank();
+			await this.getRoom();
 			await this.getDoctor();
 			await this.getCategory();
 			await this.getEmployees();
@@ -489,6 +497,11 @@
 						item.display_name = `${item.bank_name} - ${item.account_number} - ${item.account_name}`;
 						return item;
 					});
+				})
+			},
+			getRoom() {
+				axios.get('/get_rooms').then(res => {
+					this.rooms = res.data;
 				})
 			},
 			getDoctor() {
@@ -619,16 +632,36 @@
 					return;
 				}
 				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
+					document.querySelector("#room [type='search']").focus();
+				}
+
+			},
+
+			async onChangeRoom() {
+				if (this.selectedProduct == null) {
+					this.selectedProduct = {
+						Product_SlNo: '',
+						display_text: 'Select Test',
+						Product_Name: '',
+						quantity: 0,
+						Product_Purchase_Rate: '',
+						Product_SellingPrice: 0,
+						total: 0
+					}
+					return;
+				}
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
 					this.selectedProduct.quantity = 1;
 					this.$refs.salesRate.focus();
 					await this.productTotal();
 				}
-
 			},
 
 			addToCart() {
 				let product = {
 					productId: this.selectedProduct.Product_SlNo,
+					room_id: this.selectedRoom ? this.selectedRoom.Room_SlNo : '',
+					Room_Name: this.selectedRoom ? this.selectedRoom.Room_Name : '',
 					productCode: this.selectedProduct.Product_Code,
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
@@ -640,6 +673,10 @@
 
 				if (product.productId == '' || product.productId == null) {
 					alert('Select Test');
+					return;
+				}
+				if (product.room_id == '' || product.room_id == null) {
+					alert('Select Room');
 					return;
 				}
 
@@ -676,6 +713,7 @@
 					Product_SellingPrice: 0,
 					total: 0
 				}
+				this.selectedRoom = null;
 			},
 			calculateTotal() {
 				this.sales.subTotal = this.cart.reduce((prev, curr) => {

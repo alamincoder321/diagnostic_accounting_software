@@ -125,7 +125,7 @@
                 
                 <div class="widget-content">
                     <div class="widget-text">Today Patient Due</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ customerDue | decimal }}</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ todaycustomerDue | decimal }}</div>
                 </div>
             </div>
         </div>
@@ -149,7 +149,7 @@
                 
                 <div class="widget-content">
                     <div class="widget-text">Today Test</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthSale | decimal }}</div>
+                    <div class="widget-value">{{ todayTest }}</div>
                 </div>
             </div>
         </div>
@@ -160,8 +160,8 @@
                 </div>
                 
                 <div class="widget-content">
-                    <div class="widget-text">Today Test</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthSale | decimal }}</div>
+                    <div class="widget-text">Total Test</div>
+                    <div class="widget-value">{{ totalTest }}</div>
                 </div>
             </div>
         </div>
@@ -173,7 +173,7 @@
                 
                 <div class="widget-content">
                     <div class="widget-text">Today Expense</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ bankBalance | decimal }}</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ todayExpense | decimal }}</div>
                 </div>
             </div>
         </div>
@@ -185,7 +185,7 @@
                 
                 <div class="widget-content">
                     <div class="widget-text">Total Expense</div>
-                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ thisMonthProfit | decimal }}</div>
+                    <div class="widget-value"><?php echo $this->session->userdata('Currency_Name');?> {{ totalExpense | decimal }}</div>
                 </div>
             </div>
         </div>
@@ -370,6 +370,7 @@
                 thisMonthSale: 0,
                 todaysCollection: 0,
                 cashBalance: 0,
+                todaycustomerDue: 0,
                 customerDue: 0,
                 bankBalance: 0,
                 thisMonthProfit: 0,
@@ -381,6 +382,10 @@
                 totalAgent: 0,
                 todayReport: 0,
                 totalReport: 0,
+                todayTest: 0,
+                totalTest: 0,
+                todayExpense: 0,
+                totalExpense: 0,
             }
         },
         created(){
@@ -414,6 +419,7 @@
                     this.thisMonthSale    = res.data.this_month_sale;
                     this.todaysCollection = res.data.todays_collection;
                     this.cashBalance      = res.data.cash_balance;
+                    this.todaycustomerDue = res.data.today_customer_due;
                     this.customerDue      = res.data.customer_due;
                     this.bankBalance      = res.data.bank_balance;
                     this.thisMonthProfit  = res.data.this_month_profit;
@@ -424,6 +430,10 @@
                     this.totalAgent       = res.data.total_agent;
                     this.todayReport      = res.data.today_report;
                     this.totalReport      = res.data.total_report;
+                    this.todayTest        = res.data.today_test;
+                    this.totalTest        = res.data.total_test;
+                    this.todayExpense     = res.data.today_expense;
+                    this.totalExpense     = res.data.total_expense;
 
                     this.topProducts = [
                         ['Test', 'Quantity']

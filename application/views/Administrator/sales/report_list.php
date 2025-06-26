@@ -161,7 +161,7 @@
         },
         methods: {
             openInvoice(id) {
-                window.open(`/report_invoice/${id}`, '_blank');
+                window.open(`/report_invoice_print/${id}`, '_blank');
             },
             reportEdit(id) {
                 window.open(`/report_generate/${id}`, '_blank');

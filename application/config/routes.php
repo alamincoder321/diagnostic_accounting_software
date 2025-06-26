@@ -110,7 +110,8 @@ $route['update_report_generate'] = 'Administrator/ReportGenerate/updateReportGen
 $route['delete_report_generate'] = 'Administrator/ReportGenerate/deleteReportGenerate';
 $route['report_list']            = 'Administrator/ReportGenerate/reportlist';
 $route['get_report_list']        = 'Administrator/ReportGenerate/getReportList';
-$route['report_invoice/(:any)']  = 'Administrator/ReportGenerate/reportInvoice/$1';
+$route['report_invoice']  = 'Administrator/ReportGenerate/reportInvoice';
+$route['report_invoice_print/(:any)']  = 'Administrator/ReportGenerate/reportInvoicePrint/$1';
 $route['report_delivery']        = 'Administrator/ReportGenerate/reportDelivery';
 
 //user entry

@@ -183,7 +183,7 @@
 					Tr_SlNo: 0,
 					Tr_Id: null,
 					Tr_date: moment().format('YYYY-MM-DD'),
-					Tr_Type: '',
+					Tr_Type: 'Out Cash',
 					Tr_account_Type: '',
 					Acc_SlID: null,
 					Tr_Description: '',

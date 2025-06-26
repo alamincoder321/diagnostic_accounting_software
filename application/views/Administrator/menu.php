@@ -337,6 +337,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 
+		<?php if (array_search("report_invoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>report_invoice">
+					<i class="menu-icon fa fa-file-text"></i>
+					<span class="menu-text"> Report Invoice </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 	</ul>
 
 <?php } elseif ($module == 'AccountsModule') { ?>

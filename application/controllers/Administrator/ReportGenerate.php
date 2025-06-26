@@ -148,11 +148,18 @@ class ReportGenerate extends CI_Controller
         echo json_encode($msg);
     }
 
-    public function reportInvoice($id)
+    public function reportInvoice()
     {
         $data['title']  = 'Report Invoice';
-        $data['id']  = $id;
         $data['content'] = $this->load->view('Administrator/sales/report_invoice', $data, true);
+        $this->load->view('Administrator/index', $data);
+    }
+    
+    public function reportInvoicePrint($id)
+    {
+        $data['title']  = 'Report Invoice';
+        $data['reportId']  = $id;
+        $data['content'] = $this->load->view('Administrator/sales/reportAndreport', $data, true);
         $this->load->view('Administrator/index', $data);
     }
 
@@ -182,7 +189,8 @@ class ReportGenerate extends CI_Controller
                 ifnull(p.Customer_Address, sm.customerAddress) as Customer_Address, 
                 ifnull(p.Customer_Mobile, sm.customerMobile) as Customer_Mobile, 
                 t.Product_Name,
-                sm.SaleMaster_InvoiceNo
+                sm.SaleMaster_InvoiceNo,
+                concat_ws(rp.invoice, ifnull(p.Customer_Name, sm.customerName)) as invoice_text
             from tbl_report_generate rp
             left join tbl_customer p on p.Customer_SlNo = rp.patient_id
             left join tbl_product t on t.Product_SlNo = rp.test_id

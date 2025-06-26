@@ -34,14 +34,13 @@
     <div class="row" id="accessRow">
         <div class="col-md-3">
             <div class="group">
-                <input type="checkbox" id="sales" class="group-head" @click="onClickGroupHeads"> <strong>Sales</strong>
+                <input type="checkbox" id="sales" class="group-head" @click="onClickGroupHeads"> <strong>Report Panel</strong>
                 <ul ref="sales">
-                    <li><input type="checkbox" class="access" value="sales/product" v-model="access"> Sales Add</li>
-                    <li><input type="checkbox" class="access" value="sales/service" v-model="access"> Service Add</li>
-                    <li><input type="checkbox" class="access" value="salesReturn" v-model="access"> Sale Return</li>
-                    <li><input type="checkbox" class="access" value="salesrecord" v-model="access"> Sales Record</li>
-                    <li><input type="checkbox" class="access" value="currentStock" v-model="access"> Stock</li>
-                    <!-- <li><input type="checkbox" class="access" value="quotation" v-model="access"> Quotation Entry</li> -->
+                    <li><input type="checkbox" class="access" value="bill_entry" v-model="access"> Bill Entry</li>
+                    <li><input type="checkbox" class="access" value="salesrecord" v-model="access"> Bill Record</li>
+                    <li><input type="checkbox" class="access" value="report_generate" v-model="access"> Report Generate</li>
+                    <li><input type="checkbox" class="access" value="report_list" v-model="access"> Report List</li>
+                    <li><input type="checkbox" class="access" value="report_invoice" v-model="access"> Report Invoice</li>
                 </ul>
             </div>
 
@@ -55,29 +54,18 @@
                     <li><input type="checkbox" class="access" value="cash_view" v-model="access"> Cash View</li>
                     <li><input type="checkbox" class="access" value="account" v-model="access"> Transaction Accounts</li>
                     <li><input type="checkbox" class="access" value="bank_accounts" v-model="access"> Bank Accounts</li>
-                    <li><input type="checkbox" class="access" value="check/entry" v-model="access"> New Cheque Entry</li>
-                    <li><input type="checkbox" class="access" value="check/list" v-model="access"> Cheque List</li>
-                    <li><input type="checkbox" class="access" value="check/reminder/list" v-model="access"> Reminder Cheque List</li>
-                    <li><input type="checkbox" class="access" value="check/pending/list" v-model="access"> Pending Cheque List</li>
-                    <li><input type="checkbox" class="access" value="check/dis/list" v-model="access"> Dishonered Cheque List</li>
-                    <li><input type="checkbox" class="access" value="check/paid/list" v-model="access"> Paid Cheque List</li>
                 </ul>
             </div>
         </div>
         <div class="col-md-3">
             <div class="group">
-                <input type="checkbox" id="salesReports" class="group-head" @click="onClickGroupHeads"> <strong>Sales Reports</strong>
+                <input type="checkbox" id="salesReports" class="group-head" @click="onClickGroupHeads"> <strong>Bill Reports</strong>
                 <ul ref="salesReports">
-                    <li><input type="checkbox" class="access" value="salesinvoice" v-model="access"> Sales Invoice</li>
-                    <li><input type="checkbox" class="access" value="returnList" v-model="access"> Sales Return List</li>
-                    <li><input type="checkbox" class="access" value="sale_return_details" v-model="access"> Sales Return Details</li>
-                    <li><input type="checkbox" class="access" value="customerDue" v-model="access"> Customer Due List</li>
-                    <li><input type="checkbox" class="access" value="customerPaymentReport" v-model="access"> Customer Payment Report</li>
-                    <li><input type="checkbox" class="access" value="customer_payment_history" v-model="access"> Customer Payment History</li>
-                    <li><input type="checkbox" class="access" value="customerlist" v-model="access"> Customer List</li>
-                    <li><input type="checkbox" class="access" value="price_list" v-model="access"> Product Price List</li>
-                    <!-- <li><input type="checkbox" class="access" value="quotation_invoice_report" v-model="access"> Quotation Invoice</li>
-                    <li><input type="checkbox" class="access" value="quotation_record" v-model="access"> Quotation Record</li> -->
+                    <li><input type="checkbox" class="access" value="salesinvoice" v-model="access"> Bill Invoice</li>
+                    <li><input type="checkbox" class="access" value="customerDue" v-model="access"> Patient Due List</li>
+                    <li><input type="checkbox" class="access" value="customerPaymentReport" v-model="access"> Patient Ledger</li>
+                    <li><input type="checkbox" class="access" value="customer_payment_history" v-model="access"> Patient Payment History</li>
+                    <li><input type="checkbox" class="access" value="customerlist" v-model="access"> Patient List</li>
                 </ul>
             </div>
 
@@ -99,15 +87,6 @@
         </div>
         <div class="col-md-3">
             <div class="group">
-                <input type="checkbox" id="purchase" class="group-head" @click="onClickGroupHeads"> <strong>Purchase</strong>
-                <ul ref="purchase">
-                    <li><input type="checkbox" class="access" value="purchase" v-model="access"> Purchase Add</li>
-                    <li><input type="checkbox" class="access" value="purchaseReturns" v-model="access"> Purchase Return</li>
-                    <li><input type="checkbox" class="access" value="purchaseRecord" v-model="access"> Purchase Record</li>
-                    <li><input type="checkbox" class="access" value="AssetsEntry" v-model="access"> Assets Entry</li>
-                </ul>
-            </div>
-            <div class="group">
                 <input type="checkbox" id="hrPayroll" class="group-head" @click="onClickGroupHeads"> <strong>HR & Payroll</strong>
                 <ul ref="hrPayroll">
                     <li><input type="checkbox" class="access" value="salary_payment" v-model="access"> Salary Payment</li>
@@ -121,59 +100,23 @@
                     <li><input type="checkbox" class="access" value="salary_payment_report" v-model="access"> Salary Payment Report</li>
                 </ul>
             </div>
-            
-            <!-- <div class="group">
-                <input type="checkbox" id="loan" class="group-head" @click="onClickGroupHeads"> <strong>Loan</strong>
-                <ul ref="loan">
-                    <li><input type="checkbox" class="access" value="loan_transactions" v-model="access"> Loan Transection</li>
-                    <li><input type="checkbox" class="access" value="loan_view" v-model="access"> Loan View</li>
-                    <li><input type="checkbox" class="access" value="loan_transaction_report" v-model="access"> Loan Transaction Report</li>
-                    <li><input type="checkbox" class="access" value="loan_ledger" v-model="access"> Loan Ledger</li>
-                    <li><input type="checkbox" class="access" value="loan_accounts" v-model="access"> Loan Account</li>
-                </ul>
-            </div> -->
-            
-            <div class="group">
-                <input type="checkbox" id="investment" class="group-head" @click="onClickGroupHeads"> <strong>Investment</strong>
-                <ul ref="investment">
-                    <li><input type="checkbox" class="access" value="investment_transactions" v-model="access"> Investment Transection</li>
-                    <li><input type="checkbox" class="access" value="investment_view" v-model="access"> Investment View</li>
-                    <li><input type="checkbox" class="access" value="investment_transaction_report" v-model="access"> Investment Transaction Report</li>
-                    <li><input type="checkbox" class="access" value="investment_ledger" v-model="access"> Investment Ledger</li>
-                    <li><input type="checkbox" class="access" value="investment_accounts" v-model="access"> Investment Account</li>
-                </ul>
-            </div>
         </div>
         <div class="col-md-3">
-            <div class="group">
-                <input type="checkbox" id="purchaseReports" class="group-head" @click="onClickGroupHeads"> <strong>Purchase Reports</strong>
-                <ul ref="purchaseReports">
-                    <li><input type="checkbox" class="access" value="assets_report" v-model="access"> Assets Report</li>
-                    <li><input type="checkbox" class="access" value="purchaseInvoice" v-model="access"> Purchase Invoice</li>
-                    <li><input type="checkbox" class="access" value="supplierDue" v-model="access"> Supplier Due</li>
-                    <li><input type="checkbox" class="access" value="supplierPaymentReport" v-model="access"> Supplier Payment Report</li>
-                    <li><input type="checkbox" class="access" value="supplierList" v-model="access"> Supplier List</li>
-                    <li><input type="checkbox" class="access" value="returnsList" v-model="access"> Purchase Return List</li>
-                    <li><input type="checkbox" class="access" value="purchase_return_details" v-model="access"> Purchase Return Details</li>
-                    <li><input type="checkbox" class="access" value="reorder_list" v-model="access"> Re-Order List</li>
-                </ul>
-            </div>
             <div class="group">
                 <input type="checkbox" id="admin" class="group-head" @click="onClickGroupHeads"> <strong>Administrator</strong>
                 <ul ref="admin">
                     <li><input type="checkbox" class="access" value="sms" v-model="access"> Send SMS</li>
-                    <li><input type="checkbox" class="access" value="product" v-model="access"> Product Entry</li>
-                    <li><input type="checkbox" class="access" value="productlist" v-model="access"> Product List</li>
-                    <li><input type="checkbox" class="access" value="product_ledger" v-model="access"> Product Ledger</li>
-                    <li><input type="checkbox" class="access" value="damageEntry" v-model="access"> Damage Entry</li>
-                    <li><input type="checkbox" class="access" value="damageList" v-model="access"> Damage List</li>
-                    <!-- <li><input type="checkbox" class="access" value="product_transfer" v-model="access"> Product Transfer</li>
-                    <li><input type="checkbox" class="access" value="transfer_list" v-model="access"> Transfer List</li>
-                    <li><input type="checkbox" class="access" value="received_list" v-model="access"> Received List</li> -->
-                    <li><input type="checkbox" class="access" value="customer" v-model="access"> Customer Entry</li>
-                    <li><input type="checkbox" class="access" value="supplier" v-model="access"> Supplier Entry</li>
-                    <!-- <li><input type="checkbox" class="access" value="brunch" v-model="access"> Add Branch</li> -->
+                    <li><input type="checkbox" class="access" value="product" v-model="access"> Test Entry</li>
+                    <li><input type="checkbox" class="access" value="productlist" v-model="access"> Test List</li>
+                    <li><input type="checkbox" class="access" value="product_ledger" v-model="access"> Test Ledger</li>
+                    <li><input type="checkbox" class="access" value="customer" v-model="access"> Patient Entry</li>
+                    <li><input type="checkbox" class="access" value="doctor" v-model="access"> Doctor Entry</li>
+                    <li><input type="checkbox" class="access" value="doctorlist" v-model="access"> Doctor List</li>
+                    <li><input type="checkbox" class="access" value="agent" v-model="access"> Agent Entry</li>
+                    <li><input type="checkbox" class="access" value="agentlist" v-model="access"> Agent List</li>
                     <li><input type="checkbox" class="access" value="category" v-model="access"> Category Entry</li>
+                    <li><input type="checkbox" class="access" value="subcategory" v-model="access"> SubCategory Entry</li>
+                    <li><input type="checkbox" class="access" value="room" v-model="access"> Room Entry</li>
                     <li><input type="checkbox" class="access" value="unit" v-model="access"> Unit Entry</li>
                     <li><input type="checkbox" class="access" value="area" v-model="access"> Add Area</li>
                     <li><input type="checkbox" class="access" value="companyProfile" v-model="access"> Company Profile</li>

@@ -12,6 +12,10 @@ $db['default'] = array(
 	'password' => '',
 	'database' => 'ahs_dialysis',
 
+	// 'username' => 'bdsoftte_mehadi_user',
+	// 'password' => 'o5s69jXd9p?B',
+	// 'database' => 'bdsoftte_mehadi',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

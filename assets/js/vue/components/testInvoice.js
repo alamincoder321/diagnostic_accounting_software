@@ -1,4 +1,4 @@
-const salesInvoice = Vue.component('sales-invoice', {
+const testInvoice = Vue.component('test-invoice', {
     template: `
         <div>
             <div class="row">
@@ -10,20 +10,25 @@ const salesInvoice = Vue.component('sales-invoice', {
             <div id="invoiceContent">
                 <div class="row" style="border: 1px solid #979797; margin: 0; margin-bottom: 5px; border-radius: 5px;padding-top: 5px; padding-bottom: 5px;">
                     <div class="col-xs-7">
-                        <strong>Patient Id:</strong> {{ sales.Customer_Code }}<br>
-                        <strong>Name: </strong>{{ sales.Customer_Name }}<br>
-                        <strong>Mobile: </strong>{{ sales.Customer_Mobile }}<br>
-                        <strong>Address: </strong>{{ sales.Customer_Address }}<br>
-                        <strong>Age: </strong>{{ sales.age }}<br>
-                        <strong>Gender: </strong>{{ sales.gender }}<br>
+                        <strong>Patient Id:</strong> {{ report.Customer_Code }}<br>
+                        <strong>Name: </strong>{{ report.Customer_Name }}<br>
+                        <strong>Mobile: </strong>{{ report.Customer_Mobile }}<br>
+                        <strong>Address: </strong>{{ report.Customer_Address }}<br>
+                        <strong>Age: </strong>{{ report.age }}<br>
+                        <strong>Gender: </strong>{{ report.gender }}<br>
                     </div>
                     <div class="col-xs-5 mobile-second-section">
-                        <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
-                        <strong>Added By:</strong> {{ sales.AddBy }}<br>
-                        <strong>Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}<br>
-                        <span v-if="sales.Employee_Name"> <strong>Employee:</strong> {{ sales.Employee_Name }} </span>
-                        <p style="margin:0;" v-if="sales.Doctor_Name"> <strong>Doctor:</strong> {{ sales.Doctor_Name }}</p>
-                        <span v-if="sales.Doctor_Name"> <strong>Specialized:</strong> {{ sales.specialization }} </span>
+                        <strong>Invoice No.:</strong> {{ report.SaleMaster_InvoiceNo }}<br>
+                        <strong>Report by:</strong> {{ report.AddBy }}<br>
+                        <strong>Report Date:</strong> {{ formatDateTime(report.date, 'DD-MM-YYYY') }} {{ formatDateTime(report.AddTime, 'h:mm a') }}
+                        <strong>Delivery Date:</strong> {{ formatDateTime(report.delivery_date, 'DD-MM-YYYY') }} {{ formatDateTime(report.UpdateTime, 'h:mm a') }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <div _h098asdh>
+                            {{ report.Product_Name }}
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -32,123 +37,61 @@ const salesInvoice = Vue.component('sales-invoice', {
                             <thead>
                                 <tr>
                                     <td>Test Name</td>
-                                    <td>Room Name</td>
-                                    <td align="right">Rate</td>
+                                    <td>Result</td>
+                                    <td>Unit</td>
+                                    <td>Normal Range</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(product, sl) in cart">
-                                    <td style="text-align:left;padding-left: 7px;">{{ product.Product_Name }}</td>
-                                    <td style="padding-left: 7px;">{{ product.Room_Name }}</td>
-                                    <td align="right">{{ product.SaleDetails_Rate }}</td>
+                                <tr v-for="(item, sl) in cart">
+                                    <td style="text-align: left;">{{ item.name }}</td>
+                                    <td style="font-weight: 700;">{{ item.result }}</td>
+                                    <td>{{ item.Unit_Name }}</td>
+                                    <td>{{ item.normal_range }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-7 text-left">
-                        <div v-if="sales.SaleMaster_bankPaid > 0" style="margin:0; margin-top:10px; border-bottom: 1px solid gray; padding-bottom: 5px;">
-                            <table _a584de>
-                                <tr>
-                                    <td style="font-weight:700;">Sl</td>
-                                    <td style="font-weight:700;">Bank Name</td>
-                                    <td style="font-weight:700;">Amount</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>{{sales.bank_name}} - {{sales.account_number}} - {{sales.account_name}}</td>
-                                    <td>{{sales.SaleMaster_bankPaid}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }} <br><br>
-                        <strong>Note: </strong> {{ sales.SaleMaster_Description }}
-                    </div>
-                    <div class="col-xs-5">
-                        <table _t92sadbc2>
-                            <tr>
-                                <td><strong>Sub Total:</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_SubTotalAmount }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Discount (-):</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_TotalDiscountAmount }}</td>
-                            </tr>
-                            <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
-                            <tr>
-                                <td><strong>Total:</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_TotalSaleAmount }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Paid:</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_PaidAmount }}</td>
-                            </tr>
-                            <tr v-show="sales.returnAmount > 0">
-                                <td><strong>Return Amount:</strong></td>
-                                <td style="text-align:right">{{ sales.returnAmount }}</td>
-                            </tr>
-                            <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
-                            <tr>
-                                <td><strong>Due:</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_DueAmount }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 80px;">
+                <div class="row" style="margin-bottom:5px;padding-bottom:6px;margin-top:80px;">
                     <div class="col-xs-6">
-                        <span style="text-decoration:overline;">Received by</span>
+                        <strong> 
+                            {{report.left_name}}<br> 
+                            {{report.left_degree}}<br> 
+                            {{report.left_department}} 
+                        <strong>
                     </div>
                     <div class="col-xs-6 text-right">
-                        <span style="text-decoration:overline;">Authorized by</span>
+                        <strong> 
+                            {{report.right_name}}<br> 
+                            {{report.right_degree}}<br> 
+                            {{report.right_department}} 
+                        <strong>
                     </div>
                 </div>
             </div>
         </div>
     `,
-    props: ['sales_id'],
+    props: ['report_id'],
     data() {
         return {
-            sales: {
-                SaleMaster_InvoiceNo: null,
-                SalseCustomer_IDNo: null,
-                SaleMaster_SaleDate: null,
-                Customer_Name: null,
-                Customer_Address: null,
-                Customer_Mobile: null,
-                SaleMaster_TotalSaleAmount: null,
-                SaleMaster_TotalDiscountAmount: null,
-                SaleMaster_TaxAmount: null,
-                SaleMaster_Freight: null,
-                SaleMaster_SubTotalAmount: null,
-                SaleMaster_PaidAmount: null,
-                SaleMaster_DueAmount: null,
-                SaleMaster_Previous_Due: null,
-                SaleMaster_Description: null,
-                AddBy: null
-            },
+            report: {},
             cart: [],
             style: null,
             companyProfile: null,
             currentBranch: null
         }
     },
-    filters: {
-        formatDateTime(dt, format) {
-            return dt == '' || dt == null ? '' : moment(dt).format(format);
-        }
-    },
     created() {
         this.setStyle();
-        this.getSales();
+        this.getReports();
         this.getCurrentBranch();
     },
     methods: {
-        getSales() {
-            axios.post('/get_sales', { salesId: this.sales_id }).then(res => {
-                this.sales = res.data.sales[0];
-                this.cart = res.data.saleDetails;
+        getReports() {
+            axios.post('/get_report_list', { reportId: this.report_id }).then(res => {
+                this.report = res.data[0];
+                this.cart = res.data[0].details;
             })
         },
         getCurrentBranch() {
@@ -156,17 +99,19 @@ const salesInvoice = Vue.component('sales-invoice', {
                 this.currentBranch = res.data;
             })
         },
+        formatDateTime(datetime, format) {
+            return moment(datetime).format(format);
+        },
         setStyle() {
             this.style = document.createElement('style');
             this.style.innerHTML = `
                 div[_h098asdh]{
-                    /*background-color:#e0e0e0;*/
+                    background-color: #e0e0e0;
                     font-weight: bold;
-                    font-size:15px;
-                    margin-bottom:15px;
+                    font-size: 15px;
+                    margin-bottom: 5px;
                     padding: 5px;
-                    border-top: 1px dotted #454545;
-                    border-bottom: 1px dotted #454545;
+                    margin-top: 15px;
                 }
                 div[_d9283dsc]{
                     padding-bottom:25px;
@@ -313,35 +258,6 @@ const salesInvoice = Vue.component('sales-invoice', {
                                         <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                     </div>
                                     <div class="col-xs-12">
-                                        <div class="text-center" style="margin-bottom: 10px;">
-                                            <span class="invoice-header">Patient Copy</span>
-                                        </div>
-                                        ${invoiceContent}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="container-fluid invoice-copy">
-                                <div class="row">
-                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
-                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <div class="text-center" style="margin-bottom: 10px;">
-                                            <span class="invoice-header">Reception Copy</span>
-                                        </div>
-                                        ${invoiceContent}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="container-fluid invoice-copy">
-                                <div class="row">
-                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
-                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <div class="text-center" style="margin-bottom: 10px;">
-                                            <span class="invoice-header">Lab Copy</span>
-                                        </div>
                                         ${invoiceContent}
                                     </div>
                                 </div>
@@ -349,7 +265,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                         </body>
                     </html>
                 `);
-            }else{
+            } else {
                 printWindow.document.write(`
                     <!DOCTYPE html>
                     <html lang="en">
@@ -384,31 +300,6 @@ const salesInvoice = Vue.component('sales-invoice', {
                                     <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                 </div>
                                 <div class="col-xs-12">
-                                    <div class="text-center" style="margin-bottom: 10px;">
-                                        <span class="invoice-header">Patient Copy</span>
-                                    </div>
-                                    ${invoiceContent}
-                                </div>
-                            </div>
-                            <div class="row invoice-copy">
-                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
-                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
-                                </div>
-                                <div class="col-xs-12">
-                                    <div class="text-center" style="margin-bottom: 10px;">
-                                        <span class="invoice-header">Reception Copy</span>
-                                    </div>
-                                    ${invoiceContent}
-                                </div>
-                            </div>
-                            <div class="row invoice-copy">
-                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
-                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
-                                </div>
-                                <div class="col-xs-12">
-                                    <div class="text-center" style="margin-bottom: 10px;">
-                                        <span class="invoice-header">Lab Copy</span>
-                                    </div>
                                     ${invoiceContent}
                                 </div>
                             </div>
@@ -416,7 +307,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                     </html>
 				`);
             }
-            
+
             let invoiceStyle = printWindow.document.createElement('style');
             invoiceStyle.innerHTML = this.style.innerHTML;
             printWindow.document.head.appendChild(invoiceStyle);
