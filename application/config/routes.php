@@ -114,6 +114,13 @@ $route['report_invoice']  = 'Administrator/ReportGenerate/reportInvoice';
 $route['report_invoice_print/(:any)']  = 'Administrator/ReportGenerate/reportInvoicePrint/$1';
 $route['report_delivery']        = 'Administrator/ReportGenerate/reportDelivery';
 
+// dialysis route
+$route['dialysis']        = 'Administrator/Dialysis';
+$route['get_dialysis']    = 'Administrator/Dialysis/getDialysis';
+$route['add_dialysis']    = 'Administrator/Dialysis/addDialysis';
+$route['update_dialysis'] = 'Administrator/Dialysis/updateDialysis';
+$route['delete_dialysis'] = 'Administrator/Dialysis/deleteDialysis';
+
 //user entry
 $route['user'] = 'Administrator/User_management';
 $route['get_users'] = 'Administrator/User_management/getUsers';

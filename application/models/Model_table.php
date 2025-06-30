@@ -59,6 +59,20 @@ class Model_Table extends CI_Model
         return $invoice;
     }
 
+    public function generateDialysisInvoice()
+    {
+        $invoice = 'D' . date('y') . "00001";
+        $year = date('y');
+        $dialysis = $this->db->query("select * from tbl_dialysis d where d.invoice like 'D$year%'");
+        if ($dialysis->num_rows() != 0) {
+            $newDialysisId = $dialysis->num_rows() + 1;
+            $zeros = array('0', '00', '000', '0000');
+            $invoice = 'D' . date('y') . (strlen($newDialysisId) > count($zeros) ? $newDialysisId : $zeros[count($zeros) - strlen($newDialysisId)] . $newDialysisId);
+        }
+
+        return $invoice;
+    }
+
     public function generatePurchaseInvoice()
     {
         $invoice = date('Y') . "000001";
