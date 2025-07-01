@@ -133,4 +133,47 @@ class Dialysis extends CI_Controller
 
         echo json_encode($res);
     }
+
+    public function deleteDialysis()
+    {
+        $res = ['success' => false, 'message' => ''];
+        try {
+            $data = json_decode($this->input->raw_input_stream);
+
+            $this->db->set(['UpdateBy' => $this->session->userdata("FullName"), 'UpdateTime' => date("Y-m-d H:i:s"), 'status' => 'd'])->where('id', $data->dialysisId)->update('tbl_dialysis');
+            $this->db->set(['UpdateBy' => $this->session->userdata("FullName"), 'UpdateTime' => date("Y-m-d H:i:s"), 'status' => 'd'])->where('dialysis_id', $data->dialysisId)->update('tbl_dialysis_details');
+
+            $res = ['success' => true, 'message' => 'Dialysis deleted successfully'];
+        } catch (Exception $ex) {
+            $res = ['success' => false, 'message' => $ex->getMessage()];
+        }
+
+        echo json_encode($res);
+    }
+
+    public function dialysisList()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Dialysis List";
+        $data['content'] = $this->load->view('Administrator/dialysis/dialysis_list', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function dialysisInvoice()
+    {
+        $data['title']   = 'Dialysis Invoice';
+        $data['content'] = $this->load->view('Administrator/dialysis/dialysis_invoice', $data, true);
+        $this->load->view('Administrator/index', $data);
+    }
+    
+    public function dialysisInvoicePrint($id)
+    {
+        $data['title']      = 'Dialysis Invoice';
+        $data['dialysisId'] = $id;
+        $data['content']    = $this->load->view('Administrator/dialysis/dialysis_invoice_print', $data, true);
+        $this->load->view('Administrator/index', $data);
+    }
 }

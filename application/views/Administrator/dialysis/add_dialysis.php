@@ -451,6 +451,7 @@
                         if (res.data.success) {
                             alert(res.data.message);
                             this.clearData();
+                            this.getExistDialysis();
                         }
                     })
             },

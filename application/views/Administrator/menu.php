@@ -347,6 +347,26 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 
+		<?php if (array_search("dialysis", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>dialysis">
+					<i class="menu-icon fa fa-bed"></i>
+					<span class="menu-text"> Dialysis Entry </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
+		<?php if (array_search("dialysisList", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>dialysisList">
+					<i class="menu-icon fa fa-list"></i>
+					<span class="menu-text"> Dialysis List </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 	</ul>
 
 <?php } elseif ($module == 'AccountsModule') { ?>

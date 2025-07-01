@@ -120,6 +120,9 @@ $route['get_dialysis']    = 'Administrator/Dialysis/getDialysis';
 $route['add_dialysis']    = 'Administrator/Dialysis/addDialysis';
 $route['update_dialysis'] = 'Administrator/Dialysis/updateDialysis';
 $route['delete_dialysis'] = 'Administrator/Dialysis/deleteDialysis';
+$route['dialysisList']    = 'Administrator/Dialysis/dialysisList';
+$route['dialysis_invoice']  = 'Administrator/Dialysis/dialysisInvoice';
+$route['dialysis_invoice_print/(:any)']  = 'Administrator/Dialysis/dialysisInvoicePrint/$1';
 
 //user entry
 $route['user'] = 'Administrator/User_management';
