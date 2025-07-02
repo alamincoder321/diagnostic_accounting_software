@@ -616,6 +616,21 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
+
+				<?php if (array_search("profitLoss", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>profitLoss">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule" style="line-height: 13px; margin-top: 0;">
+									Profit & Loss Report
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>

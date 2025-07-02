@@ -278,21 +278,9 @@ class Account extends CI_Controller {
 
         $transactionDateClause = "";
         $employePaymentDateClause = "";
-        $profitDistributeDateClause = "";
-        $loanInterestDateClause = "";
-        $assetsSalesDateClause = "";
-        $damageClause = "";
-        $returnClause = "";
-        $purchaseClause = "";
         if(isset($data->dateFrom) && $data->dateFrom != '' && isset($data->dateTo) && $data->dateTo != ''){
             $transactionDateClause = " and ct.Tr_date between '$data->dateFrom' and '$data->dateTo'";
             $employePaymentDateClause = " and ep.payment_date between '$data->dateFrom' and '$data->dateTo'";
-            $profitDistributeDateClause = " and it.transaction_date between '$data->dateFrom' and '$data->dateTo'";
-            $loanInterestDateClause = " and lt.transaction_date between '$data->dateFrom' and '$data->dateTo'";
-            $assetsSalesDateClause = " and a.as_date between '$data->dateFrom' and '$data->dateTo'";
-            $damageClause = " and d.Damage_Date between '$data->dateFrom' and '$data->dateTo'";
-            $returnClause = " and r.SaleReturn_ReturnDate between '$data->dateFrom' and '$data->dateTo'";
-            $purchaseClause = " and pm.PurchaseMaster_OrderDate between '$data->dateFrom' and '$data->dateTo'";
         }
 
         $result = $this->db->query("
@@ -319,78 +307,7 @@ class Account extends CI_Controller {
                 where ep.branch_id = '" . $this->session->userdata('BRANCHid') . "'
                 and ep.status = 'a'
                 $employePaymentDateClause
-            ) as employee_payment,
-
-            (
-                select ifnull(sum(it.amount), 0)
-                from tbl_investment_transactions it
-                where it.branch_id = '" . $this->session->userdata('BRANCHid') . "'
-                and it.transaction_type = 'Profit'
-                and it.status = 1
-                $profitDistributeDateClause
-            ) as profit_distribute,
-
-            (
-                select ifnull(sum(lt.amount), 0)
-                from tbl_loan_transactions lt
-                where lt.branch_id = '" . $this->session->userdata('BRANCHid') . "'
-                and lt.transaction_type = 'Interest'
-                and lt.status = 1
-                $loanInterestDateClause
-            ) as loan_interest,
-
-            (
-                select ifnull(sum(a.valuation - a.as_amount), 0)
-                from tbl_assets a
-                where a.branchid = '" . $this->session->userdata('BRANCHid') . "'
-                and a.buy_or_sale = 'sale'
-                and a.status = 'a'
-                $assetsSalesDateClause
-            ) as assets_sales_profit_loss,
-
-            (
-                select ifnull(sum(pm.PurchaseMaster_DiscountAmount), 0) 
-                from tbl_purchasemaster pm
-                where pm.PurchaseMaster_BranchID = '" . $this->session->userdata('BRANCHid') . "'
-                and pm.status = 'a'
-                $purchaseClause
-            ) as purchase_discount,
-            
-            (
-                select ifnull(sum(pm.PurchaseMaster_Tax), 0) 
-                from tbl_purchasemaster pm
-                where pm.PurchaseMaster_BranchID = '" . $this->session->userdata('BRANCHid') . "'
-                and pm.status = 'a'
-                $purchaseClause
-            ) as purchase_vat,
-            
-            (
-                select ifnull(sum(pm.PurchaseMaster_Freight), 0) 
-                from tbl_purchasemaster pm
-                where pm.PurchaseMaster_BranchID = '" . $this->session->userdata('BRANCHid') . "'
-                and pm.status = 'a'
-                $purchaseClause
-            ) as purchase_transport_cost,
-            
-            (
-                select ifnull(sum(dd.damage_amount), 0) 
-                from tbl_damagedetails dd
-                join tbl_damage d on d.Damage_SlNo = dd.Damage_SlNo
-                where d.Damage_brunchid = '" . $this->session->userdata('BRANCHid') . "'
-                and dd.status = 'a'
-                $damageClause
-            ) as damaged_amount,
-
-            (
-                select ifnull(sum(rd.SaleReturnDetails_ReturnAmount) - sum(sd.Purchase_Rate * rd.SaleReturnDetails_ReturnQuantity), 0)
-                from tbl_salereturndetails rd
-                join tbl_salereturn r on r.SaleReturn_SlNo = rd.SaleReturn_IdNo
-                join tbl_salesmaster sm on sm.SaleMaster_InvoiceNo = r.SaleMaster_InvoiceNo
-                join tbl_saledetails sd on sd.Product_IDNo = rd.SaleReturnDetailsProduct_SlNo and sd.SaleMaster_IDNo = sm.SaleMaster_SlNo
-                where r.Status = 'a'
-                and r.SaleReturn_brunchId = '" . $this->session->userdata('BRANCHid') . "'
-                $returnClause
-            ) as returned_amount
+            ) as employee_payment
         ")->row();
 
         echo json_encode($result);
