@@ -41,6 +41,9 @@
                     <li><input type="checkbox" class="access" value="report_generate" v-model="access"> Report Generate</li>
                     <li><input type="checkbox" class="access" value="report_list" v-model="access"> Report List</li>
                     <li><input type="checkbox" class="access" value="report_invoice" v-model="access"> Report Invoice</li>
+                    <li><input type="checkbox" class="access" value="dialysis" v-model="access"> Dialysis Entry</li>
+                    <li><input type="checkbox" class="access" value="dialysisList" v-model="access"> Dialysis List</li>
+                    <li><input type="checkbox" class="access" value="dialysis_invoice" v-model="access"> Dialysis Invoice</li>
                 </ul>
             </div>
 

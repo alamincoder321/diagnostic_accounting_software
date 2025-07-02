@@ -146,20 +146,33 @@
                             <div class="form-group">
                                 <label class="col-xs-4 control-label no-padding-right"> Address </label>
                                 <div class="col-xs-8">
-                                    <textarea id="address" style="height: 35px;" placeholder="Address" class="form-control" v-model="selectedCustomer.Customer_Address" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true"></textarea>
+                                    <input type="text" id="address" placeholder="Address" class="form-control" v-model="selectedCustomer.Customer_Address" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true">
                                 </div>
                             </div>
-                        </div>
+                        </div>                        
                         <div class="col-md-12 col-xs-12" style="border-top: 2px solid gray;padding-top: 5px;">
-                            <div class="form-group">
-                                <label class="col-xs-4 control-label no-padding-right"> Dialysis Status </label>
-                                <div class="col-xs-8">
-                                    <select v-model="dialysis.dialysis_status" class="form-control" style="padding: 1px 3px;">
-                                        <option value="Satisfactory">Satisfactory</option>
-                                        <option value="Not Satisfactory">Not Satisfactory</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center" style="font-weight: 700;">Pre Dialysis</td>
+                                    <td class="text-center" style="font-weight: 700;">Post Dialysis</td>
+                                </tr>
+                                <tr>
+                                    <td>BP (Supine)</td>
+                                    <td><input type="text" v-model="dialysis.pre_bp" class="form-control" /></td>
+                                    <td><input type="text" v-model="dialysis.post_bp" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Weight</td>
+                                    <td><input type="text" v-model="dialysis.pre_weight" class="form-control" /></td>
+                                    <td><input type="text" v-model="dialysis.post_weight" class="form-control" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Weight Gain</td>
+                                    <td><input type="text" v-model="dialysis.pre_weight_gain" class="form-control" /></td>
+                                    <td><input type="text" v-model="dialysis.post_weight_gain" class="form-control" /></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -233,6 +246,15 @@
                                 <label class="col-xs-3 control-label no-padding-right">Blood Transfusion</label>
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" v-model="dialysis.blood_transfusion" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label no-padding-right"> Dialysis Status </label>
+                                <div class="col-xs-8">
+                                    <select v-model="dialysis.dialysis_status" class="form-control" style="padding: 1px 3px;">
+                                        <option value="Satisfactory">Satisfactory</option>
+                                        <option value="Not Satisfactory">Not Satisfactory</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -338,6 +360,12 @@
                     heparin: "",
                     initial_dose: "",
                     blood_transfusion: "",
+                    pre_bp: "",
+                    post_bp: "",
+                    pre_weight: "",
+                    post_weight: "",
+                    pre_weight_gain: "",
+                    post_weight_gain: "",
                     dialysis_status: "Satisfactory"
                 },
                 customers: [],
@@ -426,7 +454,9 @@
             },
 
             addToCart() {
-                this.carts.push(this.cartInfo);
+                this.carts.push({
+                    ...this.cartInfo
+                });
             },
 
             removeCart(sl) {
@@ -470,6 +500,12 @@
                     heparin: "",
                     initial_dose: "",
                     blood_transfusion: "",
+                    pre_bp: "",
+                    post_bp: "",
+                    pre_weight: "",
+                    post_weight: "",
+                    pre_weight_gain: "",
+                    post_weight_gain: "",
                     dialysis_status: "Satisfactory"
                 };
                 this.selectedCustomer = {
@@ -517,7 +553,7 @@
 
                     setTimeout(() => {
                         this.selectedCustomer = this.customers.find(customer => customer.Customer_SlNo == dialysis.patient_id);
-                    }, 1500);
+                    }, 1000);
 
                     this.carts = [];
                     dialysis.details.forEach(item => {

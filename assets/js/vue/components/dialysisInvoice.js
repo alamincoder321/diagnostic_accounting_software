@@ -56,23 +56,23 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                             </tr>
                             <tr>
                                 <td style="text-align:left;"></td>
-                                <td style="text-align:left;background:#dfdfdf;font-weight: 700;">Pre Dialysis</td>
-                                <td style="text-align:left;background:#dfdfdf;font-weight: 700;">Pre Dialysis</td>
+                                <td style="text-align:center;background:#dfdfdf;font-weight: 700;">Pre Dialysis</td>
+                                <td style="text-align:center;background:#dfdfdf;font-weight: 700;">Post Dialysis</td>
                             </tr>
                             <tr>
                                 <td style="text-align:left;">BP (Supine)</td>
-                                <td style="text-align:left;"></td>
-                                <td style="text-align:left;"></td>
+                                <td style="text-align:left;" v-text="report.pre_bp"></td>
+                                <td style="text-align:left;" v-text="report.post_bp"></td>
                             </tr>
                             <tr>
                                 <td style="text-align:left;">Weight</td>
-                                <td style="text-align:left;"></td>
-                                <td style="text-align:left;"></td>
+                                <td style="text-align:left;" v-text="report.pre_weight"></td>
+                                <td style="text-align:left;" v-text="report.post_weight"></td>
                             </tr>
                             <tr>
                                 <td style="text-align:left;">Weight Gain</td>
-                                <td style="text-align:left;"></td>
-                                <td style="text-align:left;"></td>
+                                <td style="text-align:left;" v-text="report.pre_weight_gain"></td>
+                                <td style="text-align:left;" v-text="report.pre_weight_gain"></td>
                             </tr>
                         </table>
                     </div>
@@ -145,6 +145,41 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                                     <td>{{ item.medicine }}</td>
                                 </tr>
                             </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-xs-5">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="padding-bottom: 18px;" colspan="2">Virus:</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">HbsAg</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Anti HCV</td>
+                            </tr>
+                            <tr>
+                                <td style="width:120px;">Dialysis Status</td>
+                                <td style="border: 1px solid gray;text-align:center;" v-text="report.dialysis_status"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-5">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="padding-bottom: 18px;">Complications:</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Hypotension / Shock / HTN / Fever <br> 
+                                    Headache / Vertigo / Vomiting <br>
+                                    Muscle Cramps / Restlessness <br>
+                                    Chest pain / Shortness of Breath
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -339,15 +374,12 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                                     @page{
                                         padding: 5px !important;
                                         margin: 25px 18px !important;
-                                    }                                  
-                                    .invoice-copy {
-                                        page-break-after: always;
                                     }    
                                 }
                             </style>
                         </head>
                         <body>
-                            <div class="container-fluid invoice-copy">
+                            <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
                                         <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
@@ -355,6 +387,14 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                                     <div class="col-xs-12">
                                         ${invoiceContent}
                                     </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid" style="width: 100%;position:fixed;left: 0; bottom:0;">
+                                <div class="col-xs-6">
+                                    <span>DOCTOR'S NAME & SIGNATURE</span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span>Others (If Any)........................................................</span>
                                 </div>
                             </div>
                         </body>
@@ -381,21 +421,24 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                                     border: 1px solid gray; 
                                     border-radius: 15px; 
                                     padding: 5px 20px;
-                                }                                
-                                @media print{                                
-                                    .invoice-copy {
-                                        page-break-after: always;
-                                    }    
                                 }
                             </style>
                         </head>
                         <body>
-                            <div class="row invoice-copy">
+                            <div class="row">
                                 <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
                                     <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
                                 </div>
                                 <div class="col-xs-12">
                                     ${invoiceContent}
+                                </div>
+                            </div>
+                            <div style="width: 100%;position:fixed;left: 0; bottom:0;">
+                                <div class="col-xs-6">
+                                    <span>DOCTOR'S NAME & SIGNATURE</span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span>Others (If Any).........................................</span>
                                 </div>
                             </div>
                         </body>

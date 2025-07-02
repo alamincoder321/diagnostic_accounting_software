@@ -367,6 +367,16 @@ if ($module == 'dashboard' or $module == '') {
 			</li>
 		<?php endif; ?>
 
+		<?php if (array_search("dialysis_invoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+			<li class="">
+				<a href="<?php echo base_url(); ?>dialysis_invoice">
+					<i class="menu-icon fa fa-file-text"></i>
+					<span class="menu-text"> Dialysis Invoice </span>
+				</a>
+				<b class="arrow"></b>
+			</li>
+		<?php endif; ?>
+
 	</ul>
 
 <?php } elseif ($module == 'AccountsModule') { ?>

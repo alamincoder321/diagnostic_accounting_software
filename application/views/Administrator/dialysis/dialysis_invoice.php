@@ -64,7 +64,7 @@
         methods: {
             getDialysis() {
                 axios.get("/get_dialysis").then(res => {
-                    this.dialysis = res.data.sales;
+                    this.dialysis = res.data;
                 })
             },
             async viewInvoice() {

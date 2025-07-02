@@ -401,6 +401,51 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
+
+				<?php if (array_search("dialysis", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>dialysis">
+								<div class="logo">
+									<i class="menu-icon fa fa-bed"></i>
+								</div>
+								<div class="textModule">
+									Dialysis Entry
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
+				<?php if (array_search("dialysisList", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>dialysisList">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Dialysis List
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
+				<?php if (array_search("dialysis_invoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 custom-padding ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>dialysis_invoice">
+								<div class="logo">
+									<i class="menu-icon fa fa-file-text-o"></i>
+								</div>
+								<div class="textModule">
+									Dialysis Invoice
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>
