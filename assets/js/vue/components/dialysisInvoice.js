@@ -85,7 +85,7 @@ const dialysisInvoice = Vue.component('dialysis-invoice', {
                             </tr>
                             <tr>
                                 <td style="text-align:left;" colspan="2">
-                                    Supervised By: {{report.supervised_by}}
+                                    Supervised By: {{report.Doctor_Name}}
                                 </td>
                             </tr>
                             <tr>

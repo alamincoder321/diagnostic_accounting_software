@@ -15,7 +15,7 @@ const salesInvoice = Vue.component('sales-invoice', {
                         <strong>Mobile: </strong>{{ sales.Customer_Mobile }}<br>
                         <strong>Address: </strong>{{ sales.Customer_Address }}<br>
                         <strong>Age: </strong>{{ sales.age }}<br>
-                        <strong>Gender: </strong>{{ sales.gender }}<br>
+                        <strong>Gender: </strong><span style="text-transform:capitalize">{{ sales.gender }}</span><br>
                     </div>
                     <div class="col-xs-5 mobile-second-section">
                         <strong>Invoice:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>

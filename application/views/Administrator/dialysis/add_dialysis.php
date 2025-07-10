@@ -149,7 +149,7 @@
                                     <input type="text" id="address" placeholder="Address" class="form-control" v-model="selectedCustomer.Customer_Address" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'N' ? false : true">
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="col-md-12 col-xs-12" style="border-top: 2px solid gray;padding-top: 5px;">
                             <table style="width: 100%;">
                                 <tr>
@@ -208,7 +208,7 @@
                             <div class="form-group">
                                 <label class="col-xs-4 control-label no-padding-right"> Supervised By Doctor </label>
                                 <div class="col-xs-8">
-                                    <input type="text" class="form-control" v-model="dialysis.supervised_by" />
+                                    <v-select :options="doctors" v-model="selectedDoctor" label="display_name" placeholder="Select Doctor"></v-select>
                                 </div>
                             </div>
 
@@ -377,6 +377,8 @@
                     Customer_Mobile: '',
                     Customer_Address: ''
                 },
+                doctors: [],
+                selectedDoctor: null,
 
                 carts: [{
                     time: "",
@@ -414,10 +416,16 @@
             }
         },
         async created() {
+            await this.getDoctor();
             await this.getCustomers();
             await this.getExistDialysis();
         },
         methods: {
+            getDoctor() {
+                axios.get('/get_doctors').then(res => {
+                    this.doctors = res.data;
+                })
+            },
             async getCustomers() {
                 await axios.post('/get_customers').then(res => {
                     this.customers = res.data;
@@ -469,6 +477,7 @@
                     alert("Please select patient");
                     return;
                 }
+                this.dialysis.supervised_by = this.selectedDoctor ? this.selectedDoctor.Doctor_SlNo : "";
                 this.dialysis.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : "";
                 let data = {
                     dialysis: this.dialysis,
@@ -530,6 +539,7 @@
                     medicine: ""
                 }]
                 this.selectedExistDialysis = null;
+                this.selectedDoctor = null;
             },
 
             async getExistDialysis() {
@@ -553,6 +563,7 @@
 
                     setTimeout(() => {
                         this.selectedCustomer = this.customers.find(customer => customer.Customer_SlNo == dialysis.patient_id);
+                        this.selectedDoctor = this.doctors.find(doctor => doctor.Doctor_SlNo == dialysis.supervised_by);
                     }, 1000);
 
                     this.carts = [];

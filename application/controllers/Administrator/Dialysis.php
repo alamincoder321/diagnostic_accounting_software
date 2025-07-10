@@ -44,9 +44,13 @@ class Dialysis extends CI_Controller
                 p.Customer_Address,
                 p.age,
                 p.gender,
+                d.Doctor_Name,
+                d.specialization,
+                d.Doctor_Mobile,
                 concat_ws(' - ', dl.invoice, p.Customer_Name) as display_name
                 from tbl_dialysis dl
                 left join tbl_customer p on p.Customer_SlNo = dl.patient_id
+                left join tbl_doctor d on d.Doctor_SlNo = dl.supervised_by
                 where dl.status != 'd'
                 $clauses
                 order by dl.id desc")->result();
