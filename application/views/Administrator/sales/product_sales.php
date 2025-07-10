@@ -73,9 +73,9 @@
 			</div>
 
 			<div class="form-group">
-				<label class="col-md-1 control-label no-padding-right"> Employee </label>
+				<label class="col-md-1 control-label no-padding-right"> Doctor </label>
 				<div class="col-md-2">
-					<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name" @input="onChangeEmployee" placeholder="Select Employee"></v-select>
+					<v-select :options="doctors" v-model="selectedDoctor" label="display_name" placeholder="Select Doctor"></v-select>
 				</div>
 			</div>
 
@@ -279,9 +279,9 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Doctor</label>
-												<div class="col-xs-12">
-													<v-select :options="doctors" v-model="selectedDoctor" label="display_name" placeholder="Select Doctor"></v-select>
+												<label class="col-xs-12 control-label no-padding-right">Employee</label>
+												<div class="col-xs-12">													
+													<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name" @input="onChangeEmployee" placeholder="Select Employee"></v-select>
 												</div>
 											</div>
 										</td>
@@ -852,6 +852,8 @@
 							productId: product.Product_IDNo,
 							categoryName: product.ProductCategory_Name,
 							name: product.Product_Name,
+							room_id: product.room_id,
+							Room_Name: product.Room_Name,
 							salesRate: product.SaleDetails_Rate,
 							quantity: product.SaleDetails_TotalQuantity,
 							total: product.SaleDetails_TotalAmount,
@@ -859,6 +861,10 @@
 						}
 						this.cart.push(cartProduct);
 					})
+
+					setTimeout(() => {
+						this.selectedDoctor = this.doctors.find(doc => doc.Doctor_SlNo == sales.doctor_id);
+					}, 1500);
 				})
 			}
 		}

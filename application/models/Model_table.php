@@ -30,15 +30,14 @@ class Model_Table extends CI_Model
 
     public function generateSalesInvoice()
     {
-        $branchId = $this->session->userdata('BRANCHid');
-        $branchNo = strlen($branchId) < 10 ? '0' . $branchId : $branchId;
-        $invoice = date('y') . $branchNo . "00001";
+        $invoice = 'AHS' . date('ym') . "0001";
         $year = date('y');
-        $sales = $this->db->query("select * from tbl_salesmaster sm where sm.SaleMaster_InvoiceNo like '$year%' and SaleMaster_branchid = ?", $branchId);
+        $month = date('m');
+        $sales = $this->db->query("select * from tbl_salesmaster sm where sm.SaleMaster_InvoiceNo like 'AHS$year$month%'");
         if ($sales->num_rows() != 0) {
             $newSalesId = $sales->num_rows() + 1;
-            $zeros = array('0', '00', '000', '0000');
-            $invoice = date('y') . $branchNo . (strlen($newSalesId) > count($zeros) ? $newSalesId : $zeros[count($zeros) - strlen($newSalesId)] . $newSalesId);
+            $zeros = array('0', '00', '000');
+            $invoice = 'AHS' . date('ym') . (strlen($newSalesId) > count($zeros) ? $newSalesId : $zeros[count($zeros) - strlen($newSalesId)] . $newSalesId);
         }
 
         return $invoice;
@@ -142,7 +141,7 @@ class Model_Table extends CI_Model
 
         return $productCode;
     }
-    
+
     public function generateDoctorCode()
     {
         $doctorCode = "D00001";
@@ -648,7 +647,7 @@ class Model_Table extends CI_Model
 
         return $dueResult;
     }
-    
+
     public function todaycustomerDue($clauses = "", $date = null)
     {
         $date = date('Y-m-d');

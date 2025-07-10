@@ -55,7 +55,7 @@ class Doctor extends CI_Controller
         $doctors = $this->db->query("
             select
                 c.*,
-                concat_ws(' - ', c.Doctor_Code, c.Doctor_Name, c.Doctor_Mobile) as display_name
+                concat_ws(' - ', c.Doctor_Name, c.Doctor_Code, c.Doctor_Mobile) as display_name
             from tbl_doctor c
             where c.status != 'd'
             and c.Doctor_brunchid = ?
