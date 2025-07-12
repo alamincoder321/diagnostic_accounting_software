@@ -327,6 +327,19 @@ const salesInvoice = Vue.component('sales-invoice', {
                                     </div>
                                     <div class="col-xs-12">
                                         <div class="text-center" style="margin-bottom: 10px;">
+                                            <span class="invoice-header">Reception Copy</span>
+                                        </div>
+                                        ${invoiceContent}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid invoice-copy">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                        <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="text-center" style="margin-bottom: 10px;">
                                             <span class="invoice-header">Lab Copy</span>
                                         </div>
                                         ${invoiceContent}
@@ -373,6 +386,17 @@ const salesInvoice = Vue.component('sales-invoice', {
                                 <div class="col-xs-12">
                                     <div class="text-center" style="margin-bottom: 10px;">
                                         <span class="invoice-header">Patient Copy</span>
+                                    </div>
+                                    ${invoiceContent}
+                                </div>
+                            </div>
+                            <div class="row invoice-copy">
+                                <div class="col-xs-12 text-center" style="margin-bottom: 5px;border-bottom: 1px; solid gray;">
+                                    <img src="/assets/images/header.jpg" alt="Logo" style="width: 100%; height: 120px; border: 1px solid #ccc; padding: 2px; border-radius: 5px; margin-bottom: 6px;" />
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="text-center" style="margin-bottom: 10px;">
+                                        <span class="invoice-header">Reception Copy</span>
                                     </div>
                                     ${invoiceContent}
                                 </div>

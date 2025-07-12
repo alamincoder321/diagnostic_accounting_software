@@ -84,6 +84,8 @@ class ReportGenerate extends CI_Controller
             if (empty($check)) {
                 $report = (array)$data->report;
                 unset($report['id']);
+                unset($report['patient_id']);
+                $report['patient_id'] = empty($data->report->patient_id) ? NULL : $data->report->patient_id;
                 $report['invoice'] = $this->mt->generateReportInvoice();
                 $report['AddBy'] = $this->session->userdata('FullName');
                 $report['AddTime'] = date("Y-m-d H:i:s");
@@ -122,6 +124,8 @@ class ReportGenerate extends CI_Controller
 
             $report               = (array)$data->report;
             unset($report['id']);
+            unset($report['patient_id']);
+            $report['patient_id'] = empty($data->report->patient_id) ? NULL : $data->report->patient_id;
             $report['UpdateBy']   = $this->session->userdata('FullName');
             $report['UpdateTime'] = date("Y-m-d H:i:s");
             $report['branch_id']  = $this->branchId;
@@ -154,7 +158,7 @@ class ReportGenerate extends CI_Controller
         $data['content'] = $this->load->view('Administrator/sales/report_invoice', $data, true);
         $this->load->view('Administrator/index', $data);
     }
-    
+
     public function reportInvoicePrint($id)
     {
         $data['title']  = 'Report Invoice';
@@ -190,7 +194,7 @@ class ReportGenerate extends CI_Controller
                 ifnull(p.Customer_Mobile, sm.customerMobile) as Customer_Mobile, 
                 t.Product_Name,
                 sm.SaleMaster_InvoiceNo,
-                concat_ws(rp.invoice, ifnull(p.Customer_Name, sm.customerName)) as invoice_text
+                concat_ws('-', rp.invoice, ifnull(p.Customer_Name, sm.customerName)) as invoice_text
             from tbl_report_generate rp
             left join tbl_customer p on p.Customer_SlNo = rp.patient_id
             left join tbl_product t on t.Product_SlNo = rp.test_id

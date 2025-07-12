@@ -60,16 +60,32 @@ class Model_Table extends CI_Model
 
     public function generateDialysisInvoice()
     {
-        $invoice = 'D' . date('y') . "00001";
+        $invoice = 'AHS' . date('ym') . "0001";
         $year = date('y');
-        $dialysis = $this->db->query("select * from tbl_dialysis d where d.invoice like 'D$year%'");
+        $month = date('m');
+        $dialysis = $this->db->query("select * from tbl_dialysis d where d.invoice like 'AHS$year$month%'");
         if ($dialysis->num_rows() != 0) {
             $newDialysisId = $dialysis->num_rows() + 1;
-            $zeros = array('0', '00', '000', '0000');
-            $invoice = 'D' . date('y') . (strlen($newDialysisId) > count($zeros) ? $newDialysisId : $zeros[count($zeros) - strlen($newDialysisId)] . $newDialysisId);
+            $zeros = array('0', '00', '000');
+            $invoice = 'AHS' . date('ym') . (strlen($newDialysisId) > count($zeros) ? $newDialysisId : $zeros[count($zeros) - strlen($newDialysisId)] . $newDialysisId);
         }
 
         return $invoice;
+    }
+
+    public function generateReportInvoice()
+    {
+        $reportCode = 'AHS' . date('ym') . "0001";
+        $year = date('y');
+        $month = date('m');
+        $lastReport = $this->db->query("select * from tbl_report_generate rp where rp.invoice like 'AHS$year$month%'");
+        if ($lastReport->num_rows() != 0) {
+            $newReportId = $lastReport->num_rows() + 1;
+            $zeros = array('0', '00', '000');
+            $reportCode = 'AHS' . date('ym') . (strlen($newReportId) > count($zeros) ? $newReportId : $zeros[count($zeros) - strlen($newReportId)] . $newReportId);
+        }
+
+        return $reportCode;
     }
 
     public function generatePurchaseInvoice()
@@ -182,20 +198,6 @@ class Model_Table extends CI_Model
         }
 
         return $transactionCode;
-    }
-
-    public function generateReportInvoice()
-    {
-        $reportCode = "R00001";
-
-        $lastReport = $this->db->query("select * from tbl_report_generate order by id desc limit 1");
-        if ($lastReport->num_rows() != 0) {
-            $newReportId = $lastReport->row()->id + 1;
-            $zeros = array('0', '00', '000', '0000');
-            $reportCode = 'R' . (strlen($newReportId) > count($zeros) ? $newReportId : $zeros[count($zeros) - strlen($newReportId)] . $newReportId);
-        }
-
-        return $reportCode;
     }
 
     public function generateDamageCode()

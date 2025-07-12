@@ -491,14 +491,15 @@
                             alert(res.data.message);
                             this.clearData();
                             this.getExistDialysis();
+                            this.dialysis.invoice = res.data.invoice;
                         }
                     })
             },
 
             clearData() {
                 this.dialysis = {
-                    id: "",
                     invoice: this.oldInvoice,
+                    id: "",
                     date: moment().format('YYYY-MM-DD'),
                     built_by: "",
                     supervised_by: "",

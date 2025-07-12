@@ -93,7 +93,7 @@ class Dialysis extends CI_Controller
             }
 
             $this->db->trans_commit();
-            $res = ['success' => true, 'message' => 'Dialysis Form entry successful'];
+            $res = ['success' => true, 'message' => 'Dialysis Form entry successful', 'invoice' => $this->mt->generateDialysisInvoice()];
         } catch (\Throwable $th) {
             $this->db->trans_rollback();
             $res = ['success' => true, 'message' => $th->getMessage()];
@@ -129,7 +129,7 @@ class Dialysis extends CI_Controller
             }
 
             $this->db->trans_commit();
-            $res = ['success' => true, 'message' => 'Dialysis Form update successful'];
+            $res = ['success' => true, 'message' => 'Dialysis Form update successful', 'invoice' => $this->mt->generateDialysisInvoice()];
         } catch (\Throwable $th) {
             $this->db->trans_rollback();
             $res = ['success' => true, 'message' => $th->getMessage()];
