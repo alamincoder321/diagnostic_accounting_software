@@ -185,6 +185,7 @@ $route['designationUpdate'] = 'Administrator/Employee/designationupdate/';
 $route['designationdelete'] = 'Administrator/Employee/designationdelete';
 
 $route['depertment'] = 'Administrator/Employee/depertment';
+$route['get_departments'] = 'Administrator/Employee/getDepartments';
 $route['insertDepertment'] = 'Administrator/Employee/insert_depertment';
 $route['depertmentdelete'] = 'Administrator/Employee/depertmentdelete/';
 $route['depertmentedit/(:any)'] = 'Administrator/Employee/depertmentedit/$1';

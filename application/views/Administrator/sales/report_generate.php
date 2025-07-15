@@ -125,19 +125,19 @@
                             <tr>
                                 <td style="text-align: left;">Name</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.left_name" class="form-control" style="margin-bottom: 0;">
+                                    <v-select :options="doctors" style="width: 100%;margin-top:2px;" v-model="selectedLeftDoctor" label="display_name" @input="onChangeLeftDoctor"></v-select>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Degree</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.left_degree" class="form-control" style="margin-bottom: 0;">
+                                    <input type="text" v-model="report.left_degree" class="form-control" style="margin-bottom: 0;" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Department</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.left_department" class="form-control" style="margin-bottom: 0;">
+                                    <input type="text" v-model="report.left_department" class="form-control" style="margin-bottom: 0;" readonly>
                                 </td>
                             </tr>
                         </tbody>
@@ -154,19 +154,19 @@
                             <tr>
                                 <td style="text-align: left;">Name</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.right_name" class="form-control" style="margin-bottom: 0;">
+                                    <v-select :options="doctors" style="width: 100%;margin-top:2px;" v-model="selectedRightDoctor" label="display_name" @input="onChangeRightDoctor"></v-select>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Degree</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.right_degree" class="form-control" style="margin-bottom: 0;">
+                                    <input type="text" v-model="report.right_degree" class="form-control" style="margin-bottom: 0;" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">Department</td>
                                 <td style="text-align: right;">
-                                    <input type="text" v-model="report.right_department" class="form-control" style="margin-bottom: 0;">
+                                    <input type="text" v-model="report.right_department" class="form-control" style="margin-bottom: 0;" readonly>
                                 </td>
                             </tr>
                         </tbody>
@@ -235,19 +235,25 @@
                     patient_id: "",
                     sale_id: "",
                     test_id: "",
+                    left_doctor_id: "",
                     left_name: "",
                     left_degree: "",
                     left_department: "",
+                    right_doctor_id: "",
                     right_name: "",
                     right_degree: "",
                     right_department: ""
                 },
                 products: [],
                 selectedTest: null,
-                carts: []
+                carts: [],
+                doctors: [],
+                selectedLeftDoctor: null,
+                selectedRightDoctor: null,
             }
         },
         async created() {
+            this.getDoctors();
             this.getCustomers();
             this.getSales();
             if (this.report.id > 0) {
@@ -255,6 +261,11 @@
             }
         },
         methods: {
+            getDoctors() {
+                axios.get('/get_doctors').then(res => {
+                    this.doctors = res.data;
+                })
+            },
             async getCustomers() {
                 await axios.post('/get_customers', {
                     forSearch: 'yes'
@@ -373,6 +384,32 @@
                     })
             },
 
+            onChangeLeftDoctor() {
+                if (this.selectedLeftDoctor) {
+                    this.report.left_doctor_id = this.selectedLeftDoctor.Doctor_SlNo;
+                    this.report.left_name = this.selectedLeftDoctor.Doctor_Name;
+                    this.report.left_degree = this.selectedLeftDoctor.specialization;
+                    this.report.left_department = this.selectedLeftDoctor.Department_Name;
+                } else {
+                    this.report.left_name = '';
+                    this.report.left_degree = '';
+                    this.report.left_department = '';
+                }
+            },
+
+            onChangeRightDoctor() {
+                if (this.selectedRightDoctor) {
+                    this.report.right_doctor_id = this.selectedRightDoctor.Doctor_SlNo;
+                    this.report.right_name = this.selectedRightDoctor.Doctor_Name;
+                    this.report.right_degree = this.selectedRightDoctor.specialization;
+                    this.report.right_department = this.selectedRightDoctor.Department_Name;
+                } else {
+                    this.report.right_name = '';
+                    this.report.right_degree = '';
+                    this.report.right_department = '';
+                }
+            },
+
             saveReport() {
                 this.report.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : '';
                 this.report.test_id = this.selectedTest ? this.selectedTest.Product_IDNo : '';
@@ -430,6 +467,8 @@
                     Customer_Address: '',
                     Customer_Type: '',
                 }
+                this.selectedLeftDoctor = null;
+                this.selectedRightDoctor = null;
             },
 
             async getGenerateReport() {
@@ -454,6 +493,8 @@
 
                     setTimeout(() => {
                         this.selectedInvoice = this.invoices.find(invoice => invoice.SaleMaster_SlNo == data.sale_id);
+                        this.selectedLeftDoctor = this.doctors.find(doctor => doctor.Doctor_SlNo == data.left_doctor_id);
+                        this.selectedRightDoctor = this.doctors.find(doctor => doctor.Doctor_SlNo == data.right_doctor_id);
                     }, 1000);
                     setTimeout(() => {
                         this.selectedTest = this.products.find(product => product.Product_IDNo == data.test_id);

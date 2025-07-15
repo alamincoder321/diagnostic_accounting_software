@@ -1,4 +1,43 @@
 <style>
+    .v-select {
+        margin-bottom: 5px;
+    }
+
+    .v-select.open .dropdown-toggle {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .v-select .dropdown-toggle {
+        padding: 0px;
+        height: 25px;
+    }
+
+    .v-select input[type=search],
+    .v-select input[type=search]:focus {
+        margin: 0px;
+    }
+
+    .v-select .vs__selected-options {
+        overflow: hidden;
+        flex-wrap: nowrap;
+    }
+
+    .v-select .selected-tag {
+        margin: 2px 0px;
+        white-space: nowrap;
+        position: absolute;
+        left: 0px;
+    }
+
+    .v-select .vs__actions {
+        margin-top: -5px;
+    }
+
+    .v-select .dropdown-menu {
+        width: auto;
+        overflow-y: auto;
+    }
+
     #doctors .add-button {
         padding: 2.5px;
         width: 28px;
@@ -35,7 +74,8 @@
     #doctorImage {
         height: 100%;
     }
-    tr td{
+
+    tr td {
         vertical-align: middle !important;
     }
 </style>
@@ -69,6 +109,14 @@
                     <div class="col-md-7">
                         <input type="text" class="form-control" v-model="doctor.specialization">
                     </div>
+                </div>
+
+                <div class="form-group clearfix">
+                    <label class="control-label col-md-4">Department:</label>
+                    <div class="col-md-7">
+                        <v-select v-bind:options="departments" v-model="selectedDepartment" label="Department_Name"></v-select>
+                    </div>
+                    <div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/depertment" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
                 </div>
 
                 <div class="form-group clearfix">
@@ -156,14 +204,15 @@
                         <tr>
                             <td>{{ row.sl }}</td>
                             <td>
-								<a :href="row.imgSrc">
-									<img :src="row.imgSrc" style="width: 35px;height:35px;border:1px solid gray;border-radius: 5px;"/>
-								</a>
-							</td>
+                                <a :href="row.imgSrc">
+                                    <img :src="row.imgSrc" style="width: 35px;height:35px;border:1px solid gray;border-radius: 5px;" />
+                                </a>
+                            </td>
                             <td>{{ row.Doctor_Code }}</td>
                             <td>{{ row.Doctor_Name }}</td>
                             <td>{{ row.Doctor_Mobile }}</td>
                             <td>{{ row.specialization }}</td>
+                            <td>{{ row.Department_Name }}</td>
                             <td>{{ row.age }}</td>
                             <td>{{ row.gender }}</td>
                             <td>{{ row.commission }}</td>
@@ -211,9 +260,11 @@
                     commission: 0,
                     status: 'a'
                 },
-                doctors: [],
                 imageUrl: '',
                 selectedFile: null,
+                doctors: [],
+                departments: [],
+                selectedDepartment: null,
 
                 columns: [{
                         label: 'Sl',
@@ -248,6 +299,11 @@
                         align: 'center'
                     },
                     {
+                        label: 'Department',
+                        field: 'Department_Name',
+                        align: 'center'
+                    },
+                    {
                         label: 'Age',
                         field: 'age',
                         align: 'center'
@@ -274,14 +330,20 @@
             }
         },
         created() {
+            this.getDepartments();
             this.getDoctors();
         },
         methods: {
+            getDepartments() {
+                axios.get('/get_departments').then(res => {
+                    this.departments = res.data;
+                })
+            },
             getDoctors() {
                 axios.get('/get_doctors').then(res => {
                     this.doctors = res.data.map((item, index) => {
-                        item.sl = index + 1;                        
-						item.imgSrc = item.image_name ? '/uploads/doctors/' + item.image_name : '/assets/no_image.gif';
+                        item.sl = index + 1;
+                        item.imgSrc = item.image_name ? '/uploads/doctors/' + item.image_name : '/assets/no_image.gif';
                         return item;
                     });
                 })
@@ -318,6 +380,7 @@
                 if (this.doctor.Doctor_SlNo != 0) {
                     url = '/update_doctor';
                 }
+                this.doctor.department_id = this.selectedDepartment ? this.selectedDepartment.Department_SlNo : null;
 
                 let fd = new FormData();
                 fd.append('image', this.selectedFile);
@@ -338,6 +401,9 @@
                 keys.forEach(key => {
                     this.doctor[key] = doctor[key];
                 })
+                if (doctor.department_id) {
+                    this.selectedDepartment = this.departments.find(d => d.Department_SlNo === doctor.department_id);
+                }
                 if (doctor.image_name == null || doctor.image_name == '') {
                     this.imageUrl = null;
                 } else {
@@ -375,6 +441,7 @@
                 }
                 this.imageUrl = '';
                 this.selectedFile = null;
+                this.selectedDepartment = null;
             }
         }
     })

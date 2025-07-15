@@ -47,20 +47,22 @@ class Doctor extends CI_Controller
             $limit .= "limit 20";
         }
         if (isset($data->name) && $data->name != '') {
-            $clauses .= " and c.Doctor_Code like '$data->name%'";
-            $clauses .= " or c.Doctor_Name like '$data->name%'";
-            $clauses .= " or c.Doctor_Mobile like '$data->name%'";
+            $clauses .= " and d.Doctor_Code like '$data->name%'";
+            $clauses .= " or d.Doctor_Name like '$data->name%'";
+            $clauses .= " or d.Doctor_Mobile like '$data->name%'";
         }
 
         $doctors = $this->db->query("
             select
-                c.*,
-                concat_ws(' - ', c.Doctor_Name, c.Doctor_Code, c.Doctor_Mobile) as display_name
-            from tbl_doctor c
-            where c.status != 'd'
-            and c.Doctor_brunchid = ?
+                d.*,
+                concat_ws(' - ', d.Doctor_Name, d.Doctor_Code, d.Doctor_Mobile) as display_name,
+                de.Department_Name
+            from tbl_doctor d
+            left join tbl_department de on de.Department_SlNo = d.department_id
+            where d.status != 'd'
+            and d.Doctor_brunchid = ?
             $clauses
-            order by c.Doctor_SlNo desc
+            order by d.Doctor_SlNo desc
             $limit
         ", $this->session->userdata('BRANCHid'))->result();
         echo json_encode($doctors);
