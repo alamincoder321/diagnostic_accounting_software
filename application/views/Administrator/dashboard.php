@@ -238,7 +238,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 									<i class="menu-icon fa fa-plus-circle"></i>
 								</div>
 								<div class="textModule">
-									SubCategory Entry
+									SubTest Entry
 								</div>
 							</a>
 						</div>

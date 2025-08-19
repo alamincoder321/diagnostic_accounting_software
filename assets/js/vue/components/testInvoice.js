@@ -27,7 +27,7 @@ const testInvoice = Vue.component('test-invoice', {
                 <div class="row">
                     <div class="col-xs-12 text-center">
                         <div _h098asdh>
-                            {{ report.Product_Name }}
+                            {{ report.ProductCategory_Name }}
                         </div>
                     </div>
                 </div>

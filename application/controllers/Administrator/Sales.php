@@ -233,6 +233,10 @@ class Sales extends CI_Controller
             order by sm.SaleMaster_SlNo desc
         ")->result();
 
+        $clausesReport = "";
+        if(!empty($data->isGenerated)){
+            $clausesReport = "group by p.ProductCategory_ID";
+        }
         foreach ($sales as $sale) {
             $sale->saleDetails = $this->db->query("
                 select 
@@ -247,6 +251,7 @@ class Sales extends CI_Controller
                 left join tbl_room r on r.Room_SlNo = sd.room_id
                 where sd.SaleMaster_IDNo = ?
                 and sd.Status != 'd'
+                $clausesReport
             ", $sale->SaleMaster_SlNo)->result();
         }
 

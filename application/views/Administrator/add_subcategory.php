@@ -162,12 +162,12 @@
 						align: 'center'
 					},
 					{
-						label: 'Category',
-						field: 'ProductCategory_Name',
+						label: 'Test Name',
+						field: 'Product_Name',
 						align: 'center'
 					},
 					{
-						label: 'Name',
+						label: 'Sub TestName',
 						field: 'name',
 						align: 'center'
 					},

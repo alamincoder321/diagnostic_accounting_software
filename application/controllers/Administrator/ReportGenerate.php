@@ -42,30 +42,68 @@ class ReportGenerate extends CI_Controller
         $data = json_decode($this->input->raw_input_stream);
         $check = $this->db
             ->query("select
-                    ifnull(rpd.subcategory_id, sc.id) as subcategory_id, 
-                    sc.name,
+                    rpd.category_id,
+                    rpd.test_id,
+                    rpd.subtest_id,
+                    ifnull(st.name, t.Product_Name) as name,
                     rpd.result,
-                    u.Unit_Name,
-                    sc.normal_range
+                    ifnull(su.Unit_Name, u.Unit_Name) as Unit_Name,
+                    ifnull(st.normal_range, t.normal_range) as normal_range
                     from tbl_report_generate_detail rpd
-                    left join tbl_subcategory sc on sc.id = rpd.subcategory_id
-                    left join tbl_unit u on u.Unit_SlNo = sc.unit_id
+                    left join tbl_product t on t.Product_SlNo = rpd.test_id
+                    left join tbl_unit u on u.Unit_SlNo = t.Unit_ID
+                    left join tbl_subtest st on st.id = rpd.subtest_id
+                    left join tbl_unit su on su.Unit_SlNo = st.unit_id
                     left join tbl_report_generate rp on rp.id = rpd.generate_id
-                    where rp.test_id = ?
+                    where rp.category_id = ?
                     and rp.sale_id = ?
-                    and rp.patient_id = ?", [$data->testId, $data->saleId, $data->customerId])->result();
+                    and rp.patient_id = ?", [$data->categoryId, $data->saleId, $data->customerId])->result();
 
-        $category = $this->db
-            ->select("sc.id as subcategory_id, sc.name, '' as result, u.Unit_Name, sc.normal_range")
-            ->join("tbl_unit as u", "u.Unit_SlNo = sc.unit_id", "left")
-            ->where('sc.test_id', $data->testId)
-            ->get('tbl_subcategory as sc')
-            ->result();
+        $sql = "
+                SELECT
+                t.ProductCategory_ID AS category_id,
+                sd.Product_IDNo      AS test_id,
+                NULL                 AS subtest_id,
+                t.Product_Name       AS name,
+                ''                   AS result,
+                u.Unit_Name          AS Unit_Name,
+                t.normal_range       AS normal_range
+                FROM tbl_saledetails sd
+                LEFT JOIN tbl_product t ON t.Product_SlNo = sd.Product_IDNo
+                LEFT JOIN tbl_unit    u ON u.Unit_SlNo    = t.Unit_ID
+                WHERE t.ProductCategory_ID = ? AND sd.SaleMaster_IDNo = ?
+
+                UNION ALL
+
+                SELECT
+                t.ProductCategory_ID AS category_id,
+                sd.Product_IDNo      AS test_id,
+                st.id                AS subtest_id,
+                st.name              AS name,
+                ''                   AS result,
+                su.Unit_Name AS Unit_Name,
+                st.normal_range       AS normal_range
+                FROM tbl_saledetails sd
+                LEFT JOIN tbl_product  t  ON t.Product_SlNo = sd.Product_IDNo
+                LEFT JOIN tbl_subtest  st ON st.test_id  = t.Product_SlNo
+                LEFT JOIN tbl_unit     su ON su.Unit_SlNo   = st.unit_id
+                WHERE t.ProductCategory_ID = ? AND sd.SaleMaster_IDNo = ?
+                ";
+
+        $test = $this->db->query($sql, [
+            $data->categoryId,
+            $data->saleId,
+            $data->categoryId,
+            $data->saleId
+        ])->result();
+
+
 
         if (count($check) > 0) {
-            $category = $check;
+            $test = $check;
         }
-        echo json_encode($category);
+
+        echo json_encode($test);
     }
 
     public function addReportGenerate()
@@ -78,7 +116,7 @@ class ReportGenerate extends CI_Controller
             $check = $this->db
                 ->where('sale_id', $data->report->sale_id)
                 ->where('patient_id', $data->report->patient_id)
-                ->where('test_id', $data->report->test_id)
+                ->where('category_id', $data->report->category_id)
                 ->get('tbl_report_generate')
                 ->row();
             if (empty($check)) {
@@ -95,9 +133,11 @@ class ReportGenerate extends CI_Controller
 
                 foreach ($data->carts as $item) {
                     $detail = array(
-                        'generate_id'    => $reportId,
-                        'subcategory_id' => $item->subcategory_id,
-                        'result'         => $item->result
+                        'generate_id' => $reportId,
+                        'category_id' => $item->category_id,
+                        'test_id'     => $item->test_id,
+                        'subtest_id'  => $item->subtest_id ?? NULL,
+                        'result'      => $item->result
                     );
                     $this->db->insert('tbl_report_generate_detail', $detail);
                 }
@@ -135,8 +175,10 @@ class ReportGenerate extends CI_Controller
             foreach ($data->carts as $item) {
                 $detail = array(
                     'generate_id' => $data->report->id,
-                    'subcategory_id' => $item->subcategory_id,
-                    'result' => $item->result
+                    'category_id' => $item->category_id,
+                    'test_id'     => $item->test_id,
+                    'subtest_id'  => $item->subtest_id ?? NULL,
+                    'result'      => $item->result
                 );
                 $this->db->insert('tbl_report_generate_detail', $detail);
             }
@@ -192,12 +234,12 @@ class ReportGenerate extends CI_Controller
                 ifnull(p.Customer_Name, sm.customerName) as Customer_Name, 
                 ifnull(p.Customer_Address, sm.customerAddress) as Customer_Address, 
                 ifnull(p.Customer_Mobile, sm.customerMobile) as Customer_Mobile, 
-                t.Product_Name,
+                pc.ProductCategory_Name,
                 sm.SaleMaster_InvoiceNo,
                 concat_ws('-', rp.invoice, ifnull(p.Customer_Name, sm.customerName)) as invoice_text
             from tbl_report_generate rp
             left join tbl_customer p on p.Customer_SlNo = rp.patient_id
-            left join tbl_product t on t.Product_SlNo = rp.test_id
+            left join tbl_productcategory pc on pc.ProductCategory_SlNo = rp.category_id
             left join tbl_salesmaster sm on sm.SaleMaster_SlNo = rp.sale_id
             where rp.status = 'a'
             $clauses
@@ -205,9 +247,11 @@ class ReportGenerate extends CI_Controller
 
         $reports = array_map(function ($report) {
             $report->details = $this->db
-                ->select("sc.id as subcategory_id, sc.name, rpd.result, u.Unit_Name, sc.normal_range")
-                ->join("tbl_subcategory as sc", "sc.id = rpd.subcategory_id", "left")
-                ->join("tbl_unit as u", "u.Unit_SlNo = sc.unit_id", "left")
+                ->select("rpd.category_id, rpd.test_id, rpd.subtest_id, ifnull(st.name, t.Product_Name) as name, rpd.result, ifnull(su.Unit_Name, u.Unit_Name) as Unit_Name, ifnull(st.normal_range, t.normal_range) as normal_range")
+                ->join("tbl_product as t", "t.Product_SlNo = rpd.test_id", "left")
+                ->join("tbl_unit as u", "u.Unit_SlNo = t.Unit_ID", "left")
+                ->join("tbl_subtest as st", "st.id = rpd.subtest_id", "left")
+                ->join("tbl_unit as su", "su.Unit_SlNo = st.Unit_ID", "left")
                 ->where('rpd.generate_id', $report->id)
                 ->get('tbl_report_generate_detail as rpd')
                 ->result();

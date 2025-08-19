@@ -32,7 +32,7 @@ class Page extends CI_Controller
         $this->load->view('Administrator/master_dashboard', $data);
     }
 
-     // Product Category 
+    // Product Category 
     public function getRooms()
     {
         $categories = $this->db->query("select * from tbl_room where status = 'a'")->result();
@@ -123,7 +123,8 @@ class Page extends CI_Controller
         $query = $this->db->query("select * from tbl_productcategory where ProductCategory_Name = '$data->ProductCategory_Name'");
 
         if ($query->num_rows() > 0) {
-            $msg = array("status" => false, "message" => "Already Exist this name");
+            $this->db->where('ProductCategory_SlNo', $query->row()->ProductCategory_SlNo)->update('tbl_productcategory', ['status' => 'a']);
+            $msg = array("status" => true, "message" => "Category insert successfully");
             echo json_encode($msg);
         } else {
             $category = array(
@@ -172,13 +173,13 @@ class Page extends CI_Controller
     public function getSubCategories()
     {
         $subcategories = $this->db
-            ->query("select sc.*,  
+            ->query("select st.*,  
                 p.Product_Name,
                 u.Unit_Name
-                from tbl_subcategory sc 
-                left join tbl_product p on p.Product_SlNo = sc.test_id
-                left join tbl_unit u on u.Unit_SlNo = sc.unit_id
-                where sc.status = 'a'")->result();
+                from tbl_subtest st 
+                left join tbl_product p on p.Product_SlNo = st.test_id
+                left join tbl_unit u on u.Unit_SlNo = st.unit_id
+                where st.status = 'a'")->result();
         echo json_encode($subcategories);
     }
 
@@ -188,14 +189,14 @@ class Page extends CI_Controller
         if (!$access) {
             redirect(base_url());
         }
-        $data['title'] = "Add SubCategory";
+        $data['title'] = "Add Sub Test";
         $data['content'] = $this->load->view('Administrator/add_subcategory', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
     public function insert_subcategory()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $query = $this->db->query("select * from tbl_subcategory where test_id = ? and name = '$data->name'", $data->test_id);
+        $query = $this->db->query("select * from tbl_subtest where test_id = ? and name = '$data->name'", $data->test_id);
 
         if ($query->num_rows() > 0) {
             $msg = array("status" => false, "message" => "Already Exist this name");
@@ -210,7 +211,7 @@ class Page extends CI_Controller
                 "AddBy"        => $this->session->userdata("FullName"),
                 "AddTime"      => date("Y-m-d H:i:s")
             );
-            $this->db->insert("tbl_subcategory", $category);
+            $this->db->insert("tbl_subtest", $category);
 
             $msg = array("status" => true, "message" => "SubCategory insert successfully");
             echo json_encode($msg);
@@ -220,7 +221,7 @@ class Page extends CI_Controller
     public function update_subcategory()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $query = $this->db->query("select * from tbl_subcategory where name = '$data->name' and id != ? and test_id = ?", [$data->id, $data->test_id]);
+        $query = $this->db->query("select * from tbl_subtest where name = '$data->name' and id != ? and test_id = ?", [$data->id, $data->test_id]);
 
         if ($query->num_rows() > 0) {
             $msg = array("status" => false, "message" => "Already Exist this name");
@@ -235,7 +236,7 @@ class Page extends CI_Controller
                 "AddBy"        => $this->session->userdata("FullName"),
                 "AddTime"      => date("Y-m-d H:i:s")
             );
-            $this->db->where('id', $data->id)->update("tbl_subcategory", $category);
+            $this->db->where('id', $data->id)->update("tbl_subtest", $category);
 
             $msg = array("status" => true, "message" => "SubCategory update successfully");
             echo json_encode($msg);
@@ -244,7 +245,7 @@ class Page extends CI_Controller
     public function subcatdelete()
     {
         $data = json_decode($this->input->raw_input_stream);
-        $this->db->where("id", $data->subcategoryId)->update('tbl_subcategory', ['status' => 'd']);
+        $this->db->where("id", $data->subcategoryId)->update('tbl_subtest', ['status' => 'd']);
         $msg = array("status" => true, "message" => "SubCategory delete successfully");
         echo json_encode($msg);
     }

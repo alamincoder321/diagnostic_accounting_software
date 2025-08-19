@@ -118,7 +118,7 @@
                     <li><input type="checkbox" class="access" value="agent" v-model="access"> Agent Entry</li>
                     <li><input type="checkbox" class="access" value="agentlist" v-model="access"> Agent List</li>
                     <li><input type="checkbox" class="access" value="category" v-model="access"> Category Entry</li>
-                    <li><input type="checkbox" class="access" value="subcategory" v-model="access"> SubCategory Entry</li>
+                    <li><input type="checkbox" class="access" value="subcategory" v-model="access"> SubTest Entry</li>
                     <li><input type="checkbox" class="access" value="room" v-model="access"> Room Entry</li>
                     <li><input type="checkbox" class="access" value="unit" v-model="access"> Unit Entry</li>
                     <li><input type="checkbox" class="access" value="area" v-model="access"> Add Area</li>

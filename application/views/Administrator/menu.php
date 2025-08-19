@@ -195,7 +195,7 @@ if ($module == 'dashboard' or $module == '') {
 			<li class="">
 				<a href="<?php echo base_url(); ?>subcategory">
 					<i class="menu-icon fa fa-plus-circle"></i>
-					<span class="menu-text"> SubCategory Entry </span>
+					<span class="menu-text"> SubTest Entry </span>
 				</a>
 				<b class="arrow"></b>
 			</li>

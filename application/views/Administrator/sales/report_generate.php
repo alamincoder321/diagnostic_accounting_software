@@ -72,8 +72,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label style="margin: 0;margin-top: -5px;">Test Name</label>
-                    <v-select v-bind:options="products" v-model="selectedTest" label="Product_Name" @input="getReportTest"></v-select>
+                    <label style="margin: 0;margin-top: -5px;">Test Category Name</label>
+                    <v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name" @input="getReportTest"></v-select>
                 </div>
 
                 <!-- <div class="form-group" style="margin-top: -2px;">
@@ -216,7 +216,7 @@
         el: '#reportGenerate',
         data() {
             return {
-                products: [],
+                categories: [],
                 customers: [],
                 selectedCustomer: {
                     Customer_SlNo: '',
@@ -234,7 +234,7 @@
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    test_id: "",
+                    category_id: "",
                     left_doctor_id: "",
                     left_name: "",
                     left_degree: "",
@@ -244,8 +244,8 @@
                     right_degree: "",
                     right_department: ""
                 },
-                products: [],
-                selectedTest: null,
+                categories: [],
+                selectedCategory: null,
                 carts: [],
                 doctors: [],
                 selectedLeftDoctor: null,
@@ -255,7 +255,6 @@
         async created() {
             this.getDoctors();
             this.getCustomers();
-            this.getSales();
             if (this.report.id > 0) {
                 await this.getGenerateReport();
             }
@@ -351,7 +350,7 @@
                 }
             },
             onChangeInvoice() {
-                this.selectedTest = null;
+                this.selectedCategory = null;
                 this.carts = [];
                 if (this.selectedInvoice == null) {
                     return;
@@ -362,7 +361,7 @@
                 }
                 axios.post('/get_sales_record', filter)
                     .then(res => {
-                        this.products = res.data[0].saleDetails;
+                        this.categories = res.data[0].saleDetails;
                     })
             },
             getReportTest() {
@@ -370,13 +369,15 @@
                 if (this.selectedInvoice == null) {
                     return;
                 }
-                if (this.selectedTest == null) {
+                if (this.selectedCategory == null) {
                     return;
                 }
+                
                 let filter = {
                     customerId: this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : null,
                     saleId: this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : null,
-                    testId: this.selectedTest.Product_IDNo
+                    categoryId: this.selectedCategory.ProductCategory_SlNo,
+                    isGenerated: 'yes'
                 }
                 axios.post('/get_report_test', filter)
                     .then(res => {
@@ -412,10 +413,10 @@
 
             saveReport() {
                 this.report.patient_id = this.selectedCustomer ? this.selectedCustomer.Customer_SlNo : '';
-                this.report.test_id = this.selectedTest ? this.selectedTest.Product_IDNo : '';
+                this.report.category_id = this.selectedCategory ? this.selectedCategory.ProductCategory_SlNo : '';
                 this.report.sale_id = this.selectedInvoice ? this.selectedInvoice.SaleMaster_SlNo : '';
                 if (this.report.test_id == "") {
-                    alert("Please select a test.");
+                    alert("Please select a test category.");
                     return;
                 }
                 if (this.report.sale_id == "") {
@@ -445,7 +446,7 @@
                     date: moment().format('YYYY-MM-DD'),
                     patient_id: "",
                     sale_id: "",
-                    test_id: "",
+                    category_id: "",
                     left_name: "",
                     left_degree: "",
                     left_department: "",
@@ -454,10 +455,10 @@
                     right_department: ""
                 };
                 this.carts = []
-                this.selectedTest = null;
+                this.selectedCategory = null;
                 this.selectedInvoice = null;
                 this.invoices = [];
-                this.products = [];
+                this.categories = [];
                 this.selectedCustomer = {
                     Customer_SlNo: '',
                     Customer_Code: '',
@@ -497,7 +498,7 @@
                         this.selectedRightDoctor = this.doctors.find(doctor => doctor.Doctor_SlNo == data.right_doctor_id);
                     }, 1000);
                     setTimeout(() => {
-                        this.selectedTest = this.products.find(product => product.Product_IDNo == data.test_id);
+                        this.selectedCategory = this.categories.find(product => product.ProductCategory_SlNo == data.category_id);
                     }, 2500);
                     setTimeout(() => {
                         this.carts = data.details.map(detail => ({
@@ -505,7 +506,9 @@
                             result: detail.result,
                             Unit_Name: detail.Unit_Name,
                             normal_range: detail.normal_range,
-                            subcategory_id: detail.subcategory_id
+                            test_id: detail.test_id,
+                            subtest_id: detail.subtest_id,
+                            category_id: detail.category_id
                         }));
                     }, 3500);
                 });

@@ -110,6 +110,12 @@
 						<input type="text" class="form-control" v-model="product.Product_Code">
 					</div>
 				</div>
+				<div class="form-group clearfix">
+					<label class="control-label col-md-4">Price:</label>
+					<div class="col-md-7">
+						<input type="text" class="form-control" v-model="product.Product_SellingPrice" required>
+					</div>
+				</div>
 			</div>
 
 			<div class="col-md-5">
@@ -121,9 +127,9 @@
 					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Price:</label>
+					<label class="control-label col-md-4">Normal Range:</label>
 					<div class="col-md-7">
-						<input type="text" class="form-control" v-model="product.Product_SellingPrice" required>
+						<input type="text" class="form-control" v-model="product.normal_range" required>
 					</div>
 				</div>
 				<div class="form-group clearfix">
@@ -153,6 +159,7 @@
 							<td>{{ row.Product_Code }}</td>
 							<td>{{ row.Product_SellingPrice }}</td>
 							<td>{{ row.Unit_Name }}</td>
+							<td>{{ row.normal_range }}</td>
 							<td>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<button type="button" class="button edit" @click="editProduct(row)">
@@ -234,6 +241,11 @@
 					{
 						label: 'Unit',
 						field: 'Unit_Name',
+						align: 'center'
+					},
+					{
+						label: 'Normal Range',
+						field: 'normal_range',
 						align: 'center'
 					},
 					{

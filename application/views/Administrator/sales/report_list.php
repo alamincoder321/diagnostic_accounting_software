@@ -60,13 +60,13 @@
                     <label>Search Type</label>
                     <select class="form-control" v-model="searchType">
                         <option value="">All</option>
-                        <option value="product">By Test</option>
+                        <option value="category">By Test Category</option>
                     </select>
                 </div>
 
-                <div class="form-group" style="display:none;" v-bind:style="{display: searchType == 'product' ? '' : 'none'}">
-                    <label>Test</label>
-                    <v-select v-bind:options="products" v-model="selectedProduct" label="Product_Name"></v-select>
+                <div class="form-group" style="display:none;" v-bind:style="{display: searchType == 'category' ? '' : 'none'}">
+                    <label>Test Category</label>
+                    <v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name"></v-select>
                 </div>
 
                 <div class="form-group">
@@ -99,7 +99,7 @@
                             <th>Delivery Date</th>
                             <th>Bill Invoice</th>
                             <th>Patient Name</th>
-                            <th>Test Name</th>
+                            <th>Test Category Name</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -112,7 +112,7 @@
                             <td>{{ item.delivery_date | dateFormat('DD-MM-YYYY') }}</td>
                             <td>{{ item.SaleMaster_InvoiceNo }}</td>
                             <td>{{ item.Customer_Name }}</td>
-                            <td>{{ item.Product_Name }}</td>
+                            <td>{{ item.ProductCategory_Name }}</td>
                             <td>
                                 <span v-if="item.is_delivery == 'yes'" class="badge badge-success">Delivered</span>
                                 <span v-if="item.is_delivery == 'no'" class="badge badge-danger">Undelivered</span>
@@ -146,8 +146,8 @@
                 dateFrom: moment().format('YYYY-MM-DD'),
                 dateTo: moment().format('YYYY-MM-DD'),
                 reports: [],
-                products: [],
-                selectedProduct: null,
+                categories: [],
+                selectedCategory: null,
             }
         },
         filters: {
@@ -156,7 +156,7 @@
             }
         },
         created() {
-            this.getProducts();
+            this.getCategory();
             this.getReportList();
         },
         methods: {
@@ -166,14 +166,14 @@
             reportEdit(id) {
                 window.open(`/report_generate/${id}`, '_blank');
             },
-            getProducts() {
-                axios.get('/get_products').then(res => {
-                    this.products = res.data;
+            getCategory() {
+                axios.get('/get_categories').then(res => {
+                    this.categories = res.data;
                 })
             },
             getReportList() {
                 let data = {
-                    testId: this.selectedProduct ? this.selectedProduct.Product_SlNo : '',
+                    categoryId: this.selectedCategory ? this.selectedCategory.ProductCategory_SlNo : '',
                     dateFrom: this.dateFrom,
                     dateTo: this.dateTo
                 }
